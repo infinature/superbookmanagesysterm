@@ -10,6 +10,7 @@
 #include <ctime>
 #include <algorithm>
 #include <map>
+#include <list>
 
 using namespace std;
 class   Book
@@ -189,4 +190,30 @@ class Index
 public:
     
 };
+
+class User
+{
+public:
+    void addBorrowBook(string& bo)
+    {
+        borrowbookname.push_back(bo);
+    }
+    User() :name(""), key(""), borrownum(0), sumbooknum(0), next(nullptr) {}
+
+    string name;                                //人名
+    string key;                                 //登陆密钥
+    short iden;                                 //
+    short borrownum;                            //借书数量
+    short sumbooknum;                           //
+    vector <string> borrowbookname;             //所借书籍名称
+    User* next;
+};
+
+
+
+
+
+
+
+
 #endif 

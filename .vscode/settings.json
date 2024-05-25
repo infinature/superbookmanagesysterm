@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "system_error": "cpp",
+        "xlocale": "cpp",
+        "xutility": "cpp",
+        "list": "cpp"
+    }
+}
