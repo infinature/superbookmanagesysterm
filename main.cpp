@@ -28,14 +28,11 @@ int main(int argc, char *argv[])
     SDL_FillRect(surf,&rect,SDL_MapRGB(surf->format,255,255,255));//创建矩形
     SDL_FillRect(surf,&rect3,SDL_MapRGB(surf->format,255,255,255));//创建矩形
     SDL_BlitSurface(bmp_surf2,NULL,surf2,&rect2);//显示绘图
+    SDL_BlitSurface(bmp_surf3,NULL,surf,&rect3);//显示绘图
     SDL_BlitSurface(bmp_surf,NULL,surf2,&rect);//显示绘图
-        SDL_BlitSurface(bmp_surf3,NULL,surf,&rect3);//显示绘图
     SDL_UpdateWindowSurface(win);//更新图形
 
-    // 登录模块
-    SDL_Window *loginWin = SDL_CreateWindow("Login", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 400, 300, 0);
-    SDL_Surface *loginSurf = SDL_GetWindowSurface(loginWin);
-    // 在这里添加登录表单的绘制代码，如用户名、密码输入框和登录按钮等
+
 
     while(true)
     {
@@ -52,6 +49,8 @@ int main(int argc, char *argv[])
     SDL_FreeSurface(bmp_surf);
     SDL_FreeSurface(surf);
     SDL_FreeSurface(surf2);
+    SDL_FreeSurface(bmp_surf2);
+    SDL_FreeSurface(bmp_surf3);
     SDL_DestroyWindow(win);
     SDL_Quit();
     return 0;
