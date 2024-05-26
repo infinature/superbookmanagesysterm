@@ -4,7 +4,7 @@ LDFLAGS +=  -LC:\Users\Lenovo\Downloads\SDL2-devel-2.30.3-mingw\SDL2-2.30.3\x86_
 
 CXXFLAGS += -std=c++17
 # 如果不用特别新的C++特性，上面这行不用写
-LDLIBS += -lSDL2
+LDLIBS += -lSDL2 -lSDL2_ttf
 
 LDLIBS += -mwindows # 用于去除运行时命令行窗口
 
