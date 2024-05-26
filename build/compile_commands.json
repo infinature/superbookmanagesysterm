@@ -1,0 +1,20 @@
+[
+{
+  "directory": "C:/Users/33537/Documents/GitHub/superbookmanagesysterm/build",
+  "command": "C:\\PROGRA~1\\mingw64\\bin\\G__~1.EXE   -g -o CMakeFiles\\SUPERBOOKMANAGESYSTEM.dir\\main.cpp.obj -c C:\\Users\\33537\\Documents\\GitHub\\superbookmanagesysterm\\main.cpp",
+  "file": "C:/Users/33537/Documents/GitHub/superbookmanagesysterm/main.cpp",
+  "output": "CMakeFiles/SUPERBOOKMANAGESYSTEM.dir/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/33537/Documents/GitHub/superbookmanagesysterm/build",
+  "command": "C:\\PROGRA~1\\mingw64\\bin\\G__~1.EXE   -g -o CMakeFiles\\SUPERBOOKMANAGESYSTEM.dir\\FileUser.cpp.obj -c C:\\Users\\33537\\Documents\\GitHub\\superbookmanagesysterm\\FileUser.cpp",
+  "file": "C:/Users/33537/Documents/GitHub/superbookmanagesysterm/FileUser.cpp",
+  "output": "CMakeFiles/SUPERBOOKMANAGESYSTEM.dir/FileUser.cpp.obj"
+},
+{
+  "directory": "C:/Users/33537/Documents/GitHub/superbookmanagesysterm/build",
+  "command": "C:\\PROGRA~1\\mingw64\\bin\\G__~1.EXE   -g -o CMakeFiles\\SUPERBOOKMANAGESYSTEM.dir\\User.cpp.obj -c C:\\Users\\33537\\Documents\\GitHub\\superbookmanagesysterm\\User.cpp",
+  "file": "C:/Users/33537/Documents/GitHub/superbookmanagesysterm/User.cpp",
+  "output": "CMakeFiles/SUPERBOOKMANAGESYSTEM.dir/User.cpp.obj"
+}
+]

@@ -1,0 +1,3 @@
+C:/Users/33537/Documents/GitHub/superbookmanagesysterm/build/CMakeFiles/SUPERBOOKMANAGESYSTEM.dir
+C:/Users/33537/Documents/GitHub/superbookmanagesysterm/build/CMakeFiles/edit_cache.dir
+C:/Users/33537/Documents/GitHub/superbookmanagesysterm/build/CMakeFiles/rebuild_cache.dir

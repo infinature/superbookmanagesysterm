@@ -7,11 +7,16 @@ void u_SaveData(list<User>&p)//存储数据
 
     for(list<User>::const_iterator it =p.begin();it!=p.end();it++)//利用迭代器来遍历user的list容器的元素并且输出到文件中
     {
-        fp<<endl<<(*it).name<<" ";
+        fp<<(*it).name<<" ";
         fp<<(*it).key<<" ";
         fp<<(*it).iden<<" ";
         fp<<(*it).borrownum<<" ";
-        fp<<(*it).sumbooknum;
+        fp<<(*it).sumbooknum<<" ";
+        for(vector <string> ::const_iterator a =(*it).borrowbookname.begin();a!=(*it).borrowbookname.end();a++)
+        {
+            fp<<*a<<" ";
+        }
+		fp<<endl;
     }
 
     fp.close();
