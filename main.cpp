@@ -74,11 +74,12 @@ int main(int argc, char *argv[]) {
     SDL_Event event;
 
 while (running) {
-    SDL_RenderClear(renderer); // 添加这一行代码
+    SDL_RenderClear(renderer); 
 
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
             running = false;
+            return 0;
         } else if (event.type == SDL_MOUSEBUTTONDOWN) {
             // 检测是否点击了rect4区域
             SDL_Rect rect4 = {400, 300, 400, 150};
