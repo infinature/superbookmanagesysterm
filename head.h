@@ -198,7 +198,7 @@ public:
     {
         borrowbookname.push_back(bo);
     }
-    User() :name(""), key(""), borrownum(0), sumbooknum(0), next(nullptr) {}
+    User() :name(""), key(""), borrownum(0), sumbooknum(0){}
 
     string name;                                //人名
     string key;                                 //登陆密钥
@@ -206,10 +206,11 @@ public:
     short borrownum;                            //借书数量
     short sumbooknum;                           //书总数
     vector <string> borrowbookname;             //所借书籍名称
-    User* next;
 };
 
-
+void u_SaveData(list<User>&p);//存储数据
+list<User> u_LordData ();//读取存储的数据
+list<User> addUser();//输入新的用户信息
 
 
 #endif 

@@ -1,8 +1,12 @@
 {
     "files.associations": {
-        "system_error": "cpp",
-        "xlocale": "cpp",
+        "vector": "cpp",
+        "list": "cpp",
+        "format": "cpp",
+        "initializer_list": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp",
         "xutility": "cpp",
-        "list": "cpp"
+        "istream": "cpp"
     }
 }

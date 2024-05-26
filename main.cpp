@@ -1,57 +1,286 @@
-#include <SDL2/SDL.h>
-#include <windows.h>
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+#include <iostream>
+#include <windows.h>
+#include <cstring>
+#include <fstream>
+#include <vector>
+#include <cmath>
+#include <ctime>
+#include <algorithm>
+#include <map>
+#include <list>
+
+using namespace std;
+class   Book
 {
-    // 你的代码，这里可以留空，因为SDL程序通常使用main作为入口点
-    return main(__argc, __argv); // 如果需要，可以调用main函数
+public:
+    int cost;       //价格
+    int sum_number;     //总数量
+    int io_number;      //借出数量
+    string bookname;        //书名
+    string author;      //作者
+    string publising;       //出版社
+    string publisingdate;       //出版日期
+    string kind;        //类别
+    string isbn;        //编号
+    Book* prior;//前一个结点
+    Book* p_next;//后一个结点
+};
+
+class BookList
+{
+public:
+    BookList()//默认构造函数
+    {
+        this->m_head = new Book;
+		this->m_head->prior = m_head;//头结点指向指针
+		this->m_head->p_next = NULL;
+    }
+
+    ~BookList(); //析构函数  需要把链表中所有结点占用的空间都释放掉
+
+    BookList(int &n);//有参构造
+
+    int getlistsize();//获取该链表的长度
+ 
+	void traverselist();//遍历链表
+ 
+	void insertnode(int  position, int  date);//在链表的指定位置插入结点
+ 
+	void deletenode(int position);//要删除的结点位置
+private:
+	Book* m_head;
+};
+BookList::BookList(int& n)//n代表创建链表是插入结点的个数
+{
+	//首先创建一个头结点，注意如果调用有参构造，就不会调用无参构造
+	this->m_head = new Book;
+	this->m_head->prior = m_head;
+	this->m_head->p_next = NULL;
+ 
+	Book* pnew;//用来存放新结点的值
+	Book* ptemp;//这个结点的作用见下面的注释
+	ptemp = this->m_head;//头结点
+	int i = n;
+	while (i--)
+	{
+		pnew = new Book;//开辟在堆区
+		pnew->prior = ptemp;
+		//默认的头结点为第0个结点（指针指向第一个结点，头结点无数据）
+		// cout << "请输入第" << n - i << "个结点的值" << endl;
+		// cin >> pnew->date;
+		pnew->p_next = m_head;//最后一个指向头结点
+		ptemp->p_next = pnew;
+		//ptemp这个结点的作用是一直作为链表最后一个结点
+		ptemp = pnew;
+	}
+	m_head->prior = ptemp;
+}
+ 
+//获取链表的长度(头结点不算)
+int BookList::getlistsize()
+{
+	int count = 0;
+	int flag = 0;
+	Book* p = this->m_head;
+	while ((p->p_next != m_head)||flag==0)
+	{
+		flag = 1;
+		count++;
+		p = p->p_next;
+	}
+	return count;
+}
+//遍历操作 后续添加操作
+void BookList::traverselist()
+{
+	Book* p = this->m_head;
+	int flag = 0;
+	int i = 0;
+	while ((p->p_next != m_head)||flag==0)
+	{
+		flag = 1;
+		//cout << "第" << ++i << "个结点的值为： " << p->p_next->date << endl;
+		p = p->p_next;
+	}
+}
+ 
+//在指定的位置后插入结点
+void BookList::insertnode(int  position, int date)
+{
+	//position代表在第几个结点后面插入新结点
+	int len = getlistsize();
+	//判断一下插入的位置是否大于现有链表的长度
+	if ((position > len) || position < 0)//这里position和len都可以为0
+	{
+		cout << "插入位置非法！" << endl;
+		exit(0);
+	}
+	else
+	{
+		Book* pnew = new Book;//要插入的结点
+		Book* ptemp = NULL;//
+		ptemp = this->m_head;
+		//pnew->date = date;
+		for (int i = 0; i < position; i++)
+		{
+			ptemp = ptemp->p_next;//找到要插入的结点位置
+		}
+		//下面两行是pnew的前后指向
+		pnew->prior = ptemp;
+		pnew->p_next = ptemp->p_next;
+ 
+		ptemp->p_next->prior = pnew;//
+ 
+		ptemp->p_next = pnew;
+	}
+}
+ 
+//删除指定的结点
+void BookList::deletenode(int position)
+{
+	int len = getlistsize();
+	if ((position > len) || position <= 0)//len都可以为0
+	{
+		cout << "删除位置非法！" << endl;
+		exit(0);
+	}
+	else
+	{
+		Book* p = this->m_head;
+		for (int i = 0; i < position - 1; i++)
+		{
+			p = p->p_next;//找到要删除结点的前一个结点
+		}
+		Book* p1 = p->p_next;//记录要删除的结点
+ 
+		p->p_next->p_next->prior = p;
+ 
+		p->p_next = p->p_next->p_next;
+ 
+		delete p1;
+	}
+}
+ 
+//析构函数，释放链表占用的空间
+BookList::~BookList()
+{
+	Book* ptemp1=m_head->p_next;//用来记录要删除的结点
+	Book* ptemp2=m_head->p_next;//用来遍历链表
+	while ((ptemp2 != m_head) )
+	{
+		ptemp1 = ptemp2;
+		ptemp2 = ptemp2->p_next;
+		delete ptemp1;
+	}
+	delete m_head;//释放头结点
 }
 
-int main(int argc, char *argv[])
+class IndexNode     //书名索引的词典节点
 {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+public:
+    string word;        //书名中的词语
+    IndexNode* prior;//前一个结点
+    IndexNode* p_next;//后一个结点
+};
+class Index
+{
+public:
+    
+};
+
+class User
+{
+public:
+    void addBorrowBook(string& bo)
     {
-        SDL_Log("Init Failed: %s", SDL_GetError());
-        return -1;
-    }//初始化视频
-    SDL_Window *win = SDL_CreateWindow("TestWindow", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,1200, 800, 0); //创建主窗口win
-    SDL_Event event;//定义事件
-    SDL_Surface *surf=SDL_GetWindowSurface(win);//创建图形surf
-    SDL_Surface *surf2=SDL_GetWindowSurface(win);//创建图形surf
-    SDL_Surface *bmp_surf=SDL_LoadBMP("山大校徽.bmp");//导入图片
-    SDL_Surface *bmp_surf2=SDL_LoadBMP("1.bmp");//导入图片
-    SDL_Surface *bmp_surf3=SDL_LoadBMP("2.bmp");//导入图片
-    SDL_Rect rect={0,400,300,0};//定义矩形
-    SDL_Rect rect3={0,0,1200,300};//定义矩形
-    SDL_Rect rect2={0,0,1200,900};//定义矩形
-    SDL_FillRect(surf2,&rect2,SDL_MapRGB(surf->format,255,255,255));//创建矩形
-    SDL_FillRect(surf,&rect,SDL_MapRGB(surf->format,255,255,255));//创建矩形
-    SDL_FillRect(surf,&rect3,SDL_MapRGB(surf->format,255,255,255));//创建矩形
-    SDL_BlitSurface(bmp_surf2,NULL,surf2,&rect2);//显示绘图
-    SDL_BlitSurface(bmp_surf3,NULL,surf,&rect3);//显示绘图
-    SDL_BlitSurface(bmp_surf,NULL,surf2,&rect);//显示绘图
-    SDL_UpdateWindowSurface(win);//更新图形
+        borrowbookname.push_back(bo);
+    }
+    User() :name(""), key(""), borrownum(0), sumbooknum(0){}
+
+    string name;                                //人名
+    string key;                                 //登陆密钥
+    short iden;                                 //0的话是管理员1的话是借书人
+    short borrownum;                            //借书数量
+    short sumbooknum;                           //书总数
+    vector <string> borrowbookname;             //所借书籍名称
+};
+
+void u_SaveData(list<User>&p);//存储数据
+list<User> u_LordData ();//读取存储的数据
+list<User> addUser();//输入新的用户信息
 
 
 
-    while(true)
+void u_SaveData(list<User>&p)//存储数据
+{
+    ofstream fp("userinfo.txt",ios::trunc);//fp为文件指针，写方式
+    
+
+    for(list<User>::const_iterator it =p.begin();it!=p.end();it++)//利用迭代器来遍历user的list容器的元素并且输出到文件中
     {
-        if(SDL_PollEvent(&event))
+        fp<<endl<<(*it).name<<" ";
+        fp<<(*it).key<<" ";
+        fp<<(*it).iden<<" ";
+        fp<<(*it).borrownum<<" ";
+        fp<<(*it).sumbooknum<<" ";
+        for(vector <string> ::const_iterator a =(*it).borrowbookname.begin();a!=(*it).borrowbookname.end();a++)
         {
-            if(event.type==SDL_QUIT)
-            {
-                break;//直到用户关闭再关闭
-            }
-            // 在这里添加登录按钮的点击事件处理代码，用于验证用户名和密码
+            fp<<*a<<" ";
         }
+    }
+
+    fp.close();
+}
+
+list<User> u_LordData ()//读取存储的数据
+{
+    ifstream fp("userinfo.txt");//读方式
+    list<User> p;
+    while(fp.peek() != EOF)//peek是看一眼下一个输入是什么但不更改数据
+    {
+        
+        User temp;
+        string bookname;
+
+        fp>>temp.name>>temp.key;
+        fp>>temp.iden>>temp.borrownum>>temp.sumbooknum;//先把除了借书名字的内容读过来
+
+        int num = temp.borrownum;
+
+        while(num--)
+        {
+            fp>>bookname;
+            temp.borrowbookname.push_back(bookname);//把书名放进user类里的vector
+        }
+        p.push_back(temp);//把这个赋值好的user放进list
 
     }
-    SDL_FreeSurface(bmp_surf);
-    SDL_FreeSurface(surf);
-    SDL_FreeSurface(surf2);
-    SDL_FreeSurface(bmp_surf2);
-    SDL_FreeSurface(bmp_surf3);
-    SDL_DestroyWindow(win);
-    SDL_Quit();
+    fp.close();
+    return p;
+}
+list<User> addUser()
+{
+    list<User> p;
+    User temp;
+    string bookname;
+   
+        cin>>temp.name;
+        cin>>temp.key;
+        cin>>temp.iden>>temp.borrownum>>temp.sumbooknum;//先把除了借书名字的内容读过来
+        int num = temp.borrownum;
+        while(num--)
+        {
+            cin>>bookname;
+            temp.borrowbookname.push_back(bookname);//把书名放进user类里的vector
+        }
+    p.push_back(temp);//把这个赋值好的user放进list
+    
+    return p;
+}
+int main()
+{
+    list<User> p =addUser();
+    u_SaveData(p);
     return 0;
 }
