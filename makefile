@@ -6,8 +6,7 @@ CXXFLAGS += -std=c++17
 # 如果不用特别新的C++特性，上面这行不用写
 LDLIBS += -lSDL2 -lSDL2_ttf
 
-LDLIBS += -mwindows # 用于去除运行时命令行窗口
-
+# LDLIBS += -mwindows 
 
 main.exe: main.o
 	$(CXX) $^ -o $(basename $@) $(LDFLAGS) $(LDLIBS)
