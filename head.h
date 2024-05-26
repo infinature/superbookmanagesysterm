@@ -202,16 +202,12 @@ public:
 
     string name;                                //人名
     string key;                                 //登陆密钥
-    short iden;                                 //
+    short iden;                                 //0的话是管理员1的话是借书人
     short borrownum;                            //借书数量
-    short sumbooknum;                           //
+    short sumbooknum;                           //书总数
     vector <string> borrowbookname;             //所借书籍名称
     User* next;
 };
-
-
-
-
 
 
 
