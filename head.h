@@ -191,23 +191,23 @@ public:
     
 };
 
-class User
-{
+// User 类定义，用于存储用户信息
+class User {
 public:
-    void addBorrowBook(string& bo)
-    {
-        borrowbookname.push_back(bo);
+    void addBorrowBook(string& bo) {
+        borrowbookname.push_back(bo); // 向所借书籍名称的向量中添加书籍
     }
-    User() :name(""), key(""), borrownum(0), sumbooknum(0), next(nullptr) {}
-
-    string name;                                //人名
-    string key;                                 //登陆密钥
-    short iden;                                 //0的话是管理员1的话是借书人
-    short borrownum;                            //借书数量
-    short sumbooknum;                           //书总数
-    vector <string> borrowbookname;             //所借书籍名称
-    User* next;
+    User() : name(""), key(""), type(0), borrownum(0), sumbooknum(0), next(nullptr) {}
+    
+    string name; // 用户名
+    string key; // 登录密钥
+    short type; // 用户类型，0为管理员，1为普通用户
+    short borrownum; // 已借书籍数量
+    short sumbooknum; // 书籍总数
+    vector<string> borrowbookname; // 所借书籍名称的列表
+    User* next; // 指向下一个User对象的指针，用于创建链表
 };
+
 
 
 
