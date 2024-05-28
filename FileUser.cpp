@@ -12,7 +12,7 @@ void u_SaveData(list<User>&p)
     {
          fp<<endl<<(*it).name<<" ";
         fp<<(*it).key<<" ";
-        fp<<(*it).iden<<" ";
+        fp<<(*it).type<<" ";
         fp<<(*it).borrownum<<" ";
         fp<<(*it).sumbooknum;
         int booknum = (*it).borrowbookname.size();
