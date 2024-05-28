@@ -24,6 +24,7 @@ SDL_Window* CreateNewWindow(const string& title) {
     SDL_Window* newWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     return newWindow;
 }
+
 // 创建新的控制台窗口函数
 void CreateConsoleWindow(const string& title) {
     FreeConsole(); // 释放控制台
@@ -501,45 +502,18 @@ else if (newWindowTitle == "SumStar") {
             }
         } 
         else if (newWindowTitle == "Myself") {
-            // 绘制三个矩形区域（灰色，黑色，蓝色）
-    // 依次为生成窗口区域的1/3并从上到下纵向排列
-    int rectHeight = windowHeight / 3; // 每个矩形的高度
-    string texts[] = {"user'name", "user'type", "user'key"};
+    // 定义矩形区域的颜色
     SDL_Color colors[] = {
         {128, 128, 128}, // 灰色
         {0, 0, 0},       // 黑色
         {0, 0, 255}      // 蓝色
     };
-
-    for (int i = 0; i < 3; ++i) {
-        SDL_Rect rect = {0, i * rectHeight, windowWidth, rectHeight};
-        SDL_SetRenderDrawColor(renderer, colors[i].r, colors[i].g, colors[i].b, 255);
-        SDL_RenderFillRect(renderer, &rect);
-
-        // 渲染文本到矩形中心
-        SDL_Surface* textSurface = TTF_RenderText_Solid(font, texts[i].c_str(), textColor);
-        if (textSurface) {
-            SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-            if (textTexture) {
-                int textX = windowWidth / 2; // 假设文本水平居中
-                int textY = rect.y + (rectHeight - textSurface->h) / 2; // 垂直居中
-                SDL_Rect textRect = {textX - textSurface->w / 2, textY, textSurface->w, textSurface->h};
-                SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
-            }
-            SDL_FreeSurface(textSurface);
-            SDL_DestroyTexture(textTexture);
-        }
-    }
-        } 
-else if (newWindowTitle == "UserADMIN" || newWindowTitle == "BookADMIN") {
-    // 定义矩形区域的颜色
-    SDL_Color colors[] = {
-        {255, 0, 0},   // 红色
-        {0, 255, 0},   // 绿色
-        {0, 0, 255}    // 蓝色
+    // 定义每个矩形区域的文本内容
+    string texts[] = {
+        loggedInUser.name,   // 用户名
+        (loggedInUser.type == 0 ? "Administrator" : loggedInUser.type == 1 ? "Teacher" : loggedInUser.type == 2 ? "Student" : "Unknown"), // 用户类型
+        loggedInUser.key     // 用户密钥
     };
-    // 定义按钮文本
-    const char* buttonTexts[] = {"add", "delete", "look"}; // 使用字符指针数组
 
     // 获取窗口尺寸
     int windowWidth, windowHeight;
@@ -550,24 +524,105 @@ else if (newWindowTitle == "UserADMIN" || newWindowTitle == "BookADMIN") {
 
     // 绘制三个矩形区域并填充文本内容
     for (int i = 0; i < 3; ++i) {
-        SDL_Rect rect = {0, rectHeight * i, windowWidth, rectHeight};
+        SDL_Rect rect = {0, i * rectHeight, windowWidth, rectHeight};
         SDL_SetRenderDrawColor(renderer, colors[i].r, colors[i].g, colors[i].b, 255);
         SDL_RenderFillRect(renderer, &rect);
 
         // 渲染文本到矩形中心
-        SDL_Surface* textSurface = TTF_RenderText_Solid(font, buttonTexts[i], textColor);
+        SDL_Surface* textSurface = TTF_RenderText_Solid(font, texts[i].c_str(), textColor);
         if (textSurface) {
             SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
             if (textTexture) {
                 // 计算文本渲染的中心位置
-                int textX = windowWidth / 2 - textSurface->w / 2; // 水平居中
+                int textX = windowWidth / 2; // 水平居中
                 int textY = rect.y + (rectHeight - textSurface->h) / 2; // 垂直居中
-                SDL_Rect textRect = {textX, textY, textSurface->w, textSurface->h};
+                SDL_Rect textRect = {textX - textSurface->w / 2, textY, textSurface->w, textSurface->h};
                 SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
             }
             SDL_FreeSurface(textSurface);
             SDL_DestroyTexture(textTexture);
         }
+    }
+}
+else if (newWindowTitle == "UserADMIN" || newWindowTitle == "BookADMIN") {
+    // 定义矩形区域的颜色
+    SDL_Color colors[] = {
+        {255, 0, 0},   // 红色
+        {0, 255, 0},   // 绿色
+        {0, 0, 255}    // 蓝色
+    };
+    // 定义按钮文本
+    const char* buttonTexts[] = {"add", "delete", "look"};
+    // 与按钮文本对应的函数名称字符串
+    const char* consoleCommands[] = {
+        "add_function",  // 对应的函数名称字符串
+        "delete_function", // 对应的函数名称字符串
+        "look_function"   // 对应的函数名称字符串
+    };
+
+    // 获取窗口尺寸
+    int windowWidth, windowHeight;
+    SDL_GetWindowSize(newWindow, &windowWidth, &windowHeight);
+
+    // 计算每个矩形的高度，这里假设窗口高度可以被3整除
+    int rectHeight = windowHeight / 3;
+
+    // 渲染循环
+    bool running = true;
+    while (running) {
+        SDL_Event event;
+        // 处理所有事件
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = false; // 用户请求关闭窗口
+            } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                // 检查是否点击了按钮
+                for (int i = 0; i < 3; ++i) {
+                    SDL_Rect rect = {0, rectHeight * i, windowWidth, rectHeight};
+                    if (event.button.x >= rect.x && event.button.x < rect.x + rect.w &&
+                        event.button.y >= rect.y && event.button.y < rect.y + rect.h) {
+                        // 根据点击的按钮创建新的控制台窗口
+                        string consoleTitle = "Console for " + string(buttonTexts[i]);
+                        CreateConsoleWindow(consoleTitle);
+
+                        // 根据点击的按钮执行对应的函数
+                        if (i == 0) {
+                            // 调用 add_function
+                            // 假设 add_function 已经定义并且可以这样调用
+                        } else if (i == 1) {
+                            // TODO: 调用 delete_function
+                            // delete_function(); // 取消注释并在 Useradd.h 中定义此函数后启用
+                        } else if (i == 2) {
+                            // TODO: 调用 look_function
+                            // look_function(); // 取消注释并在 Useradd.h 中定义此函数后启用
+                        }
+                        break; // 跳出循环
+                    }
+                }
+            }
+        }
+
+        // 渲染逻辑
+        SDL_RenderClear(renderer);
+        for (int i = 0; i < 3; ++i) {
+            SDL_SetRenderDrawColor(renderer, colors[i].r, colors[i].g, colors[i].b, 255);
+            SDL_RenderFillRect(renderer, &(SDL_Rect){0, rectHeight * i, windowWidth, rectHeight});
+            
+            // 渲染文本到矩形中心
+            SDL_Surface* textSurface = TTF_RenderText_Solid(font, buttonTexts[i], textColor);
+            if (textSurface) {
+                SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+                if (textTexture) {
+                    // 计算文本渲染的中心位置
+                    int textX = windowWidth / 2 - textSurface->w / 2; // 水平居中
+                    int textY = rect.y + (rectHeight - textSurface->h) / 2; // 垂直居中
+                    SDL_RenderCopy(renderer, textTexture, NULL, &(SDL_Rect){textX, textY, textSurface->w, textSurface->h});
+                }
+                SDL_FreeSurface(textSurface);
+                SDL_DestroyTexture(textTexture);
+            }
+        }
+        SDL_RenderPresent(renderer);
     }
 }
 else if (newWindowTitle == "BorrowBook" || newWindowTitle == "ReturnBook") {
