@@ -39,6 +39,23 @@ public:
     short borrownum;                            //借书数量                    
     list<Borrowed_Book> borrowbook;             //所借书籍名称
 };
+
+
+class   Book
+{
+public:
+    int price;       //价格
+    int id;    //在书库里的序号
+    int sum_number;     //总数量
+    int io_number;      //借出数量
+    int cur_number;         //当前数量
+    string bookname;        //书名
+    string author;      //作者
+    string publising;       //出版社
+    string publisingdate;       //出版日期
+    string kind;        //类别0为书籍1为期刊2为报刊
+};
+void userborrowbook(User& p, Book& b,string borrowdata);
 void u_SaveData(list<User>& p)//存储数据
 {
     ofstream fp("userinfo.txt", ios::trunc);//fp为文件指针，写方式
@@ -110,21 +127,45 @@ void addUser()
     
     u_SaveData(p);
 }
-
-class   Book
+User logIn()
 {
-public:
-    int price;       //价格
-    int id;    //在书库里的序号
-    int sum_number;     //总数量
-    int io_number;      //借出数量
-    int cur_number;         //当前数量
-    string bookname;        //书名
-    string author;      //作者
-    string publising;       //出版社
-    string publisingdate;       //出版日期
-    string kind;        //类别0为书籍1为期刊2为报刊
-};
+    string n,k;
+    
+    list<User> p =u_LordData();
+    bool flag=false;;
+    while(1)
+    {
+        cin>>n>>k;
+        for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)
+        {
+
+            if((*it).name==n&&(*it).key==k)
+            {
+                return (*it);
+            }
+       
+        }
+    }
+}
+void lookUser()
+{
+    list<User> p=u_LordData();
+    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)
+    {
+        cout<< (*it).name << " ";
+        cout<< (*it).key << " ";
+        cout<< (*it).type << " ";
+        cout<< (*it).id << " ";
+        cout<< (*it).borrownum << " ";
+        for (list <Borrowed_Book> ::const_iterator a = (*it).borrowbook.begin(); a != (*it).borrowbook.end(); a++)
+        {
+            cout<< (*a).borrowbookname << " "<<(*a).id<<" "<<(*a).data;
+        }
+        cout<< endl;
+    }
+
+}
+
 
 
 

@@ -12,8 +12,7 @@
 using namespace std; // 使用标准命名空间
 
 
-const string correctName = "admin"; // 正确的用户名
-const string correctKey = "12345"; // 正确的登录密钥
+
 
 // 创建新窗口的函数
 SDL_Window* CreateNewWindow(const string& title) {
@@ -24,7 +23,13 @@ SDL_Window* CreateNewWindow(const string& title) {
     SDL_Window* newWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     return newWindow;
 }
-
+void refreshMainWindow(SDL_Renderer* renderer, SDL_Window* window) {
+    // 清空渲染器
+    SDL_RenderClear(renderer);
+    // ... 重新绘制界面元素的逻辑
+    // 展示渲染结果
+    SDL_RenderPresent(renderer);
+}
 // 创建新的控制台窗口函数
 void CreateConsoleWindow(const string& title) {
     FreeConsole(); // 释放控制台
@@ -196,23 +201,7 @@ int main(int argc, char *argv[]) {
     CreateConsoleWindow("Login"); // 创建标题为"Login"的控制台窗口
 
     // 输入用户名和密码
-    string inputName, inputKey; // 定义用户名和密码变量
-    bool validInput = false; // 定义有效输入的标志变量
-    while (!validInput) { // 如果输入无效，则循环
-        cout << "Enter username: "; // 提示输入用户名
-        getline(cin, inputName); // 读取一行输入作为用户名
-        cout << "Enter key: "; // 提示输入密钥
-        getline(cin, inputKey); // 读取一行输入作为密钥
-
-        if (inputName == correctName && inputKey == correctKey) 
-        { // 如果用户名和密钥正确
-            validInput = true; // 设置有效输入标志为真
-            // 登录成功后的代码可以在这里添加
-                // 登录成功后，可以创建用户窗口
-            User loggedInUser; // 创建一个User对象
-            loggedInUser.name = inputName; // 设置User对象的用户名
-            loggedInUser.key = inputKey; // 设置User对象的密钥
-            loggedInUser.type = 0; // 设置User对象的用户类型为管理员
+        User loggedInUser= logIn();
             SDL_Window* userWin = CreateUserWindow(loggedInUser); // 根据User对象创建窗口
 
 
@@ -605,12 +594,15 @@ for (int i = 0; i < 3; ++i) {
         // 根据点击的按钮执行对应的函数
         if (newWindowTitle == "UserADMIN") {
             if (buttonTexts[i] == "add") {
-                // addUser(); // 针对UserADMIN的添加逻辑
+                addUser();
             } else if (buttonTexts[i] == "delete") {
                 // deleteUser(); // 针对UserADMIN的删除逻辑
             } else if (buttonTexts[i] == "look") {
-                // lookUser(); // 针对UserADMIN的查看逻辑
+                lookUser();
             }
+                                // 执行完操作后，刷新主窗口界面
+                    refreshMainWindow(userRenderer, userWin);
+                    break; // 跳出循环
         } else if (newWindowTitle == "BookADMIN") {
             if (buttonTexts[i] == "add") {
                 // addBook(); // 针对BookADMIN的添加逻辑
@@ -619,6 +611,9 @@ for (int i = 0; i < 3; ++i) {
             } else if (buttonTexts[i] == "look") {
                 // lookBook(); // 针对BookADMIN的查看逻辑
             }
+                                // 执行完操作后，刷新主窗口界面
+                    refreshMainWindow(userRenderer, userWin);
+                    break; // 跳出循环
         }
         break; // 跳出循环
     }
@@ -652,10 +647,10 @@ for (int i = 0; i < 3; ++i) {
 
     }
 
-}
 
 
-}
+
+
     // 清理资源
     SDL_FreeSurface(bmp_surf); // 释放bmp_surf位图资源
     SDL_FreeSurface(bmp_surf2); // 释放bmp_surf2位图资源
