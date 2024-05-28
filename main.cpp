@@ -544,6 +544,7 @@ else if (newWindowTitle == "SumStar") {
         }
     }
 }
+
 else if (newWindowTitle == "UserADMIN" || newWindowTitle == "BookADMIN") {
     // 定义矩形区域的颜色
     SDL_Color colors[] = {
@@ -553,12 +554,6 @@ else if (newWindowTitle == "UserADMIN" || newWindowTitle == "BookADMIN") {
     };
     // 定义按钮文本
     const char* buttonTexts[] = {"add", "delete", "look"};
-    // 与按钮文本对应的函数名称字符串
-    const char* consoleCommands[] = {
-        "add_function",  // 对应的函数名称字符串
-        "delete_function", // 对应的函数名称字符串
-        "look_function"   // 对应的函数名称字符串
-    };
 
     // 获取窗口尺寸
     int windowWidth, windowHeight;
@@ -566,6 +561,28 @@ else if (newWindowTitle == "UserADMIN" || newWindowTitle == "BookADMIN") {
 
     // 计算每个矩形的高度，这里假设窗口高度可以被3整除
     int rectHeight = windowHeight / 3;
+
+    // 创建和显示三个矩形
+    for (int i = 0; i < 3; ++i) {
+        SDL_Rect rect = {0, rectHeight * i, windowWidth, rectHeight};
+        SDL_SetRenderDrawColor(renderer, colors[i].r, colors[i].g, colors[i].b, 255);
+        SDL_RenderFillRect(renderer, &rect);
+        
+        // 渲染文本到矩形中心
+        SDL_Surface* textSurface = TTF_RenderText_Solid(font, buttonTexts[i], textColor);
+        if (textSurface) {
+            SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+            if (textTexture) {
+                // 计算文本渲染的中心位置
+                int textX = windowWidth / 2 - textSurface->w / 2; // 水平居中
+                int textY = rect.y + (rectHeight - textSurface->h) / 2; // 垂直居中
+SDL_Rect textRect = {textX, textY, textSurface->w, textSurface->h};
+SDL_RenderCopy(renderer, textTexture, NULL, &textRect);            }
+            SDL_FreeSurface(textSurface);
+            SDL_DestroyTexture(textTexture);
+        }
+    }
+    SDL_RenderPresent(renderer);
 
     // 渲染循环
     bool running = true;
@@ -577,74 +594,40 @@ else if (newWindowTitle == "UserADMIN" || newWindowTitle == "BookADMIN") {
                 running = false; // 用户请求关闭窗口
             } else if (event.type == SDL_MOUSEBUTTONDOWN) {
                 // 检查是否点击了按钮
-                for (int i = 0; i < 3; ++i) {
-                    SDL_Rect rect = {0, rectHeight * i, windowWidth, rectHeight};
-                    if (event.button.x >= rect.x && event.button.x < rect.x + rect.w &&
-                        event.button.y >= rect.y && event.button.y < rect.y + rect.h) {
-                        // 根据点击的按钮创建新的控制台窗口
-                        string consoleTitle = "Console for " + string(buttonTexts[i]);
-                        CreateConsoleWindow(consoleTitle);
+for (int i = 0; i < 3; ++i) {
+    SDL_Rect rect = {0, rectHeight * i, windowWidth, rectHeight};
+    if (event.button.x >= rect.x && event.button.x < rect.x + rect.w &&
+        event.button.y >= rect.y && event.button.y < rect.y + rect.h) {
+        // 根据点击的按钮创建新的控制台窗口
+        string consoleTitle = "Console for " + string(newWindowTitle) + " " + buttonTexts[i];
+        CreateConsoleWindow(consoleTitle);
 
-                        // 根据点击的按钮执行对应的函数
-                        if (i == 0) {
-                            // 调用 add_function
-                            // 假设 add_function 已经定义并且可以这样调用
-                        } else if (i == 1) {
-                            // TODO: 调用 delete_function
-                            // delete_function(); // 取消注释并在 Useradd.h 中定义此函数后启用
-                        } else if (i == 2) {
-                            // TODO: 调用 look_function
-                            // look_function(); // 取消注释并在 Useradd.h 中定义此函数后启用
-                        }
-                        break; // 跳出循环
-                    }
-                }
+        // 根据点击的按钮执行对应的函数
+        if (newWindowTitle == "UserADMIN") {
+            if (buttonTexts[i] == "add") {
+                // addUser(); // 针对UserADMIN的添加逻辑
+            } else if (buttonTexts[i] == "delete") {
+                // deleteUser(); // 针对UserADMIN的删除逻辑
+            } else if (buttonTexts[i] == "look") {
+                // lookUser(); // 针对UserADMIN的查看逻辑
+            }
+        } else if (newWindowTitle == "BookADMIN") {
+            if (buttonTexts[i] == "add") {
+                // addBook(); // 针对BookADMIN的添加逻辑
+            } else if (buttonTexts[i] == "delete") {
+                // deleteBook(); // 针对BookADMIN的删除逻辑
+            } else if (buttonTexts[i] == "look") {
+                // lookBook(); // 针对BookADMIN的查看逻辑
             }
         }
-
-        // 渲染逻辑
-        SDL_RenderClear(renderer);
-        for (int i = 0; i < 3; ++i) {
-            SDL_SetRenderDrawColor(renderer, colors[i].r, colors[i].g, colors[i].b, 255);
-            SDL_RenderFillRect(renderer, &(SDL_Rect){0, rectHeight * i, windowWidth, rectHeight});
-            
-            // 渲染文本到矩形中心
-            SDL_Surface* textSurface = TTF_RenderText_Solid(font, buttonTexts[i], textColor);
-            if (textSurface) {
-                SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-                if (textTexture) {
-                    // 计算文本渲染的中心位置
-                    int textX = windowWidth / 2 - textSurface->w / 2; // 水平居中
-                    int textY = rect.y + (rectHeight - textSurface->h) / 2; // 垂直居中
-                    SDL_RenderCopy(renderer, textTexture, NULL, &(SDL_Rect){textX, textY, textSurface->w, textSurface->h});
-                }
-                SDL_FreeSurface(textSurface);
-                SDL_DestroyTexture(textTexture);
-            }
-        }
-        SDL_RenderPresent(renderer);
+        break; // 跳出循环
     }
 }
-else if (newWindowTitle == "BorrowBook" || newWindowTitle == "ReturnBook") {
-            // 绘制一个矩形区域并填充文本内容
-            string text = "book'name";
-            SDL_Color color = {128, 128, 128}; // 灰色
-            SDL_Rect rect = {0, 0, windowWidth, windowHeight};
-            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
-            SDL_RenderFillRect(renderer, &rect);
-            // 渲染文本
-            SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
-            if (textSurface) {
-                SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-                if (textTexture) {
-                    SDL_QueryTexture(textTexture, NULL, NULL, &rect.w, &rect.h);
-                    SDL_Rect textRect = {(rect.w - textSurface->w) / 2, (rect.h - textSurface->h) / 2, textSurface->w, textSurface->h};
-                    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
                 }
-                SDL_FreeSurface(textSurface);
-                SDL_DestroyTexture(textTexture);
             }
-        }   
+        }
+    }
+}
         
             // 展示渲染结果
         SDL_RenderPresent(renderer);
@@ -689,6 +672,7 @@ else if (newWindowTitle == "BorrowBook" || newWindowTitle == "ReturnBook") {
     SDL_Quit(); // 退出SDL库
     return 0; // 正常退出程序，返回0
 }
-}
+
+
 
 
