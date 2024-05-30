@@ -143,6 +143,43 @@ list<Book> b_LordData()//读取存储的数据
     fp.close();
     return p;
 }
+list<Book> b_LordData()//读取存储的数据
+{
+    ifstream fp("bookinfo.txt");//读方式
+    list<Book> p;
+    while (fp.peek() != EOF)//peek是看一眼下一个输入是什么但不更改数据
+    {
+
+        Book temp;
+        string bookname;
+
+        fp >> temp.id >> temp.sum_number;
+        fp >> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
+        fp>>temp.publising >> temp.publisingdate;//先把除了借书名字的内容读过来
+
+        
+        p.push_back(temp);//把这个赋值好的user放进list
+
+    }
+    fp.close();
+    return p;
+}
+void b_SaveData_del(list<Book>& p)//存储数据
+{
+    ofstream fp("bookinfo.txt", ios::trunc);//fp为文件指针，写方式
+
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历user的list容器的元素并且输出到文件中
+    {
+        fp << (*it).id << " ";
+        fp << (*it).sum_number << " ";
+        fp << (*it).io_number << " ";
+        fp << (*it).cur_number << " ";
+        fp << (*it).kind << " "<<(*it).bookname<<" "<<(*it).author<<" "<<(*it).publising<<(*it).publisingdate;
+        fp << endl;
+    }
+
+    fp.close();
+}
 void addUser()
 {
     list<User> p;
@@ -157,6 +194,35 @@ void addUser()
     p.push_back(temp);//把这个赋值好的user放进list
     
     u_SaveData(p);
+}
+void addBook()
+{
+    list<Book> p;
+    Book temp;
+    
+    cin>> temp.id >> temp.sum_number;
+    cin >> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
+    cin>>temp.publising >> temp.publisingdate;
+    p.push_back(temp);//把这个赋值好的user放进list
+    
+    b_SaveData(p);
+}
+void deleteBook()
+{
+    string n;
+    cin>>n;
+    
+    list<Book> p =b_LordData();
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)
+        {
+            if((*it).bookname ==n)
+            {
+                p.erase(it);
+                break;
+            }
+        }
+    b_SaveData_del(p);
+
 }
 User logIn()
 {
