@@ -69,7 +69,7 @@ void u_SaveData(list<User>& p)//存储数据
         fp << (*it).borrownum << " ";
         for (list <Borrowed_Book> ::const_iterator a = (*it).borrowbook.begin(); a != (*it).borrowbook.end(); a++)
         {
-            fp << (*a).borrowbookname << " "<<(*a).id<<" "<<(*a).data;
+            fp << (*a).borrowbookname << " "<<(*a).id<<" "<<(*a).data<<" ";
         }
         fp << endl;
     }
@@ -89,7 +89,7 @@ void u_SaveData_del(list<User>& p)//存储数据
         fp << (*it).borrownum << " ";
         for (list <Borrowed_Book> ::const_iterator a = (*it).borrowbook.begin(); a != (*it).borrowbook.end(); a++)
         {
-            fp << (*a).borrowbookname << " "<<(*a).id<<" "<<(*a).data;
+            fp << (*a).borrowbookname << " "<<(*a).id<<" "<<(*a).data<<" ";
         }
         fp << endl;
     }
@@ -100,18 +100,16 @@ void u_SaveData_del(list<User>& p)//存储数据
 list<User> u_LordData()//读取存储的数据
 {
     ifstream fp("userinfo.txt");//读方式
-    list<User> p;
-    while (fp.peek() != EOF)//peek是看一眼下一个输入是什么但不更改数据
+    list<User> p;User temp;
+        
+    while(fp >> temp.name >> temp.key>> temp.type >> temp.id>>temp.borrownum)
     {
+       Borrowed_Book t;
 
-        User temp;
-        Borrowed_Book t;
-
-        fp >> temp.name >> temp.key;
-        fp >> temp.type >> temp.id>>temp.borrownum;//先把除了借书名字的内容读过来
+        ;//先把除了借书名字的内容读过来
 
         int num = temp.borrownum;
-
+        temp.borrowbook.clear();
         while (num--)
         {
             fp >> t.borrowbookname >>t.id >> t.data;//把书名放进user类里的list
@@ -119,12 +117,32 @@ list<User> u_LordData()//读取存储的数据
         }
         
         p.push_back(temp);//把这个赋值好的user放进list
+        
+    }
+    fp.close();
+    return p;
+}
+list<Book> b_LordData()//读取存储的数据
+{
+    ifstream fp("bookinfo.txt");//读方式
+    list<Book> p;
+    while (fp.peek() != EOF)//peek是看一眼下一个输入是什么但不更改数据
+    {
+
+        Book temp;
+        string bookname;
+
+        fp >> temp.id >> temp.sum_number;
+        fp >> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
+        fp>>temp.publising >> temp.publisingdate;//先把除了借书名字的内容读过来
+
+        
+        p.push_back(temp);//把这个赋值好的user放进list
 
     }
     fp.close();
     return p;
 }
-
 void addUser()
 {
     list<User> p;
@@ -172,7 +190,7 @@ void lookUser()
         cout<< (*it).borrownum << " ";
         for (list <Borrowed_Book> ::const_iterator a = (*it).borrowbook.begin(); a != (*it).borrowbook.end(); a++)
         {
-            cout<< (*a).borrowbookname << " "<<(*a).id<<" "<<(*a).data;
+            cout<< (*a).borrowbookname << " "<<(*a).id<<" "<<(*a).data<<" ";
         }
         cout<< endl;
     }
@@ -189,6 +207,7 @@ void deleteUser()
             if((*it).name ==n)
             {
                 p.erase(it);
+                break;
             }
         }
     u_SaveData_del(p);
@@ -196,27 +215,7 @@ void deleteUser()
 }
 
 
-list<Book> b_LordData()//读取存储的数据
-{
-    ifstream fp("bookinfo.txt");//读方式
-    list<Book> p;
-    while (fp.peek() != EOF)//peek是看一眼下一个输入是什么但不更改数据
-    {
 
-        Book temp;
-        string bookname;
-
-        fp >> temp.id >> temp.sum_number;
-        fp >> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
-        fp>>temp.publising >> temp.publisingdate;//先把除了借书名字的内容读过来
-
-        
-        p.push_back(temp);//把这个赋值好的user放进list
-
-    }
-    fp.close();
-    return p;
-}
 void b_SaveData(list<Book>& p)//存储数据
 {
     ofstream fp("userinfo.txt", ios::trunc);//fp为文件指针，写方式
