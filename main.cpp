@@ -596,7 +596,7 @@ for (int i = 0; i < 3; ++i) {
             if (buttonTexts[i] == "add") {
                 addUser();
             } else if (buttonTexts[i] == "delete") {
-                // deleteUser(); // 针对UserADMIN的删除逻辑
+                deleteUser();
             } else if (buttonTexts[i] == "look") {
                 lookUser();
             }
@@ -605,7 +605,7 @@ for (int i = 0; i < 3; ++i) {
                     break; // 跳出循环
         } else if (newWindowTitle == "BookADMIN") {
             if (buttonTexts[i] == "add") {
-                // addBook(); // 针对BookADMIN的添加逻辑
+                addBook();
             } else if (buttonTexts[i] == "delete") {
                 // deleteBook(); // 针对BookADMIN的删除逻辑
             } else if (buttonTexts[i] == "look") {
