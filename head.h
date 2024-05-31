@@ -145,19 +145,23 @@ list<Book> b_LordData()//读取存储的数据
 }
 void addUser()
 {
-    list<User> p;
-    User temp;
-    string bookname;
-    Borrowed_Book t;
-   
-        cin>>temp.name;
-        cin>>temp.key;
-        cin>>temp.type>>temp.id;
-        temp.borrownum=0;//先把除了借书名字的内容读过来
-    p.push_back(temp);//把这个赋值好的user放进list
     
-    u_SaveData(p);
+    
+        list<User> p;
+        User temp;
+        string bookname;
+        Borrowed_Book t;
+        cout<<"name:\n";cin>>temp.name;
+        cout<<"key:\n";cin>>temp.key;
+        cout<<"uesr type(0;1;2):\n";cin>>temp.type;
+        cout<<"xuehao:\n";cin>>temp.id;
+        temp.borrownum=0;//先把除了借书名字的内容读过来
+        p.push_back(temp);//把这个赋值好的user放进list
+
+        u_SaveData(p);
+    
 }
+
 User logIn()
 {
     string n,k;
