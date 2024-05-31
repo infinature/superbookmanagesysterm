@@ -170,13 +170,20 @@ User logIn()
     
     while(1)
     {
-        cin>>n>>k;
+        cout<<"name:\n";
+        cin>>n;
+        cout<<"key:\n";
+        cin>>k;
         for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)
         {
 
             if((*it).name==n&&(*it).key==k)
             {
                 return (*it);
+            }
+            else
+            {
+                cout<<"try for another once!\n";
             }
        
         }

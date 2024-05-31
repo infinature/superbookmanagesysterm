@@ -23,13 +23,6 @@ SDL_Window* CreateNewWindow(const string& title) {
     SDL_Window* newWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     return newWindow;
 }
-void refreshMainWindow(SDL_Renderer* renderer, SDL_Window* window) {
-    // 清空渲染器
-    SDL_RenderClear(renderer);
-    // ... 重新绘制界面元素的逻辑
-    // 展示渲染结果
-    SDL_RenderPresent(renderer);
-}
 // 创建新的控制台窗口函数
 void CreateConsoleWindow(const string& title) {
     FreeConsole(); // 释放控制台
@@ -592,29 +585,27 @@ for (int i = 0; i < 3; ++i) {
         CreateConsoleWindow(consoleTitle);
 
         // 根据点击的按钮执行对应的函数
-        if (newWindowTitle == "UserADMIN") {
-            if (buttonTexts[i] == "add") {
-                addUser();
-            } else if (buttonTexts[i] == "delete") {
-                deleteUser();
-            } else if (buttonTexts[i] == "look") {
-                lookUser();
-            }
-                                // 执行完操作后，刷新主窗口界面
-                    refreshMainWindow(userRenderer, userWin);
-                    break; // 跳出循环
-        } else if (newWindowTitle == "BookADMIN") {
-            if (buttonTexts[i] == "add") {
-                addBook();
-            } else if (buttonTexts[i] == "delete") {
-                // deleteBook(); // 针对BookADMIN的删除逻辑
-            } else if (buttonTexts[i] == "look") {
-                // lookBook(); // 针对BookADMIN的查看逻辑
-            }
-                                // 执行完操作后，刷新主窗口界面
-                    refreshMainWindow(userRenderer, userWin);
-                    break; // 跳出循环
-        }
+if (newWindowTitle == "UserADMIN") {
+    if (buttonTexts[i] == "add") {
+        addUser();
+    } else if (buttonTexts[i] == "delete") {
+        deleteUser();
+    } else if (buttonTexts[i] == "look") {
+        lookUser();
+    }
+    running = false;  // Execute after operation is finished
+    break;  // Jump out of the loop
+} else if (newWindowTitle == "BookADMIN") {
+    if (buttonTexts[i] == "add") {
+        addBook();
+    } else if (buttonTexts[i] == "delete") {
+        // deleteBook();  // For BookADMIN's delete logic
+    } else if (buttonTexts[i] == "look") {
+        // lookBook();  // For BookADMIN's view logic
+    }
+    running = false;  // Execute after operation is finished
+    break;  // Jump out of the loop
+}
         break; // 跳出循环
     }
 }
@@ -667,7 +658,3 @@ for (int i = 0; i < 3; ++i) {
     SDL_Quit(); // 退出SDL库
     return 0; // 正常退出程序，返回0
 }
-
-
-
-
