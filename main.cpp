@@ -462,6 +462,7 @@ if (newWindowTitle == "HaveBorrowed") {
             SDL_DestroyTexture(textTexture);
         }
     }
+    SDL_RenderPresent(renderer);
 } 
 else if (newWindowTitle == "SumStar") {
             // 绘制一个矩形区域并填充文本内容
@@ -482,6 +483,7 @@ else if (newWindowTitle == "SumStar") {
                 SDL_FreeSurface(textSurface);
                 SDL_DestroyTexture(textTexture);
             }
+            SDL_RenderPresent(renderer);
         } 
         else if (newWindowTitle == "Myself") {
     // 定义矩形区域的颜色
@@ -525,6 +527,7 @@ else if (newWindowTitle == "SumStar") {
             SDL_DestroyTexture(textTexture);
         }
     }
+    SDL_RenderPresent(renderer);
 }
 
 else if (newWindowTitle == "UserADMIN" || newWindowTitle == "BookADMIN") {
