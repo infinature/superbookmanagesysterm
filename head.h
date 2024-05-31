@@ -204,7 +204,7 @@ void addBook()
     cin >> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
     cin>>temp.publising >> temp.publisingdate;
     p.push_back(temp);//把这个赋值好的user放进list
-    
+    //将书添加到词典
     b_SaveData(p);
 }
 void deleteBook()
@@ -308,18 +308,64 @@ void userborrowbook(User& p, Book& b,string borrowdata)
     p.borrowbook.push_back(bb);    
 
 }
-void addBook()
-{
-    list<Book> b;
-    Book temp;
-    string bookname;
-    cin>> temp.id >> temp.sum_number;
-    cin>> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
-    cin>>temp.publising >> temp.publisingdate;//先把除了借书名字的内容读过来
 
+class IndexNode     //书名索引的词典节点
+{
+public:
+    char word;        //书名中的词语   
+    vector <int> bookid;             //所借书籍序号
+
+    IndexNode(){}
+    IndexNode(char s):word(s){}
+    bool operator==(const IndexNode& other) const
+    {
+        return word == other.word;
+    }
+    void addBooks(int i)
+    {
+        bookid.push_back(i);
+    }
+};
+
+list<IndexNode> BuildIndex(list<Book>& p)//建立书名词典
+{
+    list<IndexNode> L;
+    //IndexNode temp;
+    for(list<Book>::const_iterator it = p.begin();it !=p.end();it++)
+    {
+        for (auto ch : (*it).bookname)         //ch依次取的是str里面的字符,直到取完为止
+    {
+        IndexNode searchword(ch);//需要删除么
+        list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
+        if(temp!=L.end())
+        {  
+            (*temp).addBooks((*it).id);
+        }
+        else if(temp==L.end())
+        {
+            (*temp).word=ch;
+            (*temp).addBooks((*it).id);
+            L.push_back(*temp);
+        }
         
-    b.push_back(temp);//把这个赋值好的user放进list
-    
-    b_SaveData(b);
+    }
+    }
+    return L;
+}
+vector<int> searchBook(string name,list<IndexNode> L)
+{
+    vector<int> idList;
+    for (auto ch : name)         //ch依次取的是str里面的字符,直到取完为止
+    {
+        IndexNode searchword(ch);//需要删除么
+        list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
+        if(temp!=L.end())
+        {  
+            copy(((*temp).bookid).begin(),((*temp).bookid).end(),idList.end());
+        } 
+    }
+    sort(idList.begin(),idList.end());//默认从小到大
+    idList.erase(unique(idList.begin(),idList.end()),idList.end());//去重
+    return idList;
 }
 #endif 
