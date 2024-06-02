@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <cstring>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <cmath>
 #include <ctime>
@@ -69,7 +70,7 @@ class IndexNode     //书名索引的词典节点
 public:
     char word;        //书名中的词语   
     vector <int> bookid;             //所借书籍序号
-
+    
     IndexNode(){}
     IndexNode(char s):word(s){}
     bool operator==(const IndexNode& other) const
@@ -415,5 +416,46 @@ vector<int> searchBook(string name,list<IndexNode>& L)
     idList.erase(unique(idList.begin(),idList.end()),idList.end());//去重
     return idList;
 }
+void i_SaveData(list<IndexNode>& p)//存储数据
+{
+    ofstream fp("index.txt", ios::trunc);//fp为文件指针，写方式
 
+
+    for (list<IndexNode>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+    {
+        fp << (*it).word << " ";
+        for (vector<int>::const_iterator it2 = (*it).bookid.begin(); it2 != (*it).bookid.end(); it2++)
+        {
+            fp<<(*it2)<<" ";
+        }
+        fp<<endl;
+    }
+    
+
+    fp.close();
+}
+list<IndexNode> i_LordData()//读取存储的数据
+{
+    ifstream fp("index.txt");//读方式
+    list<IndexNode> p;
+    IndexNode temp;
+    string line;  
+    vector<int> numbers;  
+     while (getline(fp, line))
+    {  
+        istringstream iss(line);  
+        int num;  
+        IndexNode temp;
+        iss>> temp.word;
+        // 尝试从行中读取整数，直到无法读取为止  
+        while (iss >> num) 
+        {  
+            temp.bookid.push_back(num);  
+  
+            // 尝试读取下一个字符（可能是非整数字符） 
+        }  
+    }
+    fp.close();
+    return p;
+}
 #endif 
