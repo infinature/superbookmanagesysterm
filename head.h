@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <cstring>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include <cmath>
 #include <ctime>
@@ -13,6 +14,7 @@
 #include <list>
 
 using namespace std;
+
 class Borrowed_Book
 {
 public:
@@ -54,7 +56,33 @@ public:
     string publising;       //出版社
     string publisingdate;       //出版日期
     string kind;        //类别0为书籍1为期刊2为报刊
+
+    Book(){}
+    Book(int i):id(i){}
+    bool operator==(const Book& other) const
+    {
+        return id == other.id;
+    }
 };
+
+class IndexNode     //书名索引的词典节点
+{
+public:
+    char word;        //书名中的词语   
+    vector <int> bookid;             //所借书籍序号
+    
+    IndexNode(){}
+    IndexNode(char s):word(s){}
+    bool operator==(const IndexNode& other) const
+    {
+        return word == other.word;
+    }
+    void addBooks(int i)
+    {
+        bookid.push_back(i);
+    }
+};
+
 void userborrowbook(User& p, Book& b,string borrowdata);
 void u_SaveData(list<User>& p)//存储数据
 {
@@ -122,6 +150,7 @@ list<User> u_LordData()//读取存储的数据
     fp.close();
     return p;
 }
+
 list<Book> b_LordData()//读取存储的数据
 {
     ifstream fp("bookinfo.txt");//读方式
@@ -143,25 +172,67 @@ list<Book> b_LordData()//读取存储的数据
     fp.close();
     return p;
 }
+void b_SaveData_del(list<Book>& p)//存储数据
+{
+    ofstream fp("bookinfo.txt", ios::trunc);//fp为文件指针，写方式
+
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历user的list容器的元素并且输出到文件中
+    {
+        fp << (*it).id << " ";
+        fp << (*it).sum_number << " ";
+        fp << (*it).io_number << " ";
+        fp << (*it).cur_number << " ";
+        fp << (*it).kind << " "<<(*it).bookname<<" "<<(*it).author<<" "<<(*it).publising<<(*it).publisingdate;
+        fp << endl;
+    }
+
+    fp.close();
+}
 void addUser()
 {
-    
-    
-        list<User> p;
-        User temp;
-        string bookname;
-        Borrowed_Book t;
-        cout<<"name:\n";cin>>temp.name;
-        cout<<"key:\n";cin>>temp.key;
-        cout<<"uesr type(0;1;2):\n";cin>>temp.type;
-        cout<<"xuehao:\n";cin>>temp.id;
+    list<User> p;
+    User temp;
+    string bookname;
+    Borrowed_Book t;
+   
+        cin>>temp.name;
+        cin>>temp.key;
+        cin>>temp.type>>temp.id;
         temp.borrownum=0;//先把除了借书名字的内容读过来
-        p.push_back(temp);//把这个赋值好的user放进list
-
-        u_SaveData(p);
+    p.push_back(temp);//把这个赋值好的user放进list
     
+    u_SaveData(p);
 }
+void addBook(list<IndexNode>& L)
+{
+    list<Book> p;
+    Book temp;
+    
+    cin>> temp.id >> temp.sum_number;
+    cin >> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
+    cin>>temp.publising >> temp.publisingdate;
+    p.push_back(temp);//把这个赋值好的user放进list
+    AddIndexword(temp.bookname,temp.id,L);//将书添加到词典
+    b_SaveData(p);
+}
+void deleteBook(list<IndexNode>& L)
+{
+    string n;
+    cin>>n;
+    
+    list<Book> p =b_LordData();
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)
+        {
+            if((*it).bookname ==n)
+            {
+                DelIndexword((*it).bookname,(*it).id,L);//词典删除
+                p.erase(it);
+                break;
+            }
+        }
+    b_SaveData_del(p);
 
+}
 User logIn()
 {
     string n,k;
@@ -170,20 +241,13 @@ User logIn()
     
     while(1)
     {
-        cout<<"name:\n";
-        cin>>n;
-        cout<<"key:\n";
-        cin>>k;
+        cin>>n>>k;
         for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)
         {
 
             if((*it).name==n&&(*it).key==k)
             {
                 return (*it);
-            }
-            else
-            {
-                cout<<"try for another once!\n";
             }
        
         }
@@ -253,18 +317,145 @@ void userborrowbook(User& p, Book& b,string borrowdata)
     p.borrowbook.push_back(bb);    
 
 }
-void addBook()
+void BorrowBook(list<IndexNode>& L)
 {
-    list<Book> b;
-    Book temp;
-    string bookname;
-    cin>> temp.id >> temp.sum_number;
-    cin>> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
-    cin>>temp.publising >> temp.publisingdate;//先把除了借书名字的内容读过来
+    list<Book> p=b_LordData();
+    string name;
+    int bid;
+    User uk;//未定义用户
+    string borrowdata;//未定义时间
+    vector<int> idList;
+    cin>>name;
+    idList.clear();
+    copy((searchBook(name,L)).begin(),(searchBook(name,L)).end(),back_inserter(idList));
+    for(vector<int>::iterator it=idList.begin();it !=idList.end();it++) 
+    {
+        list<Book>::iterator temp = find(p.begin(),p.end(),*it);
+        cout<<"name:"<<(*temp).bookname<<" id: "<<(*temp).id<<endl;
+    }
+    cout<<"输入想借书的id:"<<endl;
+    cin>>bid;
+    list<Book>::iterator temp = find(p.begin(),p.end(),bid);
+    userborrowbook(uk,*temp,borrowdata);
+}
 
+void AddIndexword(string name,int id,list<IndexNode>& L)
+{
+    for (auto ch : name)         //ch依次取的是str里面的字符,直到取完为止
+    {
+        IndexNode searchword(ch);//需要删除么
+        list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
+        if(temp!=L.end())
+        {  
+            (*temp).addBooks(id);
+        }
+        else if(temp==L.end())
+        {
+            (*temp).word=ch;
+            (*temp).addBooks(id);
+            L.push_back(*temp);
+        }
         
-    b.push_back(temp);//把这个赋值好的user放进list
+    }
+}
+void DelIndexword(string name,int id,list<IndexNode>& L)
+{
+    for (auto ch : name)         //ch依次取的是str里面的字符,直到取完为止
+    {
+        IndexNode searchword(ch);//需要删除么
+        list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
+        if(temp!=L.end())
+        {  
+            ((*temp).bookid).erase(std::remove(((*temp).bookid).begin(),((*temp).bookid).end(),id),((*temp).bookid).end());
+        } 
+        if(temp==L.end())
+        {
+            cout<<"无法删除，无存储信息"<<endl;
+        }
+    }
+}
+list<IndexNode> BuildIndex(list<Book>& p)//建立书名词典
+{
+    list<IndexNode> L;
+    //IndexNode temp;
+    for(list<Book>::const_iterator it = p.begin();it !=p.end();it++)
+    {
+        AddIndexword((*it).bookname,(*it).id,L);
+    //     for (auto ch : (*it).bookname)         //ch依次取的是str里面的字符,直到取完为止
+    // {
+    //     IndexNode searchword(ch);//需要删除么
+    //     list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
+    //     if(temp!=L.end())
+    //     {  
+    //         (*temp).addBooks((*it).id);
+    //     }
+    //     else if(temp==L.end())
+    //     {
+    //         (*temp).word=ch;
+    //         (*temp).addBooks((*it).id);
+    //         L.push_back(*temp);
+    //     }
+        
+    // }
+    }
+    return L;
+}
+vector<int> searchBook(string name,list<IndexNode>& L)
+{
+    vector<int> idList;
+    for (auto ch : name)         //ch依次取的是str里面的字符,直到取完为止
+    {
+        IndexNode searchword(ch);//需要删除么
+        list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
+        if(temp!=L.end())
+        {  
+            copy(((*temp).bookid).begin(),((*temp).bookid).end(),idList.end());
+        } 
+    }
+    sort(idList.begin(),idList.end());//默认从小到大
+    idList.erase(unique(idList.begin(),idList.end()),idList.end());//去重
+    return idList;
+}
+void i_SaveData(list<IndexNode>& p)//存储数据
+{
+    ofstream fp("index.txt", ios::trunc);//fp为文件指针，写方式
+
+
+    for (list<IndexNode>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+    {
+        fp << (*it).word << " ";
+        for (vector<int>::const_iterator it2 = (*it).bookid.begin(); it2 != (*it).bookid.end(); it2++)
+        {
+            fp<<(*it2)<<" ";
+        }
+        fp<<endl;
+    }
     
-    b_SaveData(b);
+
+    fp.close();
+}
+list<IndexNode> i_LordData()//读取存储的数据
+{
+    ifstream fp("index.txt");//读方式
+    list<IndexNode> p;
+    IndexNode temp;
+    string line;  
+    vector<int> numbers;  
+     while (getline(fp, line))
+    {  
+        istringstream iss(line);  
+        int num;  
+        IndexNode temp;
+        iss>> temp.word;
+        // 尝试从行中读取整数，直到无法读取为止  
+        while (iss >> num) 
+        {  
+            temp.bookid.push_back(num);  
+  
+            // 尝试读取下一个字符（可能是非整数字符） 
+        }  
+    }
+    fp.close();
+    return p;
 }
 #endif 
