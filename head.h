@@ -82,8 +82,11 @@ public:
         bookid.push_back(i);
     }
 };
-
+void DelIndexword(string name,int id,list<IndexNode>& L);
 void userborrowbook(User& p, Book& b,string borrowdata);
+vector<int> searchBook(string name,list<IndexNode>& L);
+void b_SaveData(list<Book>& p);//存储数据
+void AddIndexword(string name,int id,list<IndexNode>& L);
 void u_SaveData(list<User>& p)//存储数据
 {
     ofstream fp("userinfo.txt", ios::app);//fp为文件指针，写方式
@@ -172,6 +175,30 @@ list<Book> b_LordData()//读取存储的数据
     fp.close();
     return p;
 }
+list<IndexNode> i_LordData()//读取存储的数据
+{
+    ifstream fp("index.txt");//读方式
+    list<IndexNode> p;
+    IndexNode temp;
+    string line;  
+    vector<int> numbers;  
+     while (getline(fp, line))
+    {  
+        istringstream iss(line);  
+        int num;  
+        IndexNode temp;
+        iss>> temp.word;
+        // 尝试从行中读取整数，直到无法读取为止  
+        while (iss >> num) 
+        {  
+            temp.bookid.push_back(num);  
+  
+            // 尝试读取下一个字符（可能是非整数字符） 
+        }  
+    }
+    fp.close();
+    return p;
+}
 void b_SaveData_del(list<Book>& p)//存储数据
 {
     ofstream fp("bookinfo.txt", ios::trunc);//fp为文件指针，写方式
@@ -203,8 +230,9 @@ void addUser()
     
     u_SaveData(p);
 }
-void addBook(list<IndexNode>& L)
+void addBook()
 {
+    list<IndexNode> L=i_LordData();
     list<Book> p;
     Book temp;
     
@@ -215,11 +243,11 @@ void addBook(list<IndexNode>& L)
     AddIndexword(temp.bookname,temp.id,L);//将书添加到词典
     b_SaveData(p);
 }
-void deleteBook(list<IndexNode>& L)
+void deleteBook()
 {
     string n;
     cin>>n;
-    
+    list<IndexNode> L=i_LordData();
     list<Book> p =b_LordData();
     for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)
         {
@@ -293,7 +321,7 @@ void deleteUser()
 
 void b_SaveData(list<Book>& p)//存储数据
 {
-    ofstream fp("userinfo.txt", ios::trunc);//fp为文件指针，写方式
+    ofstream fp("bookinfo.txt", ios::trunc);//fp为文件指针，写方式
 
 
     for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
@@ -317,8 +345,9 @@ void userborrowbook(User& p, Book& b,string borrowdata)
     p.borrowbook.push_back(bb);    
 
 }
-void BorrowBook(list<IndexNode>& L)
+void BorrowBook(list<IndexNode>&L)
 {
+    
     list<Book> p=b_LordData();
     string name;
     int bid;
@@ -434,28 +463,5 @@ void i_SaveData(list<IndexNode>& p)//存储数据
 
     fp.close();
 }
-list<IndexNode> i_LordData()//读取存储的数据
-{
-    ifstream fp("index.txt");//读方式
-    list<IndexNode> p;
-    IndexNode temp;
-    string line;  
-    vector<int> numbers;  
-     while (getline(fp, line))
-    {  
-        istringstream iss(line);  
-        int num;  
-        IndexNode temp;
-        iss>> temp.word;
-        // 尝试从行中读取整数，直到无法读取为止  
-        while (iss >> num) 
-        {  
-            temp.bookid.push_back(num);  
-  
-            // 尝试读取下一个字符（可能是非整数字符） 
-        }  
-    }
-    fp.close();
-    return p;
-}
+
 #endif 

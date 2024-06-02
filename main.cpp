@@ -602,9 +602,9 @@ if (newWindowTitle == "UserADMIN") {
     if (buttonTexts[i] == "add") {
         addBook();
     } else if (buttonTexts[i] == "delete") {
-        // deleteBook();  // For BookADMIN's delete logic
+        deleteBook();  // For BookADMIN's delete logic
     } else if (buttonTexts[i] == "look") {
-        // lookBook();  // For BookADMIN's view logic
+        //lookBook();  // For BookADMIN's view logic
     }
     running = false;  // Execute after operation is finished
     break;  // Jump out of the loop
