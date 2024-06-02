@@ -420,6 +420,49 @@ if (!newWindowTitle.empty()) {
         SDL_GetWindowSize(newWindow, &windowWidth, &windowHeight);
         int rectHeight = windowHeight / 3;
 
+if (newWindowTitle == "BorrowBook") {
+bool quit = false;
+SDL_Event e;
+std::string outputText = "";
+while (!quit) {
+    while (SDL_PollEvent(&e) != 0) {
+        if (e.type == SDL_QUIT) {
+            quit = true;
+        }
+    }
+
+    // 清空屏幕
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    // 调用BorrowBook函数，并获取输出
+    outputText = BorrowBook();
+
+    // 将输出字符串转换为SDL_Surface，然后转换为SDL_Texture以渲染
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, outputText.c_str(), textColor);
+    if (!textSurface) {
+        std::cerr << "TTF_RenderText_Solid failed: " << TTF_GetError() << std::endl;
+        continue;
+    }
+
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    if (!textTexture) {
+        std::cerr << "SDL_CreateTextureFromSurface failed: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(textSurface);
+        continue;
+    }
+
+    SDL_Rect textRect = { (windowWidth - textSurface->w) / 2, (windowHeight - textSurface->h) / 2, textSurface->w, textSurface->h };
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+    // 清理
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+
+    // 更新屏幕
+    SDL_RenderPresent(renderer);
+}
+}
 if (newWindowTitle == "HaveBorrowed") {
     // 定义每个矩形区域的颜色
     SDL_Color colors[] = {
