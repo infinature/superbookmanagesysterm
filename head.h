@@ -86,7 +86,7 @@ void DelIndexword(string name,int id);
 void userborrowbook(User& p, Book& b,string borrowdata);
 vector<int> searchBook(string name);
 void b_SaveData(list<Book>& p);//存储数据
-void AddIndexword(string name,int id);
+void AddIndexword(const string &name,int id,list<IndexNode>& L);
 void u_SaveData(list<User>& p)//存储数据
 {
     ofstream fp("userinfo.txt", ios::app);//fp为文件指针，写方式
@@ -199,22 +199,7 @@ list<IndexNode> i_LordData()//读取存储的数据
     fp.close();
     return p;
 }
-void b_SaveData_del(list<Book>& p)//存储数据
-{
-    ofstream fp("bookinfo.txt", ios::trunc);//fp为文件指针，写方式
 
-    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历user的list容器的元素并且输出到文件中
-    {
-        fp << (*it).id << " ";
-        fp << (*it).sum_number << " ";
-        fp << (*it).io_number << " ";
-        fp << (*it).cur_number << " ";
-        fp << (*it).kind << " "<<(*it).bookname<<" "<<(*it).author<<" "<<(*it).publising<<" "<< (*it).publisingdate;
-        fp << endl;
-    }
-
-    fp.close();
-}
 void addUser()
 {
     list<User> p;
@@ -232,7 +217,6 @@ void addUser()
 }
 void addBook()
 {
-    list<IndexNode> L=i_LordData();
     list<Book> p;
     Book temp;
     
@@ -240,8 +224,26 @@ void addBook()
     cin >> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
     cin>>temp.publising >> temp.publisingdate;
     p.push_back(temp);//把这个赋值好的user放进list
-    AddIndexword(temp.bookname,temp.id);//将书添加到词典
+    list<IndexNode> L = i_LordData(); // 加载现有的索引数据
+    AddIndexword(temp.bookname, temp.id, L); // 将书添加到词典
     b_SaveData(p);
+}
+void b_SaveData_del(list<Book>& p)//存储数据
+{
+    ofstream fp("bookinfo.txt", ios::trunc);//fp为文件指针，写方式
+
+
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+    {
+        fp << (*it).id << " ";
+        fp << (*it).sum_number << " ";
+        fp << (*it).io_number << " ";
+        fp << (*it).cur_number << " ";
+        fp << (*it).kind << " " << (*it).bookname << " " << (*it).author << " " << (*it).publising << " " << (*it).publisingdate;
+        fp<<endl;
+    }
+
+    fp.close();
 }
 void deleteBook()
 {
@@ -339,7 +341,7 @@ void deleteUser()
 
 void b_SaveData(list<Book>& p)//存储数据
 {
-    ofstream fp("bookinfo.txt", ios::trunc);//fp为文件指针，写方式
+    ofstream fp("bookinfo.txt", ios::app);//fp为文件指针，写方式
 
 
     for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
@@ -349,10 +351,12 @@ void b_SaveData(list<Book>& p)//存储数据
         fp << (*it).io_number << " ";
         fp << (*it).cur_number << " ";
         fp << (*it).kind << " " << (*it).bookname << " " << (*it).author << " " << (*it).publising << " " << (*it).publisingdate;
+        fp<<endl;
     }
 
     fp.close();
 }
+
 void userborrowbook(User& p, Book& b,string borrowdata)
 {
 
@@ -363,14 +367,13 @@ void userborrowbook(User& p, Book& b,string borrowdata)
     p.borrowbook.push_back(bb);    
 
 }
-string BorrowBook()
+void BorrowBook(User uk,string borrowdata)
 {
     list<IndexNode> L=i_LordData();
     list<Book> p=b_LordData();
     string name;
     int bid;
-    User uk;
-    string borrowdata;//未定义时间
+    
     vector<int> idList;
     cin>>name;
     idList.clear();
@@ -384,29 +387,43 @@ string BorrowBook()
     cin>>bid;
     list<Book>::iterator temp = find(p.begin(),p.end(),bid);
     userborrowbook(uk,*temp,borrowdata);
-        std::string output = "输出信息"; // 这里应该是BorrowBook函数实际的输出
-
-    return output;
 }
 
-void AddIndexword(string name,int id)
+void i_SaveData(list<IndexNode> &p)//存储数据
 {
-    list<IndexNode> L=i_LordData();
-    for (auto ch : name)         //ch依次取的是str里面的字符,直到取完为止
+    ofstream fp("index.txt", ios::app);//fp为文件指针，写方式
+
+
+    for (list<IndexNode>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
     {
-        IndexNode searchword(ch);//需要删除么
-        list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
-        if(temp!=L.end())
-        {  
-            (*temp).addBooks(id);
-        }
-        else if(temp==L.end())
+        fp << (*it).word << " ";
+        for (vector<int>::const_iterator it2 = (*it).bookid.begin(); it2 != (*it).bookid.end(); it2++)
         {
-            (*temp).word=ch;
-            (*temp).addBooks(id);
-            L.push_back(*temp);
+            fp<<(*it2)<<" ";
         }
-        
+        fp<<endl;
+    }
+    
+
+    fp.close();
+}
+
+void AddIndexword(const string& name, int id, list<IndexNode>& L)
+{
+    for (auto ch : name) // ch依次取的是str里面的字符,直到取完为止
+    {
+        IndexNode searchword(ch);
+        auto temp = find(L.begin(), L.end(), searchword);
+        if (temp != L.end())
+        {
+            temp->addBooks(id);
+        }
+        else
+        {
+            IndexNode newNode(ch);
+            newNode.addBooks(id);
+            L.push_back(newNode);
+        }
     }
 }
 void DelIndexword(string name,int id)
@@ -426,14 +443,16 @@ void DelIndexword(string name,int id)
         }
     }
 }
-list<IndexNode> BuildIndex()//建立书名词典
+
+
+void BuildIndex()//建立书名词典
 {
     list<Book> p=b_LordData();
-    list<IndexNode> L;
+    list<IndexNode> L=i_LordData();
     //IndexNode temp;
     for(list<Book>::const_iterator it = p.begin();it !=p.end();it++)
     {
-        AddIndexword((*it).bookname,(*it).id);
+        AddIndexword((*it).bookname,(*it).id,L);
     //     for (auto ch : (*it).bookname)         //ch依次取的是str里面的字符,直到取完为止
     // {
     //     IndexNode searchword(ch);//需要删除么
@@ -451,7 +470,7 @@ list<IndexNode> BuildIndex()//建立书名词典
         
     // }
     }
-    return L;
+    i_SaveData(L);
 }
 vector<int> searchBook(string name)
 {
@@ -469,25 +488,6 @@ vector<int> searchBook(string name)
     sort(idList.begin(),idList.end());//默认从小到大
     idList.erase(unique(idList.begin(),idList.end()),idList.end());//去重
     return idList;
-}
-void i_SaveData()//存储数据
-{
-    list<IndexNode> p=i_LordData();
-    ofstream fp("index.txt", ios::trunc);//fp为文件指针，写方式
-
-
-    for (list<IndexNode>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
-    {
-        fp << (*it).word << " ";
-        for (vector<int>::const_iterator it2 = (*it).bookid.begin(); it2 != (*it).bookid.end(); it2++)
-        {
-            fp<<(*it2)<<" ";
-        }
-        fp<<endl;
-    }
-    
-
-    fp.close();
 }
 
 #endif 

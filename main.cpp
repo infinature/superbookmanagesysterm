@@ -436,7 +436,7 @@ while (!quit) {
     SDL_RenderClear(renderer);
 
     // 调用BorrowBook函数，并获取输出
-    outputText = BorrowBook();
+    //outputText = BorrowBook(loggedInUser,"2024.6.3");
 
     // 将输出字符串转换为SDL_Surface，然后转换为SDL_Texture以渲染
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, outputText.c_str(), textColor);
@@ -573,25 +573,33 @@ else if (newWindowTitle == "SumStar") {
     SDL_RenderPresent(renderer);
 }
 
+
+
+
+
+
+
+
 else if (newWindowTitle == "UserADMIN" || newWindowTitle == "BookADMIN") {
     // 定义矩形区域的颜色
     SDL_Color colors[] = {
-        {255, 0, 0},   // 红色
-        {0, 255, 0},   // 绿色
-        {0, 0, 255}    // 蓝色
+        {224, 205, 207},   
+        {201, 192, 211},   
+        {238, 229, 248},   // 蓝色
+        {211, 212, 204} // 白色（返回按钮）
     };
     // 定义按钮文本
-    const char* buttonTexts[] = {"add", "delete", "look"};
+    const char* buttonTexts[] = {"add", "delete", "look", "return"};
 
     // 获取窗口尺寸
     int windowWidth, windowHeight;
     SDL_GetWindowSize(newWindow, &windowWidth, &windowHeight);
 
-    // 计算每个矩形的高度，这里假设窗口高度可以被3整除
-    int rectHeight = windowHeight / 3;
+    // 计算每个矩形的高度，这里假设窗口高度可以被4整除
+    int rectHeight = windowHeight / 4;
 
-    // 创建和显示三个矩形
-    for (int i = 0; i < 3; ++i) {
+    // 创建和显示四个矩形
+    for (int i = 0; i < 4; ++i) {
         SDL_Rect rect = {0, rectHeight * i, windowWidth, rectHeight};
         SDL_SetRenderDrawColor(renderer, colors[i].r, colors[i].g, colors[i].b, 255);
         SDL_RenderFillRect(renderer, &rect);
@@ -612,21 +620,27 @@ SDL_RenderCopy(renderer, textTexture, NULL, &textRect);            }
     }
     SDL_RenderPresent(renderer);
 
-    // 渲染循环
-    bool running = true;
-    while (running) {
-        SDL_Event event;
-        // 处理所有事件
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = false; // 用户请求关闭窗口
-            } else if (event.type == SDL_MOUSEBUTTONDOWN) {
-                // 检查是否点击了按钮
-for (int i = 0; i < 3; ++i) {
+bool running = true;
+while (running) {
+    SDL_Event event;
+    // 处理所有事件
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            running = false; // 用户请求关闭窗口
+        } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+            // 检查是否点击了按钮
+for (int i = 0; i < 4; ++i) {
     SDL_Rect rect = {0, rectHeight * i, windowWidth, rectHeight};
     if (event.button.x >= rect.x && event.button.x < rect.x + rect.w &&
         event.button.y >= rect.y && event.button.y < rect.y + rect.h) {
-        // 根据点击的按钮创建新的控制台窗口
+        // 根据点击的按钮执行对应的操作
+ if (colors[i].r == 255 && colors[i].g == 255 && colors[i].b == 255) { // 判断是否点击了白色矩形
+    SDL_Delay(100); // 延时100毫秒
+    SDL_DestroyWindow(newWindow); // 关闭窗口
+    running = false; // 设置running为false以退出循环
+    break; // 跳出循环
+} else {
+            // 根据点击的按钮创建新的控制台窗口
         string consoleTitle = "Console for " + string(newWindowTitle) + " " + buttonTexts[i];
         CreateConsoleWindow(consoleTitle);
 
@@ -647,10 +661,10 @@ if (newWindowTitle == "UserADMIN") {
     } else if (buttonTexts[i] == "delete") {
         deleteBook();  // For BookADMIN's delete logic
     } else if (buttonTexts[i] == "look") {
-        //lookBook();  // For BookADMIN's view logic
+        lookBook();  // For BookADMIN's view logic
     }
-    running = false;  // Execute after operation is finished
-    break;  // Jump out of the loop
+    running = false; // Execute after operation is finished
+    break; // Jump out of the loop
 }
         break; // 跳出循环
     }
@@ -659,6 +673,16 @@ if (newWindowTitle == "UserADMIN") {
             }
         }
     }
+}
+
+
+
+
+
+
+
+
+
 }
         
             // 展示渲染结果
