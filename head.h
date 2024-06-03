@@ -203,8 +203,9 @@ void addUser()
     
     u_SaveData(p);
 }
-void addBook(list<IndexNode>& L)
+void addBook()
 {
+    list<IndexNode> L=i_LordData();
     list<Book> p;
     Book temp;
     
@@ -215,11 +216,11 @@ void addBook(list<IndexNode>& L)
     AddIndexword(temp.bookname,temp.id);//将书添加到词典
     b_SaveData(p);
 }
-void deleteBook(list<IndexNode>& L)
+void deleteBook()
 {
     string n;
     cin>>n;
-    
+    list<IndexNode> L=i_LordData();
     list<Book> p =b_LordData();
     for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)
         {
@@ -271,6 +272,24 @@ void lookUser()
     }
 
 }
+void lookBook()
+{
+    list<Book> p=b_LordData();
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)
+    {
+        cout<< (*it).id << " ";
+        cout<< (*it).sum_number << " ";
+        cout<< (*it).io_number << " ";
+        cout<< (*it).cur_number << " ";
+        cout<< (*it).kind << " ";
+        cout<< (*it).bookname << " ";
+        cout<< (*it).author << " ";
+        cout<< (*it).publising << " ";
+        cout<< (*it).publisingdate << " ";
+        cout<< endl;
+    }
+
+}
 void deleteUser()
 {
     string n;
@@ -293,7 +312,7 @@ void deleteUser()
 
 void b_SaveData(list<Book>& p)//存储数据
 {
-    ofstream fp("userinfo.txt", ios::trunc);//fp为文件指针，写方式
+    ofstream fp("bookinfo.txt", ios::app);//fp为文件指针，写方式
 
 
     for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
