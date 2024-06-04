@@ -7,6 +7,7 @@
 #include <thread> // 包含线程的头文件
 #include <vector> // 包含动态数组的头文件
 #include <string> // 包含字符串类的头文件
+
 #include <cmath>
 #include <D:\github's hub\superbookmanagesysterm\head.h>
 
@@ -221,15 +222,16 @@ int main(int argc, char *argv[]) {
 
 if (userWin) {
     // 获取窗口的宽度和高度
-    int windowWidth, windowHeight;
-    SDL_GetWindowSize(userWin, &windowWidth, &windowHeight);
+int windowWidth, windowHeight;
+SDL_GetWindowSize(userWin, &windowWidth, &windowHeight);
 
-    // 计算左侧和右侧区域的宽度
-    int leftWidth = windowWidth / 4;
-    int rightWidth = windowWidth - leftWidth;
-    // 右侧五个矩形的宽度和高度
-    int rectWidth = (rightWidth - 4 * 10) / 5; // 减去一些边距
-    int rectHeight = (windowHeight / 2 - 2 * 10) / 2; // 减去一些边距
+// 计算左侧和右侧区域的宽度
+int leftWidth = windowWidth / 4;
+int rightWidth = windowWidth - leftWidth;
+// 右侧五个矩形的宽度和高度
+int rectWidth = (rightWidth - 3*10) / 5; // 减去一些边距
+int rectHeight = windowHeight - 4*10; // 设置矩形高度为窗口高度减去上下边距
+
 
     // 创建一个渲染器
     SDL_Renderer* userRenderer = SDL_CreateRenderer(userWin, -1, SDL_RENDERER_ACCELERATED);
@@ -240,7 +242,7 @@ if (userWin) {
     }
 
     // 加载字体
-    TTF_Font* font = TTF_OpenFont("C:\\Windows\\Fonts\\Candara.ttf", 20);
+    TTF_Font* font = TTF_OpenFont("C:\\Windows\\Fonts\\Candara.ttf", 18);
     if (!font) {
         SDL_Log("TTF_OpenFont failed: %s", SDL_GetError());
         SDL_DestroyRenderer(userRenderer);
@@ -263,7 +265,7 @@ while (userRunning) {
     SDL_RenderClear(userRenderer); // 清空渲染器
 
     // 美化左侧上半部分区域
-    SDL_Rect leftUpperRect = {0, 0, leftWidth, windowHeight / 2};
+    SDL_Rect leftUpperRect = {0, 0, leftWidth, windowHeight};
     SDL_SetRenderDrawColor(userRenderer, 14, 47, 41, 255); // 设置背景颜色
     SDL_RenderFillRect(userRenderer, &leftUpperRect);
 
@@ -272,20 +274,28 @@ while (userRunning) {
     SDL_Color textColor = {255, 255, 255}; // 白色文字
     string usernameText = loggedInUser.name; // 获取用户名
     string userTypeText; // 用户类型文本，根据用户类型设置文本
-        switch (loggedInUser.type) {
-            case 0:
-                userTypeText = "Administrator";
-                break;
-            case 1:
-                userTypeText = "Teacher";
-                break;
-            case 2:
-                userTypeText = "Student";
-                break;
-            default:
-                userTypeText = "Unknown";
-                break;
-        }
+switch (loggedInUser.type) {
+    case 0:
+        userTypeText = "Administrator";
+        // 可以为管理员选择一个特定的颜色，例如深蓝色
+        textColor = {221, 0, 139};
+        break;
+    case 1:
+        userTypeText = "Teacher";
+        // 为教师选择一个特定的颜色，例如绿色
+        textColor = {23, 0, 233};
+        break;
+    case 2:
+        userTypeText = "Student";
+        // 为学生选择一个特定的颜色，例如橙色
+        textColor = {255, 69, 0};
+        break;
+    default:
+        userTypeText = "Unknown";
+        // 未知用户类型使用默认颜色
+        textColor = textColor;
+        break;
+}
 
   // 创建用户名和用户类型文本的表面，并美化
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, usernameText.c_str(), textColor);
@@ -315,32 +325,31 @@ while (userRunning) {
             SDL_Rect rect = { x, y, rectWidth, rectHeight };
             
             // 根据 user.type 设置颜色和文本
-            SDL_Color color;
-            string buttonText;
-            switch (loggedInUser.type) {
-                case 0: // 管理员
-                    switch (i) {
-                        case 0: color = {255, 0, 0}; buttonText = "UserADMIN"; break;
-                        case 1: color = {0, 255, 0}; buttonText = "BookADMIN"; break;
-                        case 2: color = {128, 0, 128}; buttonText = "HaveBorrowed"; break;
-                        case 3: color = {100, 100, 100}; buttonText = "SumStar"; break;
-                        case 4: color = {255, 105, 180}; buttonText = "Myself"; break;
-                    }
-                    break;
-                case 1: // 教师
-                case 2: // 学生
-                    switch (i) {
-                        case 0: color = {255, 0, 0}; buttonText = "BorrowBook"; break;
-                        case 1: color = {0, 255, 0}; buttonText = "ReturnBook"; break;
-                        case 2: color = {128, 0, 128}; buttonText = "HaveBorrowed"; break;
-                        case 3: color = {100, 100, 100}; buttonText = "SumStar"; break;
-                        case 4: color = {255, 105, 180}; buttonText = "Myself"; break;
-                    }
-                    break;
-                default:
-                    color = {0, 0, 0}; buttonText = "未知"; break;
-            }
-
+SDL_Color color;
+string buttonText;
+switch (loggedInUser.type) {
+    case 0: // 管理员
+        switch (i) {
+            case 0: color = {255, 235, 205}; buttonText = "UserADMIN"; break; // 浅粉色
+            case 1: color = {224, 255, 255}; buttonText = "BookADMIN"; break; // 浅蓝色
+            case 2: color = {173, 216, 230}; buttonText = "HaveBorrowed"; break; // 浅紫色
+            case 3: color = {190, 190, 190}; buttonText = "SumStar"; break; // 灰色
+            case 4: color = {112, 239, 213}; buttonText = "Myself"; break; // 浅珊瑚色
+        }
+        break;
+    case 1: // 教师
+    case 2: // 学生
+        switch (i) {
+            case 0: color = {255, 193, 193}; buttonText = "BorrowBook"; break; // 浅红色
+            case 1: color = {210, 255, 185}; buttonText = "ReturnBook"; break; // 浅绿色
+            case 2: color = {218, 188, 255}; buttonText = "HaveBorrowed"; break; // 浅紫色
+            case 3: color = {190, 190, 190}; buttonText = "SumStar"; break; // 灰色
+            case 4: color = {112, 228, 225}; buttonText = "Myself"; break; // 浅珊瑚色
+        }
+        break;
+    default:
+        color = {0, 0, 0}; buttonText = "未知"; break;
+}
     // 使用渐变色填充矩形
     SDL_Color startColor = {color.r, color.g, color.b}; // 渐变开始颜色
     SDL_Color endColor = {color.r / 2, color.g / 2, color.b / 2}; // 渐变结束颜色
@@ -481,71 +490,175 @@ while (!quit) {
     SDL_RenderPresent(renderer);
 }
 }
-if (newWindowTitle == "HaveBorrowed") {
-    // 定义每个矩形区域的颜色
-    SDL_Color colors[] = {
-        {128, 128, 128}, // 灰色
-        {0, 0, 0},       // 黑色
-        {0, 0, 255}      // 蓝色
-    };
-    // 定义每个矩形中的文本
-    string texts[] = {
-        "bookname", 
-        "borrow'date", 
-        "borrow'user"
-    };
 
-    // 获取窗口尺寸
-    int windowWidth, windowHeight;
-    SDL_GetWindowSize(newWindow, &windowWidth, &windowHeight);
 
-    // 计算每个矩形的高度，这里假设窗口高度可以被3整除
-    int rectHeight = windowHeight / 3;
-
-    // 绘制三个矩形区域并填充文本内容
-    for (int i = 0; i < 3; ++i) {
-        SDL_Rect rect = {0, i * rectHeight, windowWidth, rectHeight};
-        SDL_SetRenderDrawColor(renderer, colors[i].r, colors[i].g, colors[i].b, 255);
-        SDL_RenderFillRect(renderer, &rect);
-
-        // 渲染文本到矩形中心
-        SDL_Surface* textSurface = TTF_RenderText_Solid(font, texts[i].c_str(), textColor);
-        if (textSurface) {
-            SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-            if (textTexture) {
-                // 计算文本渲染的中心位置
-                int textX = windowWidth / 2; // 水平居中
-                int textY = rect.y + (rectHeight - textSurface->h) / 2; // 垂直居中
-                SDL_Rect textRect = {textX - textSurface->w / 2, textY, textSurface->w, textSurface->h};
-                SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
-            }
-            SDL_FreeSurface(textSurface);
-            SDL_DestroyTexture(textTexture);
-        }
+if (newWindowTitle == "HaveBorrowed" && (loggedInUser.type == 1 || loggedInUser.type == 2)) {
+    // 创建窗口
+    SDL_Window *hbwindow = SDL_CreateWindow("HaveBorrowed", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
+    if (!hbwindow) {
+        printf("创建窗口失败： %s\n", SDL_GetError());
+        SDL_Quit();
+        return 1;
     }
-    SDL_RenderPresent(renderer);
-} 
-else if (newWindowTitle == "SumStar") {
-            // 绘制一个矩形区域并填充文本内容
-            SDL_Color color = {128, 128, 128}; // 灰色
-            string text = "bookname and star";
-            SDL_Rect rect = {0, 0, windowWidth, windowHeight};
-            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
-            SDL_RenderFillRect(renderer, &rect);
-            // 渲染文本
-            SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
+
+    // 创建渲染器
+    SDL_Renderer *renderer = SDL_CreateRenderer(hbwindow, -1, SDL_RENDERER_ACCELERATED);
+    if (!renderer) {
+        printf("创建渲染器失败： %s\n", SDL_GetError());
+        SDL_DestroyWindow(hbwindow);
+        SDL_Quit();
+        return 1;
+    }
+
+
+    list<string> borrowedBookList = lookBorrowbook_stu(loggedInUser);
+
+    // 遍历字符串列表，将非空子串输出到窗口中，每输出一个子串就会自动换行
+    int y = 10; // 起始y坐标，根据需要调整
+    for (const auto& bookStr : borrowedBookList) {
+        if (!bookStr.empty()) {
+            SDL_Surface *textSurface = TTF_RenderText_Solid(font, bookStr.c_str(), textColor);
             if (textSurface) {
-                SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+                SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
                 if (textTexture) {
-                    SDL_QueryTexture(textTexture, NULL, NULL, &rect.w, &rect.h);
-                    SDL_Rect textRect = {(rect.w - textSurface->w) / 2, (rect.h - textSurface->h) / 2, textSurface->w, textSurface->h};
+                    SDL_Rect textRect = {10, y, textSurface->w, textSurface->h}; // x坐标为10，根据需要调整
+                    y += textSurface->h;
                     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+                    SDL_DestroyTexture(textTexture);
                 }
                 SDL_FreeSurface(textSurface);
-                SDL_DestroyTexture(textTexture);
             }
-            SDL_RenderPresent(renderer);
-        } 
+        }
+    }
+
+    // 在窗口底部添加一个按钮用来退出窗口
+    SDL_Rect buttonRect = {350, 550, 100, 50}; // 调整按钮位置和大小
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
+    SDL_RenderFillRect(renderer, &buttonRect);
+    SDL_RenderPresent(renderer);
+
+    // 事件循环
+    SDL_Event event;
+    bool quit = false;
+    while (!quit) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                quit = true;
+            } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                int x = event.button.x;
+                int y = event.button.y;
+                if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w && y >= buttonRect.y && y <= buttonRect.y + buttonRect.h) {
+                    quit = true;
+                }
+            }
+        }
+    }
+}
+
+// ... 其他代码 ...
+
+else if (newWindowTitle == "SumStar") {
+    // 调用 Rank 函数获取排名信息
+    list<string> p = Rank();
+    
+    // 确保字体已加载
+    if (!font) {
+        SDL_Log("字体加载失败");
+        return -1; // 字体加载失败，返回错误代码
+    }
+
+    // 绘制一个矩形区域并填充文本内容
+    SDL_Color color = {128, 128, 128}; // 灰色
+    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
+    SDL_RenderFillRect(renderer, NULL); // 使用 NULL 来填充整个渲染目标
+
+    // 获取窗口宽度和高度
+    int windowWidth = 800; // 假设窗口宽度为800
+    int windowHeight = 600; // 假设窗口高度为600
+
+    // 渲染窗口标题 "SumStar:"
+    string titleText = "SumStar:";
+    SDL_Surface* titleSurface = TTF_RenderText_Solid(font, titleText.c_str(), textColor);
+    if (!titleSurface) {
+        SDL_Log("渲染标题失败");
+        return -1;
+    }
+    SDL_Texture* titleTexture = SDL_CreateTextureFromSurface(renderer, titleSurface);
+    if (!titleTexture) {
+        SDL_Log("创建标题纹理失败");
+        SDL_FreeSurface(titleSurface);
+        return -1;
+    }
+    SDL_QueryTexture(titleTexture, NULL, NULL, &rect.w, &rect.h);
+    SDL_Rect titleRect = {0, 0, rect.w, rect.h};
+    SDL_RenderCopy(renderer, titleTexture, NULL, &titleRect);
+    
+    SDL_FreeSurface(titleSurface);
+    SDL_DestroyTexture(titleTexture);
+SDL_Rect textRect = {0, 0, 0, 0}; // 初始化文本渲染区域
+SDL_Rect lineRect = {0, 0, 0, 0}; // 初始化行号渲染区域
+    // 初始化y坐标，以便排名信息从标题下方开始渲染
+    int y = rect.h; // 标题的高度
+
+    // 遍历排名信息并渲染每个文本项及其行号
+    int line_number = 1; // 行号起始值
+    for (const string& textLine : p) {
+        // 创建文本表面和纹理
+        SDL_Surface* textSurface = TTF_RenderText_Solid(font, textLine.c_str(), textColor);
+        if (!textSurface) {
+            SDL_Log("创建文本表面失败");
+            continue;
+        }
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        if (!textTexture) {
+            SDL_Log("创建文本纹理失败");
+            SDL_FreeSurface(textSurface);
+            continue;
+        }
+        SDL_QueryTexture(textTexture, NULL, NULL, &textRect.w, &textRect.h);
+
+        // 设置文本渲染区域
+        textRect.x = 10; // 左边距
+        textRect.y = y;
+
+        // 渲染文本
+        SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+        // 计算行号字符串宽度
+        char line_number_str[10];
+        sprintf(line_number_str, "%d", line_number);
+        SDL_Surface* lineSurface = TTF_RenderText_Solid(font, line_number_str, textColor);
+        if (lineSurface) {
+            SDL_Texture* lineTexture = SDL_CreateTextureFromSurface(renderer, lineSurface);
+            if (lineTexture) {
+                SDL_QueryTexture(lineTexture, NULL, NULL, &lineRect.w, &lineRect.h);
+
+                // 设置行号渲染区域，位于窗口的最右端，与文本行垂直居中对齐
+                lineRect.x = windowWidth - lineRect.w - 10; // 右边距
+                lineRect.y = y + (textRect.h - lineRect.h) / 2;
+
+                // 渲染行号
+                SDL_RenderCopy(renderer, lineTexture, NULL, &lineRect);
+                SDL_DestroyTexture(lineTexture);
+
+            }
+            SDL_FreeSurface(lineSurface);
+        }
+
+        // 更新y坐标以便于下一个文本项的渲染
+        y += textRect.h;
+        line_number++;
+
+        // 清理纹理
+        SDL_DestroyTexture(textTexture);
+        SDL_FreeSurface(textSurface);
+    }
+
+    // 渲染结束，更新屏幕显示
+    SDL_RenderPresent(renderer);
+}
+
+// ... 其他代码 ...
         else if (newWindowTitle == "Myself") {
     // 定义矩形区域的颜色
     SDL_Color colors[] = {

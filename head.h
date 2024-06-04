@@ -28,11 +28,26 @@ public:
 class User
 {
 public:
+User(string name,string key,string id,short type,short borrownum)
+{
+    this->name=name;
+    this->key=key;
+    this->id=id;
+    this->type=type;
+    this->borrownum=borrownum;
+}
+
+
+
     void addBorrowBook(Borrowed_Book& b)
     {
         borrowbook.push_back(b);
     }
     User() :name(""), key(""), borrownum(0){}
+    bool operator==(const User& other) const
+    {
+        return (id == other.id)&&(name==other.name);
+    }
 
     string name;                                //人名
     string key;                                 //登陆密钥
@@ -84,7 +99,7 @@ public:
 };
 void DelIndexword(string name,int id);
 void userborrowbook(User& p, Book& b,string borrowdata);
-vector<int> searchBook(string name);
+vector<int> searchBook(const string& name);
 void b_SaveData(list<Book>& p);//存储数据
 void AddIndexword(const string &name,int id,list<IndexNode>& L);
 void u_SaveData(list<User>& p)//存储数据
@@ -158,13 +173,14 @@ list<Book> b_LordData()//读取存储的数据
 {
     ifstream fp("bookinfo.txt");//读方式
     list<Book> p;
-    while (fp.peek() != EOF)//peek是看一眼下一个输入是什么但不更改数据
+    Book temp;
+        string bookname;
+    while (fp >> temp.id)//peek是看一眼下一个输入是什么但不更改数据
     {
 
-        Book temp;
-        string bookname;
+        
 
-        fp >> temp.id >> temp.sum_number;
+         fp>> temp.sum_number;
         fp >> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
         fp>>temp.publising >> temp.publisingdate;//先把除了借书名字的内容读过来
 
@@ -195,6 +211,7 @@ list<IndexNode> i_LordData()//读取存储的数据
   
             // 尝试读取下一个字符（可能是非整数字符） 
         }  
+        p.push_back(temp);
     }
     fp.close();
     return p;
@@ -367,26 +384,52 @@ void userborrowbook(User& p, Book& b,string borrowdata)
     p.borrowbook.push_back(bb);    
 
 }
-void BorrowBook(User uk,string borrowdata)
+vector<int> searchBook(const string& name)
 {
-    list<IndexNode> L=i_LordData();
-    list<Book> p=b_LordData();
+    list<IndexNode> L = i_LordData();
+    vector<int> idList;
+    for (auto ch : name) // ch依次取的是str里面的字符,直到取完为止
+    {
+        IndexNode searchword(ch);
+        auto temp = find(L.begin(), L.end(), searchword);
+        if (temp != L.end())
+        {
+            copy((*temp).bookid.begin(), (*temp).bookid.end(), back_inserter(idList));
+        }
+    }
+    sort(idList.begin(), idList.end()); // 默认从小到大排序
+    idList.erase(unique(idList.begin(), idList.end()), idList.end()); // 去重
+    return idList;
+}
+
+
+void BorrowBook(User uk ,string borrowdata )
+{
+    list<Book> p = b_LordData(); // 加载书籍数据
     string name;
     int bid;
     
     vector<int> idList;
-    cin>>name;
-    idList.clear();
-    copy((searchBook(name)).begin(),(searchBook(name)).end(),back_inserter(idList));
-    for(vector<int>::iterator it=idList.begin();it !=idList.end();it++) 
+
+    cin >> name;
+    idList = searchBook(name);
+    for (int bookId : idList)
     {
-        list<Book>::iterator temp = find(p.begin(),p.end(),*it);
-        cout<<"name:"<<(*temp).bookname<<" id: "<<(*temp).id<<endl;
+        auto temp = find_if(p.begin(), p.end(), [bookId](const Book& book) { return book.id == bookId; });
+        if (temp != p.end())
+        {
+            cout << "name: " << temp->bookname << " id: " << temp->id << endl;
+        }
     }
-    cout<<"输入想借书的id:"<<endl;
-    cin>>bid;
-    list<Book>::iterator temp = find(p.begin(),p.end(),bid);
-    userborrowbook(uk,*temp,borrowdata);
+
+    cout << "输入想借书的id:" << endl;
+    cin >> bid;
+
+    auto temp = find_if(p.begin(), p.end(), [bid](const Book& book) { return book.id == bid; });
+    if (temp != p.end())
+    {
+        userborrowbook(uk, *temp, borrowdata);
+    }
 }
 
 void i_SaveData(list<IndexNode> &p)//存储数据
@@ -426,6 +469,7 @@ void AddIndexword(const string& name, int id, list<IndexNode>& L)
         }
     }
 }
+
 void DelIndexword(string name,int id)
 {
     list<IndexNode> L=i_LordData();
@@ -472,22 +516,45 @@ void BuildIndex()//建立书名词典
     }
     i_SaveData(L);
 }
-vector<int> searchBook(string name)
+bool compareBook(Book a,Book b)
 {
-    list<IndexNode> L=i_LordData();
-    vector<int> idList;
-    for (auto ch : name)         //ch依次取的是str里面的字符,直到取完为止
+    return a.io_number>b.io_number;
+}
+
+list<string> Rank()
+{
+    list<Book> p=b_LordData(); 
+    list<string> a;
+    string b;
+    p.sort(compareBook);
+    int ranking=1;
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
     {
-        IndexNode searchword(ch);//需要删除么
-        list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
-        if(temp!=L.end())
-        {  
-            copy(((*temp).bookid).begin(),((*temp).bookid).end(),idList.end());
-        } 
+        b =to_string(ranking) + " " + (*it).bookname + " " + to_string((*it).id); ;
+        a.push_back(b);
+        ranking++;
     }
-    sort(idList.begin(),idList.end());//默认从小到大
-    idList.erase(unique(idList.begin(),idList.end()),idList.end());//去重
-    return idList;
+    return a;
+}
+
+list<string> lookBorrowbook_stu(User x)
+{
+    list<User> p =u_LordData();
+    list<string> a;
+    string b;
+    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+    {
+        if(x==(*it))
+        {
+            for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+            {
+                b=(*it2).borrowbookname+ " " +to_string((*it2).id)+" "+(*it2).data;
+                a.push_back(b);
+            }
+        }
+    }
+
+    return a;
 }
 
 #endif 
