@@ -150,6 +150,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 // main函数是程序的入口点
 int main(int argc, char *argv[]) {
+    BuildIndex();
     // 初始化SDL视频和TTF库
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         SDL_Log("SDL_Init failed: %s", SDL_GetError()); // 记录错误信息
@@ -533,12 +534,16 @@ while (!bquit) {
                 CreateConsoleWindow(consoleTitle);
                 BorrowBook(loggedInUser);
                 isBorrowButtonPressed = false;
+                SDL_Delay(100); // 延时100毫秒
+                SDL_DestroyWindow(newWindow); 
+                SDL_DestroyRenderer(renderer);// 关闭窗口
                 bquit=true;
                 break;
             } else if (isReturnButtonPressed) {
                 // Return按钮被点击
                 SDL_Delay(100); // 延时100毫秒
                 SDL_DestroyWindow(newWindow);
+                SDL_DestroyRenderer(renderer);
                 bquit=true;
                break;
             }
@@ -548,9 +553,10 @@ while (!bquit) {
 
     // 绘制按钮
     DrawButton(renderer, borrowButton, isBorrowButtonPressed, "Borrow", font, textColor);
-    DrawButton(renderer, returnButton, isReturnButtonPressed, "Return", font, textColor);
+    DrawButton(renderer, returnButton, isReturnButtonPressed, "Back", font, textColor);
     SDL_RenderPresent(renderer);
 }
+
 
 }
 if (newWindowTitle == "ReturnBook") {
@@ -584,12 +590,16 @@ while (!bquit) {
                 CreateConsoleWindow(consoleTitle);
                 returnBook(loggedInUser);
                 isBorrowButtonPressed = false;
+                    SDL_Delay(100); // 延时100毫秒
+    SDL_DestroyWindow(newWindow); // 关闭窗口
+    SDL_DestroyRenderer(renderer);
                 bquit=true;
                 break;
             } else if (isReturnButtonPressed) {
                 // back按钮被点击
                 SDL_Delay(100); // 延时100毫秒
                 SDL_DestroyWindow(newWindow);
+                SDL_DestroyRenderer(renderer);
                 bquit=true;
                break;
             }
@@ -652,6 +662,7 @@ RenderButtonText(renderer, font, "back", textColor, buttonRect.x, buttonRect.y);
                 if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w && y >= buttonRect.y && y <= buttonRect.y + buttonRect.h) {
                     SDL_Delay(100); // 延时100毫秒
                     SDL_DestroyWindow(newWindow);
+                    SDL_DestroyRenderer(renderer);
                     quit = true;
                     break;
                 }
@@ -709,6 +720,7 @@ RenderButtonText(renderer, font, "back", textColor, buttonRect.x, buttonRect.y);
                 if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w && y >= buttonRect.y && y <= buttonRect.y + buttonRect.h) {
                     SDL_Delay(100); // 延时100毫秒
                     SDL_DestroyWindow(newWindow);
+                    SDL_DestroyRenderer(renderer);
                     quit = true;
                     break;
                 }
@@ -717,7 +729,7 @@ RenderButtonText(renderer, font, "back", textColor, buttonRect.x, buttonRect.y);
     }
 }
 
-// ... 其他代码 ...
+
 
 else if (newWindowTitle == "SumStar") {
     // 调用 Rank 函数获取排名信息
@@ -816,17 +828,46 @@ SDL_Rect lineRect = {0, 0, 0, 0}; // 初始化行号渲染区域
         SDL_FreeSurface(textSurface);
     }
 
-    // 渲染结束，更新屏幕显示
+        // 在窗口底部添加一个按钮用来退出窗口
+    SDL_Rect buttonRect = {350, 550, 200, 80}; // 调整按钮位置和大小
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
+
+    SDL_RenderFillRect(renderer, &buttonRect);
+    // 在绘制按钮之后，调用这个函数来渲染"back"文本
+RenderButtonText(renderer, font, "back", textColor, buttonRect.x, buttonRect.y);
     SDL_RenderPresent(renderer);
+
+
+    // 事件循环
+    SDL_Event event;
+    bool quit = false;
+    while (!quit) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                quit = true;
+            } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                int x = event.button.x;
+                int y = event.button.y;
+                if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w && y >= buttonRect.y && y <= buttonRect.y + buttonRect.h) {
+                    SDL_Delay(100); // 延时100毫秒
+                    SDL_DestroyWindow(newWindow);
+                    quit = true;
+                    break;
+                }
+            }
+        }
+    }
+
+
 }
 
-// ... 其他代码 ...
-        else if (newWindowTitle == "Myself") {
+
+else if (newWindowTitle == "Myself") {
     // 定义矩形区域的颜色
     SDL_Color colors[] = {
         {128, 128, 128}, // 灰色
         {0, 0, 0},       // 黑色
-        {0, 0, 255}      // 蓝色
+        {66, 66, 255}      // 蓝色
     };
     // 定义每个矩形区域的文本内容
     string texts[] = {
@@ -863,7 +904,38 @@ SDL_Rect lineRect = {0, 0, 0, 0}; // 初始化行号渲染区域
             SDL_DestroyTexture(textTexture);
         }
     }
+        // 在窗口底部添加一个按钮用来退出窗口
+    SDL_Rect buttonRect = {350, 550, 200, 80}; // 调整按钮位置和大小
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
+
+    SDL_RenderFillRect(renderer, &buttonRect);
+    // 在绘制按钮之后，调用这个函数来渲染"back"文本
+RenderButtonText(renderer, font, "back", textColor, buttonRect.x, buttonRect.y);
     SDL_RenderPresent(renderer);
+
+
+    // 事件循环
+    SDL_Event event;
+    bool quit = false;
+    while (!quit) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                quit = true;
+            } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                int x = event.button.x;
+                int y = event.button.y;
+                if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w && y >= buttonRect.y && y <= buttonRect.y + buttonRect.h) {
+                    SDL_Delay(100); // 延时100毫秒
+                    SDL_DestroyWindow(newWindow);
+                    SDL_DestroyRenderer(renderer);
+                    quit = true;
+                    break;
+                }
+            }
+        }
+    }
+    
+
 }
 
 
@@ -931,6 +1003,7 @@ if (buttonTexts[i] == "return") {
 
     SDL_Delay(100); // 延时100毫秒
     SDL_DestroyWindow(newWindow); // 关闭窗口
+    SDL_DestroyRenderer(renderer);
     running = false; // 设置running为false以退出循环
     break; // 跳出循环
 } else {
@@ -947,8 +1020,11 @@ if (newWindowTitle == "UserADMIN") {
     } else if (buttonTexts[i] == "look") {
         lookUser();
     }
-    running = false;  // Execute after operation is finished
-    break;  // Jump out of the loop
+    SDL_Delay(100); // 延时100毫秒
+    SDL_DestroyWindow(newWindow); // 关闭窗口
+    SDL_DestroyRenderer(renderer);
+    running = false; // 设置running为false以退出循环
+    break; // 跳出循环
 } else if (newWindowTitle == "BookADMIN") {
     if (buttonTexts[i] == "add") {
         addBook();
@@ -957,8 +1033,11 @@ if (newWindowTitle == "UserADMIN") {
     } else if (buttonTexts[i] == "look") {
         lookBook();  // For BookADMIN's view logic
     }
-    running = false; // Execute after operation is finished
-    break; // Jump out of the loop
+    SDL_Delay(100); // 延时100毫秒
+    SDL_DestroyWindow(newWindow); // 关闭窗口
+    SDL_DestroyRenderer(renderer);
+    running = false; // 设置running为false以退出循环
+    break; // 跳出循环
 }
         break; // 跳出循环
     }
