@@ -14,5 +14,7 @@ class Book;
 void BorrowBook(User uk ,string borrowdata );
 bool compareBook(Book a,Book b);
 list<string> Rank();
+string getCurrentDateTime();
+int daysBetweenDates(const std::string& date1, const std::string& date2);
 
 #endif //_FUNCTION_H

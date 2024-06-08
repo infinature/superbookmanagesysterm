@@ -7,3 +7,11 @@ include_directories(include)
 file(GLOB_RECURSE SRC_LIST "src/*.cpp")
 
 add_executable(booksystem ${SRC_LIST})
+
+set(LIBRARY_PATH "${CMAKE_SOURCE_DIR}/libs")
+
+add_custom_command(TARGET booksystem POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${LIBRARY_PATH}/SDL2_ttf.dll"
+    "${LIBRARY_PATH}/SDL2.dll"
+    $<TARGET_FILE_DIR:booksystem>)
