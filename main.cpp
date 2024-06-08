@@ -36,6 +36,53 @@ void gradientAnimation(SDL_Renderer* renderer, SDL_Rect rect, SDL_Color startCol
     }
 }
 
+// 创建一个函数来渲染文本到按钮上
+void RenderButtonText(SDL_Renderer *renderer, TTF_Font *font, const char *text, SDL_Color color, int x, int y) {
+    SDL_Rect buttonRect = {350, 550, 200, 80}; // 调整按钮位置和大小
+    SDL_Surface *textSurface = TTF_RenderText_Solid(font, text, color);
+    if (textSurface) {
+        SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        if (textTexture) {
+            SDL_Rect textRect = {x + (buttonRect.w - textSurface->w) / 2, y + (buttonRect.h - textSurface->h) / 2, textSurface->w, textSurface->h};
+            SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+            SDL_DestroyTexture(textTexture);
+        }
+        SDL_FreeSurface(textSurface);
+    }
+}
+// 绘制按钮的函数
+void DrawButton(SDL_Renderer* renderer, SDL_Rect button, bool isPressed, const char* buttonText, TTF_Font* font, SDL_Color textColor) {
+    // 根据是否按下改变按钮背景色
+    SDL_Color buttonBackgroundColor;
+    if (isPressed) {
+        buttonBackgroundColor = {128, 128, 128}; // 按下时颜色变深
+    } else {
+        buttonBackgroundColor = {200, 200, 200}; // 未按下时使用浅灰色
+    }
+
+    // 绘制按钮背景
+    SDL_SetRenderDrawColor(renderer, buttonBackgroundColor.r, buttonBackgroundColor.g, buttonBackgroundColor.b, 255);
+    SDL_RenderFillRect(renderer, &button);
+
+    // 根据背景色选择对比度高的文本颜色
+    if (isPressed) {
+        textColor = {255, 255, 255}; // 背景色深时使用白色文本
+    } else {
+        textColor = {0, 0, 0}; // 背景色浅时使用黑色文本
+    }
+
+    // 创建文本表面并转换为纹理
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, buttonText, textColor);
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    SDL_Rect textRect = {button.x + (button.w - textSurface->w) / 2, button.y + (button.h - textSurface->h) / 2, textSurface->w, textSurface->h};
+
+    // 渲染文本
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+
+    // 清理
+    SDL_DestroyTexture(textTexture);
+    SDL_FreeSurface(textSurface);
+}
 // 创建新窗口的函数
 SDL_Window* CreateNewWindow(const string& title) {
     // 设置窗口的宽度和高度
@@ -351,8 +398,16 @@ switch (loggedInUser.type) {
         color = {0, 0, 0}; buttonText = "未知"; break;
 }
     // 使用渐变色填充矩形
-    SDL_Color startColor = {color.r, color.g, color.b}; // 渐变开始颜色
-    SDL_Color endColor = {color.r / 2, color.g / 2, color.b / 2}; // 渐变结束颜色
+    SDL_Color startColor = {
+    (color.r ) ,  
+    (color.g ) ,
+    (color.b ) 
+};
+SDL_Color endColor = {
+    color.r / 2,  // 直接对Uint8类型进行除以2操作
+    color.g / 2,  // 同上
+    color.b / 2   // 同上
+};
     gradientAnimation(userRenderer, rect, startColor, endColor, 1000); // 调用渐变动画函数
             // 渲染文本到矩形中心
             SDL_Surface* textSurface = TTF_RenderText_Solid(font, buttonText.c_str(), {255, 255, 255});
@@ -448,67 +503,167 @@ if (!newWindowTitle.empty()) {
         int rectHeight = windowHeight / 3;
 
 if (newWindowTitle == "BorrowBook") {
-bool quit = false;
+ // 创建按钮
+SDL_Rect borrowButton = {0, 0, windowWidth, rectHeight};
+SDL_Rect returnButton = {0, rectHeight, windowWidth, rectHeight};
+// 定义按钮状态变量
+bool isBorrowButtonPressed = false;
+bool isReturnButtonPressed = false;
+bool bquit = false;
 SDL_Event e;
 std::string outputText = "";
-while (!quit) {
+while (!bquit) {
     while (SDL_PollEvent(&e) != 0) {
         if (e.type == SDL_QUIT) {
-            quit = true;
+            bquit = true;
+        } else if (e.type == SDL_MOUSEBUTTONDOWN) {
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+
+            // 检测点击了Borrow按钮
+            if (x >= borrowButton.x && x <= borrowButton.x + borrowButton.w && y >= borrowButton.y && y <= borrowButton.y + borrowButton.h) {
+                isBorrowButtonPressed = true;
+            } else if (x >= returnButton.x && x <= returnButton.x + returnButton.w && y >= returnButton.y && y <= returnButton.y + returnButton.h) {
+                isReturnButtonPressed = true;
+            }
+        } else if (e.type == SDL_MOUSEBUTTONUP) {
+            if (isBorrowButtonPressed) {
+                // Borrow按钮被点击
+                string consoleTitle = "Console for " + string(newWindowTitle) + " " + "BorrowBook";
+                CreateConsoleWindow(consoleTitle);
+                BorrowBook(loggedInUser);
+                isBorrowButtonPressed = false;
+                bquit=true;
+                break;
+            } else if (isReturnButtonPressed) {
+                // Return按钮被点击
+                SDL_Delay(100); // 延时100毫秒
+                SDL_DestroyWindow(newWindow);
+                bquit=true;
+               break;
+            }
+            isReturnButtonPressed = false;
         }
     }
 
-    // 清空屏幕
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-
-    // 调用BorrowBook函数，并获取输出
-    //outputText = BorrowBook(loggedInUser,"2024.6.3");
-
-    // 将输出字符串转换为SDL_Surface，然后转换为SDL_Texture以渲染
-    SDL_Surface* textSurface = TTF_RenderText_Solid(font, outputText.c_str(), textColor);
-    if (!textSurface) {
-        std::cerr << "TTF_RenderText_Solid failed: " << TTF_GetError() << std::endl;
-        continue;
-    }
-
-    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    if (!textTexture) {
-        std::cerr << "SDL_CreateTextureFromSurface failed: " << SDL_GetError() << std::endl;
-        SDL_FreeSurface(textSurface);
-        continue;
-    }
-
-    SDL_Rect textRect = { (windowWidth - textSurface->w) / 2, (windowHeight - textSurface->h) / 2, textSurface->w, textSurface->h };
-    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
-
-    // 清理
-    SDL_FreeSurface(textSurface);
-    SDL_DestroyTexture(textTexture);
-
-    // 更新屏幕
+    // 绘制按钮
+    DrawButton(renderer, borrowButton, isBorrowButtonPressed, "Borrow", font, textColor);
+    DrawButton(renderer, returnButton, isReturnButtonPressed, "Return", font, textColor);
     SDL_RenderPresent(renderer);
 }
+
+}
+if (newWindowTitle == "ReturnBook") {
+ // 创建按钮
+SDL_Rect borrowButton = {0, 0, windowWidth, rectHeight};
+SDL_Rect returnButton = {0, rectHeight, windowWidth, rectHeight};
+// 定义按钮状态变量
+bool isBorrowButtonPressed = false;
+bool isReturnButtonPressed = false;
+bool bquit = false;
+SDL_Event e;
+std::string outputText = "";
+while (!bquit) {
+    while (SDL_PollEvent(&e) != 0) {
+        if (e.type == SDL_QUIT) {
+            bquit = true;
+        } else if (e.type == SDL_MOUSEBUTTONDOWN) {
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+
+            // 检测点击了Borrow按钮
+            if (x >= borrowButton.x && x <= borrowButton.x + borrowButton.w && y >= borrowButton.y && y <= borrowButton.y + borrowButton.h) {
+                isBorrowButtonPressed = true;
+            } else if (x >= returnButton.x && x <= returnButton.x + returnButton.w && y >= returnButton.y && y <= returnButton.y + returnButton.h) {
+                isReturnButtonPressed = true;
+            }
+        } else if (e.type == SDL_MOUSEBUTTONUP) {
+            if (isBorrowButtonPressed) {
+                // Borrow按钮被点击
+                string consoleTitle = "Console for " + string(newWindowTitle) + " " + "ReturnBook";
+                CreateConsoleWindow(consoleTitle);
+                returnBook(loggedInUser);
+                isBorrowButtonPressed = false;
+                bquit=true;
+                break;
+            } else if (isReturnButtonPressed) {
+                // back按钮被点击
+                SDL_Delay(100); // 延时100毫秒
+                SDL_DestroyWindow(newWindow);
+                bquit=true;
+               break;
+            }
+            isReturnButtonPressed = false;
+        }
+    }
+
+    // 绘制按钮
+    DrawButton(renderer, borrowButton, isBorrowButtonPressed, "returnbook", font, textColor);
+    DrawButton(renderer, returnButton, isReturnButtonPressed, "back", font, textColor);
+    SDL_RenderPresent(renderer);
 }
 
+}
+if (newWindowTitle == "HaveBorrowed" && (loggedInUser.type == 0 )) {
+
+
+
+
+
+    list<string> borrowedBookList = lookBorrowbook_man(loggedInUser);
+
+    // 遍历字符串列表，将非空子串输出到窗口中，每输出一个子串就会自动换行
+    int y = 10; // 起始y坐标，根据需要调整
+    for (const auto& bookStr : borrowedBookList) {
+        if (!bookStr.empty()) {
+            SDL_Surface *textSurface = TTF_RenderText_Solid(font, bookStr.c_str(), textColor);
+            if (textSurface) {
+                SDL_Texture *textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+                if (textTexture) {
+                    SDL_Rect textRect = {10, y, textSurface->w, textSurface->h}; // x坐标为10，根据需要调整
+                    y += textSurface->h;
+                    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+                    SDL_DestroyTexture(textTexture);
+                }
+                SDL_FreeSurface(textSurface);
+            }
+        }
+    }
+
+    // 在窗口底部添加一个按钮用来退出窗口
+    SDL_Rect buttonRect = {350, 550, 200, 80}; // 调整按钮位置和大小
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
+
+    SDL_RenderFillRect(renderer, &buttonRect);
+    // 在绘制按钮之后，调用这个函数来渲染"back"文本
+RenderButtonText(renderer, font, "back", textColor, buttonRect.x, buttonRect.y);
+    SDL_RenderPresent(renderer);
+
+    // 事件循环
+    SDL_Event event;
+    bool quit = false;
+    while (!quit) {
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                quit = true;
+            } else if (event.type == SDL_MOUSEBUTTONDOWN) {
+                int x = event.button.x;
+                int y = event.button.y;
+                if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w && y >= buttonRect.y && y <= buttonRect.y + buttonRect.h) {
+                    SDL_Delay(100); // 延时100毫秒
+                    SDL_DestroyWindow(newWindow);
+                    quit = true;
+                    break;
+                }
+            }
+        }
+    }
+}
 
 if (newWindowTitle == "HaveBorrowed" && (loggedInUser.type == 1 || loggedInUser.type == 2)) {
-    // 创建窗口
-    SDL_Window *hbwindow = SDL_CreateWindow("HaveBorrowed", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
-    if (!hbwindow) {
-        printf("创建窗口失败： %s\n", SDL_GetError());
-        SDL_Quit();
-        return 1;
-    }
 
-    // 创建渲染器
-    SDL_Renderer *renderer = SDL_CreateRenderer(hbwindow, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) {
-        printf("创建渲染器失败： %s\n", SDL_GetError());
-        SDL_DestroyWindow(hbwindow);
-        SDL_Quit();
-        return 1;
-    }
+
+
 
 
     list<string> borrowedBookList = lookBorrowbook_stu(loggedInUser);
@@ -532,10 +687,14 @@ if (newWindowTitle == "HaveBorrowed" && (loggedInUser.type == 1 || loggedInUser.
     }
 
     // 在窗口底部添加一个按钮用来退出窗口
-    SDL_Rect buttonRect = {350, 550, 100, 50}; // 调整按钮位置和大小
+    SDL_Rect buttonRect = {350, 550, 200, 80}; // 调整按钮位置和大小
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
+
     SDL_RenderFillRect(renderer, &buttonRect);
+    // 在绘制按钮之后，调用这个函数来渲染"back"文本
+RenderButtonText(renderer, font, "back", textColor, buttonRect.x, buttonRect.y);
     SDL_RenderPresent(renderer);
+
 
     // 事件循环
     SDL_Event event;
@@ -548,7 +707,10 @@ if (newWindowTitle == "HaveBorrowed" && (loggedInUser.type == 1 || loggedInUser.
                 int x = event.button.x;
                 int y = event.button.y;
                 if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w && y >= buttonRect.y && y <= buttonRect.y + buttonRect.h) {
+                    SDL_Delay(100); // 延时100毫秒
+                    SDL_DestroyWindow(newWindow);
                     quit = true;
+                    break;
                 }
             }
         }

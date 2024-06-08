@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <map>
 #include <list>
+#include <iomanip> 
+
 
 using namespace std;
 
@@ -401,12 +403,45 @@ vector<int> searchBook(const string& name)
     idList.erase(unique(idList.begin(), idList.end()), idList.end()); // 去重
     return idList;
 }
+string getCurrentDateTime() {  
+     // 获取当前时间（秒自从1970-01-01 00:00:00 UTC）
+    time_t rawtime;
+    time(&rawtime);
+    
+    // 转换为本地时间
+    struct tm * timeinfo = localtime(&rawtime);
+    
+    // 使用stringstream来构造日期字符串
+    std::ostringstream oss;
+    oss << (timeinfo->tm_year + 1900)
+    << std::setfill('0') << std::setw(2) << (timeinfo->tm_mon + 1)
+    << std::setfill('0') << std::setw(2) << timeinfo->tm_mday;
+    
+    return oss.str();
+}
 
+int daysBetweenDates(const std::string& date1, const std::string& date2) {
+    // 将字符串转换为tm结构体
+    std::tm tm1 = {}, tm2 = {};
+    std::istringstream ss1(date1), ss2(date2);
+    ss1 >> std::get_time(&tm1, "%Y%m%d");
+    ss2 >> std::get_time(&tm2, "%Y%m%d");
 
-void BorrowBook(User uk ,string borrowdata )
+    // 转换为time_t类型
+    time_t time1 = mktime(&tm1);
+    time_t time2 = mktime(&tm2);
+
+    // 计算时间差并转换为天数
+    double seconds = difftime(time2, time1);
+    int days = static_cast<int>(seconds / (60 * 60 * 24)); // 秒转换为天
+
+    return days;
+}
+void BorrowBook(User uk  )
 {
     list<Book> p = b_LordData(); // 加载书籍数据
     string name;
+    string borrowdata=getCurrentDateTime();
     int bid;
     
     vector<int> idList;
@@ -429,6 +464,67 @@ void BorrowBook(User uk ,string borrowdata )
     if (temp != p.end())
     {
         userborrowbook(uk, *temp, borrowdata);
+    }
+}
+list<string> lookBorrowbook_stu(User x);
+void returnBook(User uk)
+{
+    //先展示借书有哪些然后输入书名和id进行还书，最后输出罚款金额并且把所还书放到书库里
+    list<string> p=lookBorrowbook_stu(uk);
+for (list<string>::const_iterator it = p.begin(); it != p.end(); it++)
+    {
+        cout<<(*it)<<endl;
+    }
+    cout<<"请输入你想还的书名和id："<<endl;
+    string returnname;
+    int returnid;
+    
+    std::cin>>returnname;
+    cin>>returnid;
+    list<User> q =u_LordData();
+    for (list<User>::iterator it = q.begin(); it != q.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+    {
+        if(uk==(*it))
+        {
+            uk.borrowbook=(*it).borrowbook;
+            for (list<Borrowed_Book>::iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+            {
+                if((*it2).borrowbookname==returnname&&(*it2).id==returnid)
+                {
+                    (*it).borrowbook.erase(it2);
+                    
+                    break;
+                }
+            }
+        }
+    }
+    u_SaveData_del(q);
+    for(list<Borrowed_Book>::const_iterator it = uk.borrowbook.begin(); it != uk.borrowbook.end(); it++)
+    {
+        if((*it).borrowbookname==returnname&&(*it).id==returnid)
+        {
+            string returndata=getCurrentDateTime();
+            int days=daysBetweenDates((*it).data,returndata);
+            if(days>=15)
+            cout<<"您逾期 "<<days-14<<" 天未还书,罚款 "<<(days-14)/2<<" 元！"<<endl;
+            else
+            {
+                cout<<"您已按期完成还书。"<<endl;
+            }
+            uk.borrowbook.erase(it);
+            
+            list<Book> b =b_LordData();
+    for (list<Book>::iterator it2 = b.begin(); it2 != b.end(); it2++)
+        {
+            if((*it2).bookname ==returnname&&(*it2).id==returnid)
+            {
+                (*it2).io_number-=1;
+                (*it2).cur_number+=1;
+                break;
+            }
+        }
+    b_SaveData_del(b);
+        }
     }
 }
 
@@ -554,6 +650,24 @@ list<string> lookBorrowbook_stu(User x)
         }
     }
 
+    return a;
+}
+list<string> lookBorrowbook_man(User x)
+{
+    
+    list<User> p =u_LordData();
+    list<string> a;
+    string b;
+    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+    {
+        if((*it).borrownum!= 0){
+            for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+            {
+                b=(*it2).borrowbookname+ " " +to_string((*it2).id)+" "+(*it2).data+" "+(*it).name;
+                a.push_back(b);
+            }
+        }
+    }
     return a;
 }
 
