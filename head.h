@@ -51,28 +51,28 @@ User(string name,string key,string id,short type,short borrownum)
         return (id == other.id)&&(name==other.name);
     }
 
-    string name;                                //äººå
-    string key;                                 //ç™»é™†å¯†é’¥
-    string id;                                  //å€Ÿä¹¦è¯å·åŠå?¦å·
-    short type;                                 //0çš„è¯æ˜?ç®¡ç†å‘?1çš„è¯æ˜?å€Ÿä¹¦äº?
-    short borrownum;                            //å€Ÿä¹¦æ•°é‡                    
-    list<Borrowed_Book> borrowbook;             //æ‰€å€Ÿä¹¦ç±åç§?
+    string name;                                //ÈËÃû
+    string key;                                 //µÇÂ½ÃÜÔ¿
+    string id;                                  //½èÊéÖ¤ºÅ¼°Ñ§ºÅ
+    short type;                                 //0µÄ»°ÊÇ¹ÜÀíÔ±1µÄ»°ÊÇ½èÊéÈË
+    short borrownum;                            //½èÊéÊýÁ¿                    
+    list<Borrowed_Book> borrowbook;             //Ëù½èÊé¼®Ãû³Æ
 };
 
 
 class   Book
 {
 public:
-    int price;       //ä»·æ ¼
-    int id;    //åœ¨ä¹¦åº“é‡Œçš„åºå?
-    int sum_number;     //æ€»æ•°é‡?
-    int io_number;      //å€Ÿå‡ºæ•°é‡
-    int cur_number;         //å½“å‰æ•°é‡
-    string bookname;        //ä¹¦å
-    string author;      //ä½œè€?
-    string publising;       //å‡ºç‰ˆç¤?
-    string publisingdate;       //å‡ºç‰ˆæ—¥æœŸ
-    string kind;        //ç±»åˆ«0ä¸ºä¹¦ç±?1ä¸ºæœŸåˆ?2ä¸ºæŠ¥åˆ?
+    int price;       //¼Û¸ñ
+    int id;    //ÔÚÊé¿âÀïµÄÐòºÅ
+    int sum_number;     //×ÜÊýÁ¿
+    int io_number;      //½è³öÊýÁ¿
+    int cur_number;         //µ±Ç°ÊýÁ¿
+    string bookname;        //ÊéÃû
+    string author;      //×÷Õß
+    string publising;       //³ö°æÉç
+    string publisingdate;       //³ö°æÈÕÆÚ
+    string kind;        //Àà±ð0ÎªÊé¼®1ÎªÆÚ¿¯2Îª±¨¿¯
 
     Book(){}
     Book(int i):id(i){}
@@ -82,11 +82,11 @@ public:
     }
 };
 
-class IndexNode     //ä¹¦åç´¢å¼•çš„è¯å…¸èŠ‚ç‚?
+class IndexNode     //ÊéÃûË÷ÒýµÄ´Êµä½Úµã
 {
 public:
-    char word;        //ä¹¦åä¸?çš„è¯è¯?   
-    vector <int> bookid;             //æ‰€å€Ÿä¹¦ç±åºå?
+    char word;        //ÊéÃûÖÐµÄ´ÊÓï   
+    vector <int> bookid;             //Ëù½èÊé¼®ÐòºÅ
     
     IndexNode(){}
     IndexNode(char s):word(s){}
@@ -102,13 +102,13 @@ public:
 void DelIndexword(string name,int id);
 void userborrowbook(User& p, Book& b,string borrowdata);
 vector<int> searchBook(const string& name);
-void b_SaveData(list<Book>& p);//å­˜å‚¨æ•°æ®
+void b_SaveData(list<Book>& p);//´æ´¢Êý¾Ý
 void AddIndexword(const string &name,int id,list<IndexNode>& L);
-void u_SaveData(list<User>& p)//å­˜å‚¨æ•°æ®
+void u_SaveData(list<User>& p)//´æ´¢Êý¾Ý
 {
-    ofstream fp("userinfo.txt", ios::app);//fpä¸ºæ–‡ä»¶æŒ‡é’ˆï¼Œå†™æ–¹å¼?
+    ofstream fp("userinfo.txt", ios::app);//fpÎªÎÄ¼þÖ¸Õë£¬Ð´·½Ê½
 
-    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†userçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//ÀûÓÃµü´úÆ÷À´±éÀúuserµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
     {
         fp << (*it).name << " ";
         fp << (*it).key << " ";
@@ -124,11 +124,11 @@ void u_SaveData(list<User>& p)//å­˜å‚¨æ•°æ®
 
     fp.close();
 }
-void u_SaveData_del(list<User>& p)//å­˜å‚¨æ•°æ®
+void u_SaveData_del(list<User>& p)//´æ´¢Êý¾Ý
 {
-    ofstream fp("userinfo.txt", ios::trunc);//fpä¸ºæ–‡ä»¶æŒ‡é’ˆï¼Œå†™æ–¹å¼?
+    ofstream fp("userinfo.txt", ios::trunc);//fpÎªÎÄ¼þÖ¸Õë£¬Ð´·½Ê½
 
-    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†userçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//ÀûÓÃµü´úÆ÷À´±éÀúuserµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
     {
         fp << (*it).name << " ";
         fp << (*it).key << " ";
@@ -145,57 +145,57 @@ void u_SaveData_del(list<User>& p)//å­˜å‚¨æ•°æ®
     fp.close();
 }
 
-list<User> u_LordData()//è¯»å–å­˜å‚¨çš„æ•°æ?
+list<User> u_LordData()//¶ÁÈ¡´æ´¢µÄÊý¾Ý
 {
-    ifstream fp("userinfo.txt");//è¯»æ–¹å¼?
+    ifstream fp("userinfo.txt");//¶Á·½Ê½
     list<User> p;User temp;
         
     while(fp >> temp.name >> temp.key>> temp.type >> temp.id>>temp.borrownum)
     {
        Borrowed_Book t;
 
-        ;//å…ˆæŠŠé™¤äº†å€Ÿä¹¦åå­—çš„å†…å®¹è?»è¿‡æ?
+        ;//ÏÈ°Ñ³ýÁË½èÊéÃû×ÖµÄÄÚÈÝ¶Á¹ýÀ´
 
         int num = temp.borrownum;
         temp.borrowbook.clear();
         while (num--)
         {
-            fp >> t.borrowbookname >>t.id >> t.data;//æŠŠä¹¦åæ”¾è¿›userç±»é‡Œçš„list
+            fp >> t.borrowbookname >>t.id >> t.data;//°ÑÊéÃû·Å½øuserÀàÀïµÄlist
             temp.borrowbook.push_back(t);
         }
         
-        p.push_back(temp);//æŠŠè¿™ä¸?èµ‹å€¼å¥½çš„useræ”¾è¿›list
+        p.push_back(temp);//°ÑÕâ¸ö¸³ÖµºÃµÄuser·Å½ølist
         
     }
     fp.close();
     return p;
 }
 
-list<Book> b_LordData()//è¯»å–å­˜å‚¨çš„æ•°æ?
+list<Book> b_LordData()//¶ÁÈ¡´æ´¢µÄÊý¾Ý
 {
-    ifstream fp("bookinfo.txt");//è¯»æ–¹å¼?
+    ifstream fp("bookinfo.txt");//¶Á·½Ê½
     list<Book> p;
     Book temp;
         string bookname;
-    while (fp >> temp.id)//peekæ˜?çœ‹ä¸€çœ¼ä¸‹ä¸€ä¸?è¾“å…¥æ˜?ä»€ä¹ˆä½†ä¸æ›´æ”¹æ•°æ?
+    while (fp >> temp.id)//peekÊÇ¿´Ò»ÑÛÏÂÒ»¸öÊäÈëÊÇÊ²Ã´µ«²»¸ü¸ÄÊý¾Ý
     {
 
         
 
          fp>> temp.sum_number;
         fp >> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
-        fp>>temp.publising >> temp.publisingdate;//å…ˆæŠŠé™¤äº†å€Ÿä¹¦åå­—çš„å†…å®¹è?»è¿‡æ?
+        fp>>temp.publising >> temp.publisingdate;//ÏÈ°Ñ³ýÁË½èÊéÃû×ÖµÄÄÚÈÝ¶Á¹ýÀ´
 
         
-        p.push_back(temp);//æŠŠè¿™ä¸?èµ‹å€¼å¥½çš„useræ”¾è¿›list
+        p.push_back(temp);//°ÑÕâ¸ö¸³ÖµºÃµÄuser·Å½ølist
 
     }
     fp.close();
     return p;
 }
-list<IndexNode> i_LordData()//è¯»å–å­˜å‚¨çš„æ•°æ?
+list<IndexNode> i_LordData()//¶ÁÈ¡´æ´¢µÄÊý¾Ý
 {
-    ifstream fp("index.txt");//è¯»æ–¹å¼?
+    ifstream fp("index.txt");//¶Á·½Ê½
     list<IndexNode> p;
     IndexNode temp;
     string line;  
@@ -206,12 +206,12 @@ list<IndexNode> i_LordData()//è¯»å–å­˜å‚¨çš„æ•°æ?
         int num;  
         IndexNode temp;
         iss>> temp.word;
-        // å°è¯•ä»Žè?Œä¸­è¯»å–æ•´æ•°ï¼Œç›´åˆ°æ— æ³•è?»å–ä¸ºæ??  
+        // ³¢ÊÔ´ÓÐÐÖÐ¶ÁÈ¡ÕûÊý£¬Ö±µ½ÎÞ·¨¶ÁÈ¡ÎªÖ¹  
         while (iss >> num) 
         {  
             temp.bookid.push_back(num);  
   
-            // å°è¯•è¯»å–ä¸‹ä¸€ä¸?å­—ç?¦ï¼ˆå?èƒ½æ˜¯éžæ•´æ•°å­—ç¬¦ï¼‰ 
+            // ³¢ÊÔ¶ÁÈ¡ÏÂÒ»¸ö×Ö·û£¨¿ÉÄÜÊÇ·ÇÕûÊý×Ö·û£© 
         }  
         p.push_back(temp);
     }
@@ -229,8 +229,8 @@ void addUser()
         cin>>temp.name;
         cin>>temp.key;
         cin>>temp.type>>temp.id;
-        temp.borrownum=0;//å…ˆæŠŠé™¤äº†å€Ÿä¹¦åå­—çš„å†…å®¹è?»è¿‡æ?
-    p.push_back(temp);//æŠŠè¿™ä¸?èµ‹å€¼å¥½çš„useræ”¾è¿›list
+        temp.borrownum=0;//ÏÈ°Ñ³ýÁË½èÊéÃû×ÖµÄÄÚÈÝ¶Á¹ýÀ´
+    p.push_back(temp);//°ÑÕâ¸ö¸³ÖµºÃµÄuser·Å½ølist
     
     u_SaveData(p);
 }
@@ -242,17 +242,17 @@ void addBook()
     cin>> temp.id >> temp.sum_number;
     cin >> temp.io_number >> temp.cur_number >> temp.kind>>temp.bookname >> temp.author;
     cin>>temp.publising >> temp.publisingdate;
-    p.push_back(temp);//æŠŠè¿™ä¸?èµ‹å€¼å¥½çš„useræ”¾è¿›list
-    list<IndexNode> L = i_LordData(); // åŠ è½½çŽ°æœ‰çš„ç´¢å¼•æ•°æ?
-    AddIndexword(temp.bookname, temp.id, L); // å°†ä¹¦æ·»åŠ åˆ°è¯å…?
+    p.push_back(temp);//°ÑÕâ¸ö¸³ÖµºÃµÄuser·Å½ølist
+    list<IndexNode> L = i_LordData(); // ¼ÓÔØÏÖÓÐµÄË÷ÒýÊý¾Ý
+    AddIndexword(temp.bookname, temp.id, L); // ½«ÊéÌí¼Óµ½´Êµä
     b_SaveData(p);
 }
-void b_SaveData_del(list<Book>& p)//å­˜å‚¨æ•°æ®
+void b_SaveData_del(list<Book>& p)//´æ´¢Êý¾Ý
 {
-    ofstream fp("bookinfo.txt", ios::trunc);//fpä¸ºæ–‡ä»¶æŒ‡é’ˆï¼Œå†™æ–¹å¼?
+    ofstream fp("bookinfo.txt", ios::trunc);//fpÎªÎÄ¼þÖ¸Õë£¬Ð´·½Ê½
 
 
-    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†bookçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//ÀûÓÃµü´úÆ÷À´±éÀúbookµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
     {
         fp << (*it).id << " ";
         fp << (*it).sum_number << " ";
@@ -274,7 +274,7 @@ void deleteBook()
         {
             if((*it).bookname ==n)
             {
-                DelIndexword((*it).bookname,(*it).id);//è¯å…¸åˆ é™¤
+                DelIndexword((*it).bookname,(*it).id);//´ÊµäÉ¾³ý
                 p.erase(it);
                 break;
             }
@@ -358,12 +358,12 @@ void deleteUser()
 
 
 
-void b_SaveData(list<Book>& p)//å­˜å‚¨æ•°æ®
+void b_SaveData(list<Book>& p)//´æ´¢Êý¾Ý
 {
-    ofstream fp("bookinfo.txt", ios::app);//fpä¸ºæ–‡ä»¶æŒ‡é’ˆï¼Œå†™æ–¹å¼?
+    ofstream fp("bookinfo.txt", ios::app);//fpÎªÎÄ¼þÖ¸Õë£¬Ð´·½Ê½
 
 
-    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†bookçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//ÀûÓÃµü´úÆ÷À´±éÀúbookµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
     {
         fp << (*it).id << " ";
         fp << (*it).sum_number << " ";
@@ -390,7 +390,7 @@ vector<int> searchBook(const string& name)
 {
     list<IndexNode> L = i_LordData();
     vector<int> idList;
-    for (auto ch : name) // chä¾æ?¡å–çš„æ˜¯stré‡Œé¢çš„å­—ç¬?,ç›´åˆ°å–å®Œä¸ºæ??
+    for (auto ch : name) // chÒÀ´ÎÈ¡µÄÊÇstrÀïÃæµÄ×Ö·û,Ö±µ½È¡ÍêÎªÖ¹
     {
         IndexNode searchword(ch);
         auto temp = find(L.begin(), L.end(), searchword);
@@ -399,19 +399,19 @@ vector<int> searchBook(const string& name)
             copy((*temp).bookid.begin(), (*temp).bookid.end(), back_inserter(idList));
         }
     }
-    sort(idList.begin(), idList.end()); // é»˜è?¤ä»Žå°åˆ°å¤§æŽ’åº?
-    idList.erase(unique(idList.begin(), idList.end()), idList.end()); // åŽ»é‡
+    sort(idList.begin(), idList.end()); // Ä¬ÈÏ´ÓÐ¡µ½´óÅÅÐò
+    idList.erase(unique(idList.begin(), idList.end()), idList.end()); // È¥ÖØ
     return idList;
 }
 string getCurrentDateTime() {  
-     // èŽ·å–å½“å‰æ—¶é—´ï¼ˆç?’è‡ªä»?1970-01-01 00:00:00 UTCï¼?
+     // »ñÈ¡µ±Ç°Ê±¼ä£¨Ãë×Ô´Ó1970-01-01 00:00:00 UTC£©
     time_t rawtime;
     time(&rawtime);
     
-    // è½?æ?ä¸ºæœ¬åœ°æ—¶é—?
+    // ×ª»»Îª±¾µØÊ±¼ä
     struct tm * timeinfo = localtime(&rawtime);
     
-    // ä½¿ç”¨stringstreamæ¥æž„é€ æ—¥æœŸå­—ç¬¦ä¸²
+    // Ê¹ÓÃstringstreamÀ´¹¹ÔìÈÕÆÚ×Ö·û´®
     std::ostringstream oss;
     oss << (timeinfo->tm_year + 1900)
     << std::setfill('0') << std::setw(2) << (timeinfo->tm_mon + 1)
@@ -421,25 +421,25 @@ string getCurrentDateTime() {
 }
 
 int daysBetweenDates(const std::string& date1, const std::string& date2) {
-    // å°†å­—ç¬¦ä¸²è½?æ?ä¸ºtmç»“æž„ä½?
+    // ½«×Ö·û´®×ª»»Îªtm½á¹¹Ìå
     std::tm tm1 = {}, tm2 = {};
     std::istringstream ss1(date1), ss2(date2);
     ss1 >> std::get_time(&tm1, "%Y%m%d");
     ss2 >> std::get_time(&tm2, "%Y%m%d");
 
-    // è½?æ?ä¸ºtime_tç±»åž‹
+    // ×ª»»Îªtime_tÀàÐÍ
     time_t time1 = mktime(&tm1);
     time_t time2 = mktime(&tm2);
 
-    // è®¡ç®—æ—¶é—´å·?å¹¶è½¬æ?ä¸ºå¤©æ•?
+    // ¼ÆËãÊ±¼ä²î²¢×ª»»ÎªÌìÊý
     double seconds = difftime(time2, time1);
-    int days = static_cast<int>(seconds / (60 * 60 * 24)); // ç§’è½¬æ?ä¸ºå¤©
+    int days = static_cast<int>(seconds / (60 * 60 * 24)); // Ãë×ª»»ÎªÌì
 
     return days;
 }
 void BorrowBook(User uk  )
 {
-    list<Book> p = b_LordData(); // åŠ è½½ä¹¦ç±æ•°æ®
+    list<Book> p = b_LordData(); // ¼ÓÔØÊé¼®Êý¾Ý
     string name;
     string borrowdata=getCurrentDateTime();
     int bid;
@@ -457,7 +457,7 @@ void BorrowBook(User uk  )
         }
     }
 
-    cout << "è¾“å…¥æƒ³å€Ÿä¹¦çš„id:" << endl;
+    cout << "ÊäÈëÏë½èÊéµÄid:" << endl;
     cin >> bid;
 
     auto temp = find_if(p.begin(), p.end(), [bid](const Book& book) { return book.id == bid; });
@@ -469,25 +469,25 @@ void BorrowBook(User uk  )
 list<string> lookBorrowbook_stu(User x);
 void returnBook(User uk)
 {
-    //å…ˆå±•ç¤ºå€Ÿä¹¦æœ‰å“ªäº›ç„¶åŽè¾“å…¥ä¹¦åå’Œidè¿›è?Œè¿˜ä¹¦ï¼Œæœ€åŽè¾“å‡ºç½šæ¬¾é‡‘é¢å¹¶ä¸”æŠŠæ‰€è¿˜ä¹¦æ”¾åˆ°ä¹¦åº“é‡?
+    //ÏÈÕ¹Ê¾½èÊéÓÐÄÄÐ©È»ºóÊäÈëÊéÃûºÍid½øÐÐ»¹Êé£¬×îºóÊä³ö·£¿î½ð¶î²¢ÇÒ°ÑËù»¹Êé·Åµ½Êé¿âÀï
     list<string> p=lookBorrowbook_stu(uk);
 for (list<string>::const_iterator it = p.begin(); it != p.end(); it++)
     {
         cout<<(*it)<<endl;
     }
-    cout<<"ÇëÊäÈë½èÊéÃûºÍid"<<endl;
+    cout<<"ÇëÊäÈëÄãÏë»¹µÄÊéÃûºÍid£º"<<endl;
     string returnname;
     int returnid;
     
     std::cin>>returnname;
     cin>>returnid;
     list<User> q =u_LordData();
-    for (list<User>::iterator it = q.begin(); it != q.end(); it++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†bookçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+    for (list<User>::iterator it = q.begin(); it != q.end(); it++)//ÀûÓÃµü´úÆ÷À´±éÀúbookµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
     {
         if(uk==(*it))
         {
             uk.borrowbook=(*it).borrowbook;
-            for (list<Borrowed_Book>::iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†bookçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+            for (list<Borrowed_Book>::iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//ÀûÓÃµü´úÆ÷À´±éÀúbookµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
             {
                 if((*it2).borrowbookname==returnname&&(*it2).id==returnid)
                 {
@@ -506,10 +506,10 @@ for (list<string>::const_iterator it = p.begin(); it != p.end(); it++)
             string returndata=getCurrentDateTime();
             int days=daysBetweenDates((*it).data,returndata);
             if(days>=15)
-            cout<<"æ‚¨é€¾æœŸ "<<days-14<<" å¤©æœªè¿˜ä¹¦,ç½šæ?? "<<(days-14)/2<<" å…ƒï¼"<<endl;
+            cout<<"ÄúÓâÆÚ "<<days-14<<" ÌìÎ´»¹Êé,·£¿î "<<(days-14)/2<<" Ôª£¡"<<endl;
             else
             {
-                cout<<"æ‚¨å·²æŒ‰æœŸå®Œæˆè¿˜ä¹¦ã€?"<<endl;
+                cout<<"ÄúÒÑ°´ÆÚÍê³É»¹Êé¡£"<<endl;
             }
             uk.borrowbook.erase(it);
             
@@ -528,12 +528,12 @@ for (list<string>::const_iterator it = p.begin(); it != p.end(); it++)
     }
 }
 
-void i_SaveData(list<IndexNode> &p)//å­˜å‚¨æ•°æ®
+void i_SaveData(list<IndexNode> &p)//´æ´¢Êý¾Ý
 {
-    ofstream fp("index.txt", ios::app);//fpä¸ºæ–‡ä»¶æŒ‡é’ˆï¼Œå†™æ–¹å¼?
+    ofstream fp("index.txt", ios::app);//fpÎªÎÄ¼þÖ¸Õë£¬Ð´·½Ê½
 
 
-    for (list<IndexNode>::const_iterator it = p.begin(); it != p.end(); it++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†bookçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+    for (list<IndexNode>::const_iterator it = p.begin(); it != p.end(); it++)//ÀûÓÃµü´úÆ÷À´±éÀúbookµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
     {
         fp << (*it).word << " ";
         for (vector<int>::const_iterator it2 = (*it).bookid.begin(); it2 != (*it).bookid.end(); it2++)
@@ -549,7 +549,7 @@ void i_SaveData(list<IndexNode> &p)//å­˜å‚¨æ•°æ®
 
 void AddIndexword(const string& name, int id, list<IndexNode>& L)
 {
-    for (auto ch : name) // chä¾æ?¡å–çš„æ˜¯stré‡Œé¢çš„å­—ç¬?,ç›´åˆ°å–å®Œä¸ºæ??
+    for (auto ch : name) // chÒÀ´ÎÈ¡µÄÊÇstrÀïÃæµÄ×Ö·û,Ö±µ½È¡ÍêÎªÖ¹
     {
         IndexNode searchword(ch);
         auto temp = find(L.begin(), L.end(), searchword);
@@ -569,9 +569,9 @@ void AddIndexword(const string& name, int id, list<IndexNode>& L)
 void DelIndexword(string name,int id)
 {
     list<IndexNode> L=i_LordData();
-    for (auto ch : name)         //chä¾æ?¡å–çš„æ˜¯stré‡Œé¢çš„å­—ç¬?,ç›´åˆ°å–å®Œä¸ºæ??
+    for (auto ch : name)         //chÒÀ´ÎÈ¡µÄÊÇstrÀïÃæµÄ×Ö·û,Ö±µ½È¡ÍêÎªÖ¹
     {
-        IndexNode searchword(ch);//éœ€è¦åˆ é™¤ä¹ˆ
+        IndexNode searchword(ch);//ÐèÒªÉ¾³ýÃ´
         list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
         if(temp!=L.end())
         {  
@@ -579,13 +579,13 @@ void DelIndexword(string name,int id)
         } 
         if(temp==L.end())
         {
-            cout<<"æ— æ³•åˆ é™¤ï¼Œæ— å­˜å‚¨ä¿¡æ¯"<<endl;
+            cout<<"ÎÞ·¨É¾³ý£¬ÎÞ´æ´¢ÐÅÏ¢"<<endl;
         }
     }
 }
 
 
-void BuildIndex()//å»ºç«‹ä¹¦åè¯å…¸
+void BuildIndex()//½¨Á¢ÊéÃû´Êµä
 {
     list<Book> p=b_LordData();
     list<IndexNode> L=i_LordData();
@@ -593,9 +593,9 @@ void BuildIndex()//å»ºç«‹ä¹¦åè¯å…¸
     for(list<Book>::const_iterator it = p.begin();it !=p.end();it++)
     {
         AddIndexword((*it).bookname,(*it).id,L);
-    //     for (auto ch : (*it).bookname)         //chä¾æ?¡å–çš„æ˜¯stré‡Œé¢çš„å­—ç¬?,ç›´åˆ°å–å®Œä¸ºæ??
+    //     for (auto ch : (*it).bookname)         //chÒÀ´ÎÈ¡µÄÊÇstrÀïÃæµÄ×Ö·û,Ö±µ½È¡ÍêÎªÖ¹
     // {
-    //     IndexNode searchword(ch);//éœ€è¦åˆ é™¤ä¹ˆ
+    //     IndexNode searchword(ch);//ÐèÒªÉ¾³ýÃ´
     //     list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
     //     if(temp!=L.end())
     //     {  
@@ -624,7 +624,7 @@ list<string> Rank()
     string b;
     p.sort(compareBook);
     int ranking=1;
-    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†bookçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//ÀûÓÃµü´úÆ÷À´±éÀúbookµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
     {
         b =to_string(ranking) + " " + (*it).bookname + " " + to_string((*it).id); ;
         a.push_back(b);
@@ -638,11 +638,11 @@ list<string> lookBorrowbook_stu(User x)
     list<User> p =u_LordData();
     list<string> a;
     string b;
-    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†bookçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//ÀûÓÃµü´úÆ÷À´±éÀúbookµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
     {
         if(x==(*it))
         {
-            for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†bookçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+            for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//ÀûÓÃµü´úÆ÷À´±éÀúbookµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
             {
                 b=(*it2).borrowbookname+ " " +to_string((*it2).id)+" "+(*it2).data;
                 a.push_back(b);
@@ -658,10 +658,10 @@ list<string> lookBorrowbook_man(User x)
     list<User> p =u_LordData();
     list<string> a;
     string b;
-    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†bookçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//ÀûÓÃµü´úÆ÷À´±éÀúbookµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
     {
         if((*it).borrownum!= 0){
-            for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//åˆ©ç”¨è¿?ä»£å™¨æ¥éåŽ†bookçš„listå®¹å™¨çš„å…ƒç´ å¹¶ä¸”è¾“å‡ºåˆ°æ–‡ä»¶ä¸?
+            for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//ÀûÓÃµü´úÆ÷À´±éÀúbookµÄlistÈÝÆ÷µÄÔªËØ²¢ÇÒÊä³öµ½ÎÄ¼þÖÐ
             {
                 b=(*it2).borrowbookname+ " " +to_string((*it2).id)+" "+(*it2).data+" "+(*it).name;
                 a.push_back(b);
