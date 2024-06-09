@@ -8,6 +8,7 @@
 //#include "Index.h"
 
 using namespace std;
+
 class User;
 class Borrowed_Book;
 class Book;
@@ -16,5 +17,5 @@ bool compareBook(Book a,Book b);
 list<string> Rank();
 string getCurrentDateTime();
 int daysBetweenDates(const std::string& date1, const std::string& date2);
-
+vector<string> chinese_io(char* ori_c);
 #endif //_FUNCTION_H

@@ -91,3 +91,42 @@ int daysBetweenDates(const std::string& date1, const std::string& date2) {
 
     return days;
 }
+vector<string> chinese_io(char* ori_c) {
+    // 中文字符串切割 并且去除相同的字
+    //char* ori_c = (char*)"我是中国人人"; // 原始中文字符串
+    int size = strlen(ori_c); // 获取字符串长度
+    int index = 0; // 初始化索引
+    char zi_c[3]; // 用于存储单个汉字字符的数组，每个汉字占3个字节
+    string zi_str; // 用于存储单个汉字的字符串
+    vector<string> res_str; // 用于存储不重复汉字的结果向量
+
+    // 循环遍历原始字符串中的每个汉字
+    while(index < size) {
+        // 将单个汉字的三个字节拷贝到 zi_c 数组中
+        zi_c[0] = ori_c[index++];
+        zi_c[1] = ori_c[index++];
+        zi_c[2] = ori_c[index++];
+        zi_str = zi_c; // 将字符数组转为字符串
+
+        if (res_str.size() == 0) {
+            res_str.push_back(zi_str); // 如果结果向量为空，则直接添加当前汉字
+        } else {
+            // 检查当前汉字是否已经在结果向量中存在
+            for (int i = 0; i < res_str.size(); ++i) {
+                if (res_str.at(i) == zi_str) {
+                    break; // 如果找到相同的汉字，跳出循环，不做任何操作
+                } else if (i == res_str.size() - 1) {
+                    res_str.push_back(zi_str); // 如果遍历到最后一个元素且没有相同的汉字，则添加当前汉字
+                }
+            }
+        }
+    }
+
+    // 输出结果向量中的每个汉字
+    // for (int i = 0; i < res_str.size(); ++i) {
+    //     cout << res_str.at(i);
+    // }
+    // cout << endl;
+
+    return res_str;
+}
