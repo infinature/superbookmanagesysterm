@@ -9,11 +9,11 @@ using namespace std;
 class IndexNode     //书名索引的词典节点
 {
 public:
-    char word;        //书名中的词语   
+    string word;        //书名中的词语   
     vector <int> bookid;             //所借书籍序号
     
     IndexNode(){}
-    IndexNode(char s):word(s){}
+    IndexNode(const string &s):word(s){}
     bool operator==(const IndexNode& other) const
     {
         return word == other.word;
@@ -25,7 +25,7 @@ public:
 };
 
 void AddIndexword(const string &name,int id,list<IndexNode>& L);
-void DelIndexword(string name,int id);
+//void DelIndexword(string name,int id);
 list<IndexNode> i_LordData();
 vector<int> searchBook(const string& name);
 void i_SaveData(list<IndexNode> &p);

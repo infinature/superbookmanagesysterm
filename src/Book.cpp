@@ -1,7 +1,7 @@
 #include "Book.h"
 list<Book> b_LordData()//读取存储的数据
 {
-    ifstream fp("bookinfo.txt");//读方式
+    ifstream fp("../data/bookinfo.txt");//读方式
     list<Book> p;
     Book temp;
         string bookname;
@@ -36,7 +36,7 @@ void addBook()
 }
 void b_SaveData_del(list<Book>& p)//存储数据
 {
-    ofstream fp("bookinfo.txt", ios::trunc);//fp为文件指针，写方式
+    ofstream fp("../data/bookinfo.txt", ios::trunc);//fp为文件指针，写方式
 
 
     for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
@@ -51,24 +51,24 @@ void b_SaveData_del(list<Book>& p)//存储数据
 
     fp.close();
 }
-void deleteBook()
-{
-    string n;
-    cin>>n;
-    list<IndexNode> L=i_LordData();
-    list<Book> p =b_LordData();
-    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)
-        {
-            if((*it).bookname ==n)
-            {
-                DelIndexword((*it).bookname,(*it).id);//词典删除
-                p.erase(it);
-                break;
-            }
-        }
-    b_SaveData_del(p);
+// void deleteBook()
+// {
+//     string n;
+//     cin>>n;
+//     list<IndexNode> L=i_LordData();
+//     list<Book> p =b_LordData();
+//     for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)
+//         {
+//             if((*it).bookname ==n)
+//             {
+//                 DelIndexword((*it).bookname,(*it).id);//词典删除
+//                 p.erase(it);
+//                 break;
+//             }
+//         }
+//     b_SaveData_del(p);
 
-}
+// }
 void lookBook()
 {
     list<Book> p=b_LordData();
@@ -89,7 +89,7 @@ void lookBook()
 }
 void b_SaveData(list<Book>& p)//存储数据
 {
-    ofstream fp("bookinfo.txt", ios::app);//fp为文件指针，写方式
+    ofstream fp("../data/bookinfo.txt", ios::app);//fp为文件指针，写方式
 
 
     for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中

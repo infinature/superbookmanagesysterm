@@ -2,14 +2,16 @@
 
 using namespace std;
 
-int main()
-{
-    char* ch=(char*)"我是人中国人人";
-    vector <string> res_str= chinese_io(ch);
+int main() {
+    list<IndexNode> indexList;
+    AddIndexword("我是中国人人", 1, indexList);
 
-    //输出结果向量中的每个汉字
-    for (int i = 0; i < res_str.size(); ++i) {
-        cout << res_str.at(i);
+    // 打印结果
+    for (const auto& node : indexList) {
+        cout << "Word: " << node.word << ", Book IDs: ";
+        for (const auto& id : node.bookid) {
+            cout << id << " ";
+        }
         cout << endl;
     }
     return 0;

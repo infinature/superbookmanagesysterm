@@ -18,4 +18,5 @@ list<string> Rank();
 string getCurrentDateTime();
 int daysBetweenDates(const std::string& date1, const std::string& date2);
 vector<string> chinese_io(char* ori_c);
+char* strToChar(string strSend);
 #endif //_FUNCTION_H
