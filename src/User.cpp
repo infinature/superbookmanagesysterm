@@ -2,7 +2,7 @@
 
 void u_SaveData(list<User>& p)//存储数据
 {
-    ofstream fp("userinfo.txt", ios::app);//fp为文件指针，写方式
+    ofstream fp("../data/userinfo.txt", ios::app);//fp为文件指针，写方式
 
     for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历user的list容器的元素并且输出到文件中
     {
@@ -23,7 +23,7 @@ void u_SaveData(list<User>& p)//存储数据
 
 void u_SaveData_del(list<User>& p)//存储数据
 {
-    ofstream fp("userinfo.txt", ios::trunc);//fp为文件指针，写方式
+    ofstream fp("../data/userinfo.txt", ios::trunc);//fp为文件指针，写方式
 
     for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历user的list容器的元素并且输出到文件中
     {
@@ -43,7 +43,7 @@ void u_SaveData_del(list<User>& p)//存储数据
 }
 list<User> u_LordData()//读取存储的数据
 {
-    ifstream fp("userinfo.txt");//读方式
+    ifstream fp("../data/userinfo.txt");//读方式
     list<User> p;User temp;
         
     while(fp >> temp.name >> temp.key>> temp.type >> temp.id>>temp.borrownum)

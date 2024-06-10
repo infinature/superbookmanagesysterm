@@ -7,8 +7,8 @@ void BorrowBook(User uk ,string borrowdata )
     int bid;
     
     vector<int> idList;
-
-    cin >> name;
+    cout<<"输入关键词查找：";
+    getline(cin,name);
     idList = searchBook(name);
     for (int bookId : idList)
     {
@@ -33,7 +33,7 @@ void BorrowBook(User uk ,string borrowdata )
         {
         (*temp).io_number+=1;
         (*temp).cur_number-=1;
-        userborrowbook(uk, *temp, borrowdata);
+        //userborrowbook(uk, *temp, borrowdata);
         }
     }
 }
