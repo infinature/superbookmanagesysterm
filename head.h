@@ -437,17 +437,20 @@ int daysBetweenDates(const std::string& date1, const std::string& date2) {
 
     return days;
 }
-void BorrowBook(User uk  )
+void BorrowBook(User uk ,string borrowdata ,int kind)
 {
     list<Book> p = b_LordData(); // 加载书籍数据
     string name;
-    string borrowdata=getCurrentDateTime();
     int bid;
     
     vector<int> idList;
-
-    cin >> name;
-    idList = searchBook(name);
+    cout<<"输入关键词查找：";  
+    name=readUTF8FromConsole();
+    //name=UTF16ToUTF8(wname);
+    if(kind==0)
+    idList = searchBookD(name);
+    else if(kind==1)
+    idList = searchBookW(name);
     for (int bookId : idList)
     {
         auto temp = find_if(p.begin(), p.end(), [bookId](const Book& book) { return book.id == bookId; });
@@ -463,7 +466,18 @@ void BorrowBook(User uk  )
     auto temp = find_if(p.begin(), p.end(), [bid](const Book& book) { return book.id == bid; });
     if (temp != p.end())
     {
+        if((*temp).cur_number==0)
+        {
+            cout<<"无存书！"<<endl;
+        }
+        else
+        {
+        (*temp).io_number+=1;
+        (*temp).cur_number-=1;
+        b_SaveData_del(p);
         userborrowbook(uk, *temp, borrowdata);
+        cout<<"借书成功！"<<endl;
+        }
     }
 }
 list<string> lookBorrowbook_stu(User x);
