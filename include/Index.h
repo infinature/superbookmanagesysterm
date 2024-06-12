@@ -27,7 +27,8 @@ public:
 void AddIndexword(const string &name,int id,list<IndexNode>& L);
 //void DelIndexword(string name,int id);
 list<IndexNode> i_LordData();
-vector<int> searchBook(const string& name);
+vector<int> searchBookW(const string& name);
+vector<int> searchBookD(const string& name);
 void i_SaveData(list<IndexNode> &p);
 void BuildIndex();
 #endif //_INDEX_H

@@ -25,7 +25,7 @@ list<IndexNode> i_LordData()//读取存储的数据
     return p;
 }
 
-vector<int> searchBook(const string& name) {
+vector<int> searchBookW(const string& name) {
     list<IndexNode> L = i_LordData();
     vector<int> idList;
 
@@ -45,6 +45,41 @@ vector<int> searchBook(const string& name) {
     idList.erase(unique(idList.begin(), idList.end()), idList.end()); // 去重
 
     return idList;
+}
+vector<int> searchBookD(const string& name) {
+    list<IndexNode> L = i_LordData();
+    vector<vector<int>> bookIdLists;
+
+    char* Name = strToChar(name);
+    vector<string> res_str = chinese_io(Name);
+    delete[] Name; // 确保释放内存
+
+    for (const string& str : res_str) {
+        IndexNode searchword(str);
+        auto temp = find(L.begin(), L.end(), searchword);
+        if (temp != L.end()) {
+            bookIdLists.push_back(temp->bookid);
+        }
+    }
+
+    if (bookIdLists.empty()) {
+        return {};
+    }
+
+    // 初始化交集结果为第一个列表
+    vector<int> commonBooks = bookIdLists[0];
+
+    for (size_t i = 1; i < bookIdLists.size(); ++i) {
+        vector<int> temp;
+        sort(commonBooks.begin(), commonBooks.end());
+        sort(bookIdLists[i].begin(), bookIdLists[i].end());
+        set_intersection(commonBooks.begin(), commonBooks.end(),
+                         bookIdLists[i].begin(), bookIdLists[i].end(),
+                         back_inserter(temp));
+        commonBooks = temp;
+    }
+
+    return commonBooks;
 }
 void i_SaveData(list<IndexNode> &p)//存储数据
 {

@@ -1,16 +1,19 @@
 #include "function.h"
 
-void BorrowBook(User uk ,string borrowdata )
+void BorrowBook(User uk ,string borrowdata ,int kind)
 {
     list<Book> p = b_LordData(); // 加载书籍数据
     string name;
     int bid;
     
     vector<int> idList;
-    cout<<"输入关键词查找：";
+    cout<<"输入关键词查找：";  
     name=readUTF8FromConsole();
     //name=UTF16ToUTF8(wname);
-    idList = searchBook(name);
+    if(kind==0)
+    idList = searchBookD(name);
+    else if(kind==1)
+    idList = searchBookW(name);
     for (int bookId : idList)
     {
         auto temp = find_if(p.begin(), p.end(), [bookId](const Book& book) { return book.id == bookId; });
@@ -34,7 +37,9 @@ void BorrowBook(User uk ,string borrowdata )
         {
         (*temp).io_number+=1;
         (*temp).cur_number-=1;
-        //userborrowbook(uk, *temp, borrowdata);
+        b_SaveData_del(p);
+        userborrowbook(uk, *temp, borrowdata);
+        cout<<"借书成功！"<<endl;
         }
     }
 }
