@@ -3,13 +3,12 @@
 void BorrowBook(User uk ,string borrowdata )
 {
     list<Book> p = b_LordData(); // 加载书籍数据
-    wstring wname;
     string name;
     int bid;
     
     vector<int> idList;
     cout<<"输入关键词查找：";
-    getline(cin,name);
+    name=readUTF8FromConsole();
     //name=UTF16ToUTF8(wname);
     idList = searchBook(name);
     for (int bookId : idList)
