@@ -17,6 +17,10 @@
 
 using namespace std;
 
+string readUTF8FromConsole();
+vector<string> chinese_io(char* ori_c);
+char* strToChar(string strSend);
+
 class Borrowed_Book
 {
 public:
@@ -386,22 +390,61 @@ void userborrowbook(User& p, Book& b,string borrowdata)
     p.borrowbook.push_back(bb);    
 
 }
-vector<int> searchBook(const string& name)
-{
+vector<int> searchBookW(const string& name) {
     list<IndexNode> L = i_LordData();
     vector<int> idList;
-    for (auto ch : name) // ch依次取的是str里面的字符,直到取完为止
-    {
-        IndexNode searchword(ch);
+
+    char* Name = strToChar(name);
+    vector<string> res_str = chinese_io(Name);
+    delete[] Name; // 确保释放内存
+
+    for (const string& str : res_str) {
+        IndexNode searchword(str);
         auto temp = find(L.begin(), L.end(), searchword);
-        if (temp != L.end())
-        {
+        if (temp != L.end()) {
             copy((*temp).bookid.begin(), (*temp).bookid.end(), back_inserter(idList));
         }
     }
+
     sort(idList.begin(), idList.end()); // 默认从小到大排序
     idList.erase(unique(idList.begin(), idList.end()), idList.end()); // 去重
+
     return idList;
+}
+vector<int> searchBookD(const string& name) {
+    list<IndexNode> L = i_LordData();
+    vector<vector<int>> bookIdLists;
+
+    char* Name = strToChar(name);
+    vector<string> res_str = chinese_io(Name);
+    delete[] Name; // 确保释放内存
+
+    for (const string& str : res_str) {
+        IndexNode searchword(str);
+        auto temp = find(L.begin(), L.end(), searchword);
+        if (temp != L.end()) {
+            bookIdLists.push_back(temp->bookid);
+        }
+    }
+
+    if (bookIdLists.empty()) {
+        return {};
+    }
+
+    // 初始化交集结果为第一个列表
+    vector<int> commonBooks = bookIdLists[0];
+
+    for (size_t i = 1; i < bookIdLists.size(); ++i) {
+        vector<int> temp;
+        sort(commonBooks.begin(), commonBooks.end());
+        sort(bookIdLists[i].begin(), bookIdLists[i].end());
+        set_intersection(commonBooks.begin(), commonBooks.end(),
+                         bookIdLists[i].begin(), bookIdLists[i].end(),
+                         back_inserter(temp));
+        commonBooks = temp;
+    }
+
+    return commonBooks;
 }
 string getCurrentDateTime() {  
      // 获取当前时间（秒自从1970-01-01 00:00:00 UTC）
