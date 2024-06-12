@@ -19,4 +19,7 @@ string getCurrentDateTime();
 int daysBetweenDates(const std::string& date1, const std::string& date2);
 vector<string> chinese_io(char* ori_c);
 char* strToChar(string strSend);
+string UTF16ToUTF8(const std::wstring& utf16);
+bool isValidUTF8(const std::string& str);
+string readUTF8FromConsole();
 #endif //_FUNCTION_H

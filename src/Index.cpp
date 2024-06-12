@@ -103,7 +103,7 @@ void AddIndexword(const string& name, int id, list<IndexNode>& L) {
 void BuildIndex()//建立书名词典
 {
     list<Book> p=b_LordData();
-    list<IndexNode> L=i_LordData();
+    list<IndexNode> L;
     //IndexNode temp;
     for(list<Book>::const_iterator it = p.begin();it !=p.end();it++)
     {

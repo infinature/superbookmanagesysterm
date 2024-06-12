@@ -3,12 +3,14 @@
 void BorrowBook(User uk ,string borrowdata )
 {
     list<Book> p = b_LordData(); // 加载书籍数据
+    wstring wname;
     string name;
     int bid;
     
     vector<int> idList;
     cout<<"输入关键词查找：";
     getline(cin,name);
+    //name=UTF16ToUTF8(wname);
     idList = searchBook(name);
     for (int bookId : idList)
     {
@@ -121,4 +123,86 @@ char* strToChar(string strSend)
     ConvertData = new char[len2 + 1];
     strcpy(ConvertData, strSend.c_str());
     return ConvertData;
+}
+string UTF16ToUTF8(const std::wstring& utf16) {
+    int count = WideCharToMultiByte(CP_UTF8, 0, utf16.c_str(), -1, NULL, 0, NULL, NULL);
+    char* buffer = new char[count+1];
+    memset(buffer,0,count+1);
+    WideCharToMultiByte(CP_UTF8, 0, utf16.c_str(), -1, buffer, count, NULL, NULL);
+    std::string utf8(buffer);
+    delete[] buffer;
+    return utf8;
+}
+bool isValidUTF8(const std::string& str) {
+    int len = str.length();
+    int i = 0;
+    while (i < len) {
+        unsigned char c = str[i];
+        int num_bytes = 0;
+        
+        if ((c & 0x80) == 0) {
+            // 1-byte character (ASCII)
+            num_bytes = 1;
+        } else if ((c & 0xE0) == 0xC0) {
+            // 2-byte character
+            num_bytes = 2;
+        } else if ((c & 0xF0) == 0xE0) {
+            // 3-byte character
+            num_bytes = 3;
+        } else if ((c & 0xF8) == 0xF0) {
+            // 4-byte character
+            num_bytes = 4;
+        } else {
+            // Invalid UTF-8 start byte
+            return false;
+        }
+        
+        if (i + num_bytes > len) {
+            // Not enough bytes left
+            return false;
+        }
+        
+        // Check continuation bytes
+        for (int j = 1; j < num_bytes; ++j) {
+            if ((str[i + j] & 0xC0) != 0x80) {
+                return false;
+            }
+        }
+        
+        i += num_bytes;
+    }
+    return true;
+}
+string readUTF8FromConsole() {
+    // 获取标准输入的句柄
+    HANDLE hConsole = GetStdHandle(STD_INPUT_HANDLE);
+    if (hConsole == INVALID_HANDLE_VALUE) {
+        return "";
+    }
+
+    // 临时缓冲区用于存储宽字符
+    wchar_t buffer[256];
+    DWORD charsRead;
+    
+    // 读取输入的宽字符
+    if (!ReadConsoleW(hConsole, buffer, 256, &charsRead, NULL)) {
+        return "";
+    }
+
+    // 去掉缓冲区末尾的换行符（如果有）
+    if (charsRead > 0 && buffer[charsRead - 1] == L'\n') {
+        buffer[charsRead - 1] = L'\0';
+        charsRead--;
+    }
+    if (charsRead > 0 && buffer[charsRead - 1] == L'\r') {
+        buffer[charsRead - 1] = L'\0';
+        charsRead--;
+    }
+
+    // 转换宽字符为 UTF-8
+    int size_needed = WideCharToMultiByte(CP_UTF8, 0, buffer, charsRead, NULL, 0, NULL, NULL);
+    std::string utf8String(size_needed, 0);
+    WideCharToMultiByte(CP_UTF8, 0, buffer, charsRead, &utf8String[0], size_needed, NULL, NULL);
+
+    return utf8String;
 }
