@@ -684,5 +684,117 @@ list<string> lookBorrowbook_man(User x)
     }
     return a;
 }
+vector<string> chinese_io(char* ori_c) {
+    int size = strlen(ori_c); // 获取字符串长度
+    int index = 0; // 初始化索引
+    char zi_c[3]; // 用于存储单个汉字字符的数组，每个汉字占3个字节
+    vector<string> res_str; // 用于存储不重复汉字的结果向量
 
+    // 循环遍历原始字符串中的每个汉字
+    while (index < size) {
+        // 将单个汉字的三个字节拷贝到 zi_c 数组中
+        zi_c[0] = ori_c[index++];
+        zi_c[1] = ori_c[index++];
+        zi_c[2] = ori_c[index++];
+        string zi_str(zi_c, 3); // 将字符数组转为字符串
+
+        // 如果结果向量中没有该汉字，则添加
+        if (find(res_str.begin(), res_str.end(), zi_str) == res_str.end()) {
+            res_str.push_back(zi_str);
+        }
+    }
+
+    return res_str;
+}
+
+char* strToChar(string strSend)
+{
+    char* ConvertData;
+    const int len2 = strSend.length();
+    ConvertData = new char[len2 + 1];
+    strcpy(ConvertData, strSend.c_str());
+    return ConvertData;
+}
+string UTF16ToUTF8(const std::wstring& utf16) {
+    int count = WideCharToMultiByte(CP_UTF8, 0, utf16.c_str(), -1, NULL, 0, NULL, NULL);
+    char* buffer = new char[count+1];
+    memset(buffer,0,count+1);
+    WideCharToMultiByte(CP_UTF8, 0, utf16.c_str(), -1, buffer, count, NULL, NULL);
+    std::string utf8(buffer);
+    delete[] buffer;
+    return utf8;
+}
+bool isValidUTF8(const std::string& str) {
+    int len = str.length();
+    int i = 0;
+    while (i < len) {
+        unsigned char c = str[i];
+        int num_bytes = 0;
+        
+        if ((c & 0x80) == 0) {
+            // 1-byte character (ASCII)
+            num_bytes = 1;
+        } else if ((c & 0xE0) == 0xC0) {
+            // 2-byte character
+            num_bytes = 2;
+        } else if ((c & 0xF0) == 0xE0) {
+            // 3-byte character
+            num_bytes = 3;
+        } else if ((c & 0xF8) == 0xF0) {
+            // 4-byte character
+            num_bytes = 4;
+        } else {
+            // Invalid UTF-8 start byte
+            return false;
+        }
+        
+        if (i + num_bytes > len) {
+            // Not enough bytes left
+            return false;
+        }
+        
+        // Check continuation bytes
+        for (int j = 1; j < num_bytes; ++j) {
+            if ((str[i + j] & 0xC0) != 0x80) {
+                return false;
+            }
+        }
+        
+        i += num_bytes;
+    }
+    return true;
+}
+string readUTF8FromConsole() {
+    // 获取标准输入的句柄
+    HANDLE hConsole = GetStdHandle(STD_INPUT_HANDLE);
+    if (hConsole == INVALID_HANDLE_VALUE) {
+        return "";
+    }
+
+    // 临时缓冲区用于存储宽字符
+    wchar_t buffer[256];
+    DWORD charsRead;
+    
+    // 读取输入的宽字符
+    if (!ReadConsoleW(hConsole, buffer, 256, &charsRead, NULL)) {
+        return "";
+    }
+
+    // 去掉缓冲区末尾的换行符（如果有）
+    if (charsRead > 0 && buffer[charsRead - 1] == L'\n') {
+        buffer[charsRead - 1] = L'\0';
+        charsRead--;
+    }
+    if (charsRead > 0 && buffer[charsRead - 1] == L'\r') {
+        buffer[charsRead - 1] = L'\0';
+        charsRead--;
+    }
+
+    // 转换宽字符为 UTF-8
+    int size_needed = WideCharToMultiByte(CP_UTF8, 0, buffer, charsRead, NULL, 0, NULL, NULL);
+    std::string utf8String(size_needed, 0);
+    WideCharToMultiByte(CP_UTF8, 0, buffer, charsRead, &utf8String[0], size_needed, NULL, NULL);
+
+    return utf8String;
+}
 #endif 
