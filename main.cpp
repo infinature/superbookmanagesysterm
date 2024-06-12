@@ -1,6 +1,5 @@
 #include <D:\github's hub\superbookmanagesysterm\include\head.h>
-#undef main // 加上这句防止一些奇怪的报错
-using namespace std; // 使用标准命名空间
+
 
 
 
@@ -81,28 +80,14 @@ SDL_Window* CreateNewWindow(const string& title) {
     SDL_Window* newWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     return newWindow;
 }
-void CreateConsoleWindow(const std::string& title) {
+// 创建新的控制台窗口函数
+void CreateConsoleWindow(const string& title) {
     FreeConsole(); // 释放控制台
     AllocConsole(); // 分配新的控制台
     freopen("CONOUT$", "wt", stdout); // 重定向标准输出到控制台
     freopen("CONIN$", "rt", stdin);  // 重定向标准输入到控制台
-
-    // 将 const char* 转换为 ANSI 字符串
-    int len = MultiByteToWideChar(CP_ACP, 0, title.c_str(), -1, NULL, 0);
-    wchar_t* wstrTitle = new wchar_t[len];
-    MultiByteToWideChar(CP_ACP, 0, title.c_str(), -1, wstrTitle, len);
-
-    // 将宽字符字符串转换回 ANSI 字符串
-    len = WideCharToMultiByte(CP_ACP, 0, wstrTitle, -1, NULL, 0, NULL, NULL);
-    char* ansiTitle = new char[len];
-    WideCharToMultiByte(CP_ACP, 0, wstrTitle, -1, ansiTitle, len, NULL, NULL);
-
-    SetConsoleTitle(ansiTitle);   // 设置控制台窗口标题
-
-    std::wcout << L"New console window created with title: " << wstrTitle << std::endl; // 输出新窗口的标题
-
-    delete[] wstrTitle;
-    delete[] ansiTitle;
+    SetConsoleTitle(title.c_str());   // 设置控制台窗口标题
+    cout << "New console window created with title: " << title << endl; // 输出新窗口的标题
 }
 
 // 根据用户类型创建新窗口的函数
