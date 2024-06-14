@@ -9,7 +9,7 @@
 #include <string> // 包含字符串类的头文件
 
 #include <cmath>
-#include <include\head.h>
+#include "head.h"
 
 using namespace std; // 使用标准命名空间
 
@@ -99,6 +99,8 @@ void CreateConsoleWindow(const string& title) {
     freopen("CONOUT$", "wt", stdout); // 重定向标准输出到控制台
     freopen("CONIN$", "rt", stdin);  // 重定向标准输入到控制台
     SetConsoleTitle(title.c_str());   // 设置控制台窗口标题
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
     cout << "New console window created with title: " << title << endl; // 输出新窗口的标题
 }
 
@@ -150,6 +152,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 // main函数是程序的入口点
 int main(int argc, char *argv[]) {
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
     BuildIndex();
     // 初始化SDL视频和TTF库
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -532,7 +536,8 @@ while (!bquit) {
                 // Borrow按钮被点击
                 string consoleTitle = "Console for " + string(newWindowTitle) + " " + "BorrowBook";
                 CreateConsoleWindow(consoleTitle);
-                BorrowBook(loggedInUser,getCurrentDateTime());
+                int temp=0;
+                BorrowBook(loggedInUser,getCurrentDateTime(),temp);
                 isBorrowButtonPressed = false;
                 SDL_Delay(100); // 延时100毫秒
                 SDL_DestroyWindow(newWindow); 
@@ -1029,7 +1034,7 @@ if (newWindowTitle == "UserADMIN") {
     if (buttonTexts[i] == "add") {
         addBook();
     } else if (buttonTexts[i] == "delete") {
-        //deleteBook();  // For BookADMIN's delete logic
+        deleteBook();  // For BookADMIN's delete logic
     } else if (buttonTexts[i] == "look") {
         lookBook();  // For BookADMIN's view logic
     }

@@ -51,24 +51,24 @@ void b_SaveData_del(list<Book>& p)//存储数据
 
     fp.close();
 }
-// void deleteBook()
-// {
-//     string n;
-//     cin>>n;
-//     list<IndexNode> L=i_LordData();
-//     list<Book> p =b_LordData();
-//     for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)
-//         {
-//             if((*it).bookname ==n)
-//             {
-//                 DelIndexword((*it).bookname,(*it).id);//词典删除
-//                 p.erase(it);
-//                 break;
-//             }
-//         }
-//     b_SaveData_del(p);
+void deleteBook()
+{
+    string n;
+    cin>>n;
+    list<IndexNode> L=i_LordData();
+    list<Book> p =b_LordData();
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)
+        {
+            if((*it).bookname ==n)
+            {
+                //DelIndexword((*it).bookname,(*it).id);//词典删除
+                p.erase(it);
+                break;
+            }
+        }
+    b_SaveData_del(p);
 
-// }
+}
 void lookBook()
 {
     list<Book> p=b_LordData();

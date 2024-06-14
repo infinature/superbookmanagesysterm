@@ -12,7 +12,7 @@ using namespace std;
 class User;
 class Borrowed_Book;
 class Book;
-void BorrowBook(User uk ,string borrowdata );
+void BorrowBook(User uk ,string borrowdata ,int kind);
 bool compareBook(Book a,Book b);
 list<string> Rank();
 string getCurrentDateTime();

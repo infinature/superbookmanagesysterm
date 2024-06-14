@@ -36,7 +36,7 @@ list<Book> b_LordData();
 void addBook();
 void b_SaveData(list<Book>& p);
 void b_SaveData_del(list<Book>& p);
-//void deleteBook();
+void deleteBook();
 void lookBook();
 
 
