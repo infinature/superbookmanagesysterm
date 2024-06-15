@@ -22,4 +22,5 @@ char* strToChar(string strSend);
 string UTF16ToUTF8(const std::wstring& utf16);
 bool isValidUTF8(const std::string& str);
 string readUTF8FromConsole();
+int getValidIntegerInput(const std::string& prompt);
 #endif //_FUNCTION_H

@@ -72,9 +72,11 @@ void addUser()
     User temp;
     string bookname;
     Borrowed_Book t;
-   
+    cout<<"请输入用户名："<<endl;
         cin>>temp.name;
+        cout<<" 请输入新用户密钥"<<endl;
         cin>>temp.key;
+        cout<<"请输入新用户类型和id(类型为第一位0或1):"<<endl;
         cin>>temp.type>>temp.id;
         temp.borrownum=0;//先把除了借书名字的内容读过来
     p.push_back(temp);//把这个赋值好的user放进list
@@ -143,9 +145,21 @@ void userborrowbook(User& p, Book b,string borrowdata)
     bb.data = borrowdata;
     bb.id = b.id;
     bb.borrowbookname=b.bookname;
-    p.borrowbook.push_back(bb);    
+     
+    list<User> u= u_LordData();
+    for (list<User>::iterator it = u.begin(); it != u.end(); it++)
+        {
+            if((*it) ==p)
+            {
+                (*it).borrowbook.push_back(bb);   
+                break;
+            
+            }
 
+        }
+    u_SaveData_del(u);
 }
+
 
 void returnBook(User uk)
 {
