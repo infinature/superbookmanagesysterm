@@ -920,8 +920,89 @@ if (newWindowTitle == "UserADMIN") {
     } else if (buttonTexts[i] == "delete") {
         deleteBook();  // For BookADMIN's delete logic
     } else if (buttonTexts[i] == "look") {
-        lookBook();  // For BookADMIN's view logic
+        SDL_Color newWindowColors[] = {
+    {139, 0, 139},   // 暗紫罗兰
+    {206, 0, 209},   // 深紫
+    {242, 212, 0},   // 浅黄绿
+    {212, 211, 0}     // 浅橄榄绿
+};
+
+// 定义新窗口的按钮文本和对应的回调函数
+const char* newButtonTexts[] = {"Function1", "Function2", "Function3", "Function4"};
+
+void (*newButtonCallbacks[])() = {lookBook, lookBook_0, lookBook_1, lookBook_2};
+
+    // 创建新窗口
+    SDL_Window* new2Window = SDL_CreateWindow("New Console Window",
+                                              SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                              windowWidth, 600,0);
+    if (!new2Window) {
+        SDL_Log("Failed to create new window: %s", SDL_GetError());
     }
+
+    // 创建渲染器
+    SDL_Renderer* renderer = SDL_CreateRenderer(new2Window, -1, SDL_RENDERER_ACCELERATED);
+    if (!renderer) {
+        SDL_Log("Failed to create renderer: %s", SDL_GetError());
+        SDL_DestroyWindow(new2Window);
+    }
+
+// 循环创建和显示四个矩形以及按钮文本
+for (int i = 0; i < 4; ++i) {
+    SDL_Rect newRect = {0, 150 * i, windowWidth, 150};
+    
+    // 设置绘制颜色
+    SDL_SetRenderDrawColor(renderer, newWindowColors[i].r, newWindowColors[i].g, newWindowColors[i].b, 255);
+    SDL_RenderFillRect(renderer, &newRect);
+    
+    // 渲染按钮文本
+    SDL_Color textColor = {255, 255, 255}; // 文本颜色为白色
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, newButtonTexts[i], textColor);
+    if (textSurface) {
+        SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+        if (textTexture) {
+            // 计算文本渲染的中心位置
+            int textX = windowWidth / 2 - textSurface->w / 2; // 水平居中
+            int textY = newRect.y + (150 - textSurface->h) / 2; // 垂直居中
+            SDL_Rect textRect = {textX, textY, textSurface->w, textSurface->h};
+            SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+            
+            // 清理资源
+            SDL_FreeSurface(textSurface);
+            SDL_DestroyTexture(textTexture);
+        }
+    }
+}
+// 展示渲染结果
+SDL_RenderPresent(renderer);
+
+    // 新窗口的事件循环
+    bool newRunning = true;
+    while (newRunning) {
+        SDL_Event newEvent;
+        while (SDL_PollEvent(&newEvent)) {
+            if (newEvent.type == SDL_QUIT) {
+                newRunning = false;
+            } else if (newEvent.type == SDL_MOUSEBUTTONDOWN) {
+                // 检查点击的按钮并执行对应的函数
+                for (int i = 0; i < 4; ++i) {
+                    SDL_Rect newRect = {0, rectHeight * i, windowWidth, rectHeight};
+                    if (newEvent.button.x >= newRect.x && newEvent.button.x < newRect.x + newRect.w &&
+                        newEvent.button.y >= newRect.y && newEvent.button.y < newRect.y + newRect.h) {
+                        newButtonCallbacks[i](); // 执行对应的函数
+                        newRunning = false; // 退出事件循环
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // 清理资源
+    SDL_DestroyWindow(new2Window);
+    SDL_DestroyRenderer(renderer);
+}
+    
     SDL_Delay(100); // 延时100毫秒
     SDL_DestroyWindow(newWindow); // 关闭窗口
     SDL_DestroyRenderer(renderer);
