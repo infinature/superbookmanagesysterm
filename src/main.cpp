@@ -928,7 +928,7 @@ if (newWindowTitle == "UserADMIN") {
 };
 
 // 定义新窗口的按钮文本和对应的回调函数
-const char* newButtonTexts[] = {"Function1", "Function2", "Function3", "Function4"};
+const char* newButtonTexts[] = {"lookBook", "lookBook_0", "lookBook_1", "lookBook_2"};
 
 void (*newButtonCallbacks[])() = {lookBook, lookBook_0, lookBook_1, lookBook_2};
 
