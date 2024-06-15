@@ -154,7 +154,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 int main(int argc, char *argv[]) {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
-    BuildIndex();
+    //BuildIndex();
     // 初始化SDL视频和TTF库
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         SDL_Log("SDL_Init failed: %s", SDL_GetError()); // 记录错误信息

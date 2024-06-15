@@ -1,45 +1,50 @@
 #include "function.h"
 
-void BorrowBook(User uk ,string borrowdata ,int kind)
-{
-    list<Book> p = b_LordData(); // 加载书籍数据
-    string name;
+void BorrowBook(User uk, std::string borrowdata, int kind) {
+    std::list<Book> p = b_LordData();
+    std::string name;
     int bid;
-    
-    vector<int> idList;
-    cout<<"输入关键词查找：";  
-    name=readUTF8FromConsole();
-    //name=UTF16ToUTF8(wname);
-    if(kind==0)
-    idList = searchBookD(name);
-    else if(kind==1)
-    idList = searchBookW(name);
-    for (int bookId : idList)
-    {
-        auto temp = find_if(p.begin(), p.end(), [bookId](const Book& book) { return book.id == bookId; });
-        if (temp != p.end())
-        {
-            cout << "name: " << temp->bookname << " id: " << temp->id << endl;
-        }
+
+    std::vector<int> idList;
+    std::cout << "输入关键词查找：";
+    name = readUTF8FromConsole();
+
+    if (kind == 0)
+        idList = searchBookD(name);
+    else if (kind == 1)
+        idList = searchBookW(name);
+    bool flag=0;
+    for (int bookId : idList) {
+        auto temp = std::find_if(p.begin(), p.end(), [bookId](const Book& book) { return book.id == bookId; });
+        if (temp != p.end()) {
+            flag=1;
+            std::cout << "name: " << temp->bookname << " id: " << temp->id << std::endl;
+        }   
     }
-
-    cout << "输入想借书的id:" << endl;
-    cin >> bid;
-
-    auto temp = find_if(p.begin(), p.end(), [bid](const Book& book) { return book.id == bid; });
-    if (temp != p.end())
+    if(!flag)
     {
-        if((*temp).cur_number==0)
-        {
-            cout<<"无存书！"<<endl;
-        }
-        else
-        {
-        (*temp).io_number+=1;
-        (*temp).cur_number-=1;
-        b_SaveData_del(p);
-        userborrowbook(uk, *temp, borrowdata);
-        cout<<"借书成功！"<<endl;
+        cout<<"无存书，自动返回"<<endl;
+        return;
+    }
+    while (true) {
+        bid=getValidIntegerInput("输入想借书的id:");
+        // 检查输入的bid是否在idList中
+        if (std::find(idList.begin(), idList.end(), bid) != idList.end()) {
+            auto temp = std::find_if(p.begin(), p.end(), [bid](const Book& book) { return book.id == bid; });
+            if (temp != p.end()) {
+                if ((*temp).cur_number == 0) {
+                    std::cout << "无存书！" << std::endl;
+                } else {
+                    (*temp).io_number += 1;
+                    (*temp).cur_number -= 1;
+                    b_SaveData_del(p);
+                    userborrowbook(uk, *temp, borrowdata);
+                    std::cout << "借书成功！" << std::endl;
+                }
+            }
+            break; // 成功借书后退出循环
+        } else {
+            std::cout << "输入的id无效,请重新输入." << std::endl;
         }
     }
 }
@@ -209,4 +214,32 @@ string readUTF8FromConsole() {
     WideCharToMultiByte(CP_UTF8, 0, buffer, charsRead, &utf8String[0], size_needed, NULL, NULL);
 
     return utf8String;
+}
+// 通用函数：验证并获取有效的整数输入
+int getValidIntegerInput(const std::string& prompt) {
+    int value;
+    while (true) {
+        std::cout << prompt;
+        std::string input;
+        std::cin >> input;
+
+        // 检查输入是否为有效的整数
+        try {
+            size_t pos;
+            value = std::stoi(input, &pos);
+            if (pos == input.length()) {
+                return value;
+            } else {
+                throw std::invalid_argument("Invalid input");
+            }
+        } catch (const std::invalid_argument&) {
+            std::cerr << "输入无效，请输入一个有效的整数。" << std::endl;
+        } catch (const std::out_of_range&) {
+            std::cerr << "输入超出范围，请输入一个有效的整数。" << std::endl;
+        }
+
+        // 清空错误标志并忽略剩余的输入
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
 }
