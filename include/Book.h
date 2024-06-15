@@ -38,6 +38,9 @@ void b_SaveData(list<Book>& p);
 void b_SaveData_del(list<Book>& p);
 void deleteBook();
 void lookBook();
+void lookBook_0();
+void lookBook_1();
+void lookBook_2();
 
 
 #endif //BOOK_H

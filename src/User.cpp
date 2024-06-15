@@ -152,6 +152,7 @@ void userborrowbook(User& p, Book b,string borrowdata)
             if((*it) ==p)
             {
                 (*it).borrowbook.push_back(bb);   
+                (*it).borrownum++;
                 break;
             
             }

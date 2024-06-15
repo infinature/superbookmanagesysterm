@@ -111,7 +111,112 @@ void lookBook() {
              << endl;  
     }  
 }
+void lookBook_0() {  
+    list<Book> booksList = b_LordData(); // 假设这个函数存在并返回书的列表  
+    cout<<"目前查询的是书库里所有的期刊"<<endl;
+  const int FIELD_WIDTH = 10; // 你可以根据需要调整这个值  
+    cout << left; // 左对齐  
+    cout << setw(FIELD_WIDTH) << "书籍id"  
+         << setw(FIELD_WIDTH) << "书籍总数"  
+         << setw(FIELD_WIDTH) << "书籍已借出数"  
+         << setw(FIELD_WIDTH) << "书籍现存数"  
+         << setw(FIELD_WIDTH) << "书籍种类"  
+         << setw(FIELD_WIDTH * 4) << "书籍名" // 如果书名较长，可以增加宽度  
+         << setw(FIELD_WIDTH*4) << "作者名"  
+         << setw(FIELD_WIDTH*4) << "出版社名称"  
+         << setw(FIELD_WIDTH*4) << "出版日期"  
+         << endl;  
+    for (list<Book>::const_iterator it = booksList.begin(); it != booksList.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+    {
+        if((*it).kind=="0")
+        {
+    
+  
+     // 使用范围for循环简化代码  
+        cout << setw(FIELD_WIDTH) << (*it).id  
+             << setw(FIELD_WIDTH) << (*it).sum_number  
+             << setw(FIELD_WIDTH) << (*it).io_number  
+             << setw(FIELD_WIDTH) << (*it).cur_number  
+             << setw(FIELD_WIDTH) << (*it).kind  
+             << setw(FIELD_WIDTH * 4) << (*it).bookname  
+             << setw(FIELD_WIDTH*4) << (*it).author  
+             << setw(FIELD_WIDTH*4) <<(*it).publising  
+             << setw(FIELD_WIDTH*4) << (*it).publisingdate  
+             << endl;  
+    }  
+}
+}
 
+void lookBook_1() {  
+    list<Book> booksList = b_LordData(); // 假设这个函数存在并返回书的列表  
+    cout<<"目前查询的是书库里所有的报刊"<<endl;
+  const int FIELD_WIDTH = 10; // 你可以根据需要调整这个值  
+    cout << left; // 左对齐  
+    cout << setw(FIELD_WIDTH) << "书籍id"  
+         << setw(FIELD_WIDTH) << "书籍总数"  
+         << setw(FIELD_WIDTH) << "书籍已借出数"  
+         << setw(FIELD_WIDTH) << "书籍现存数"  
+         << setw(FIELD_WIDTH) << "书籍种类"  
+         << setw(FIELD_WIDTH * 4) << "书籍名" // 如果书名较长，可以增加宽度  
+         << setw(FIELD_WIDTH*4) << "作者名"  
+         << setw(FIELD_WIDTH*4) << "出版社名称"  
+         << setw(FIELD_WIDTH*4) << "出版日期"  
+         << endl;  
+    for (list<Book>::const_iterator it = booksList.begin(); it != booksList.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+    {
+        if((*it).kind=="1")
+        {
+    
+  
+     // 使用范围for循环简化代码  
+        cout << setw(FIELD_WIDTH) << (*it).id  
+             << setw(FIELD_WIDTH) << (*it).sum_number  
+             << setw(FIELD_WIDTH) << (*it).io_number  
+             << setw(FIELD_WIDTH) << (*it).cur_number  
+             << setw(FIELD_WIDTH) << (*it).kind  
+             << setw(FIELD_WIDTH * 4) << (*it).bookname  
+             << setw(FIELD_WIDTH*4) << (*it).author  
+             << setw(FIELD_WIDTH*4) <<(*it).publising  
+             << setw(FIELD_WIDTH*4) << (*it).publisingdate  
+             << endl;  
+    }  
+}
+}
+void lookBook_2() {  
+    list<Book> booksList = b_LordData(); // 假设这个函数存在并返回书的列表  
+    cout<<"目前查询的是书库里所有的书籍"<<endl;
+  const int FIELD_WIDTH = 10; // 你可以根据需要调整这个值  
+    cout << left; // 左对齐  
+    cout << setw(FIELD_WIDTH) << "书籍id"  
+         << setw(FIELD_WIDTH) << "书籍总数"  
+         << setw(FIELD_WIDTH) << "书籍已借出数"  
+         << setw(FIELD_WIDTH) << "书籍现存数"  
+         << setw(FIELD_WIDTH) << "书籍种类"  
+         << setw(FIELD_WIDTH * 4) << "书籍名" // 如果书名较长，可以增加宽度  
+         << setw(FIELD_WIDTH*4) << "作者名"  
+         << setw(FIELD_WIDTH*4) << "出版社名称"  
+         << setw(FIELD_WIDTH*4) << "出版日期"  
+         << endl;  
+    for (list<Book>::const_iterator it = booksList.begin(); it != booksList.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+    {
+        if((*it).kind=="2")
+        {
+    
+  
+     // 使用范围for循环简化代码  
+        cout << setw(FIELD_WIDTH) << (*it).id  
+             << setw(FIELD_WIDTH) << (*it).sum_number  
+             << setw(FIELD_WIDTH) << (*it).io_number  
+             << setw(FIELD_WIDTH) << (*it).cur_number  
+             << setw(FIELD_WIDTH) << (*it).kind  
+             << setw(FIELD_WIDTH * 4) << (*it).bookname  
+             << setw(FIELD_WIDTH*4) << (*it).author  
+             << setw(FIELD_WIDTH*4) <<(*it).publising  
+             << setw(FIELD_WIDTH*4) << (*it).publisingdate  
+             << endl;  
+    }  
+}
+}
 void b_SaveData(list<Book>& p)//存储数据
 {
     ofstream fp("../data/bookinfo.txt", ios::app);//fp为文件指针，写方式
