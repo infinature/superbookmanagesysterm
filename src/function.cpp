@@ -53,20 +53,24 @@ bool compareBook(Book a,Book b)
 {
     return a.io_number>b.io_number;
 }
-list<string> Rank()
-{
-    list<Book> p=b_LordData(); 
-    list<string> a;
-    string b;
-    p.sort(compareBook);
-    int ranking=1;
-    for (list<Book>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
-    {
-        b =to_string(ranking) + " " + (*it).bookname + " " + to_string((*it).id); ;
-        a.push_back(b);
-        ranking++;
-    }
-    return a;
+
+void Rank()  
+{  
+    list<Book> p = b_LordData(); // 假设这个函数返回一个Book的列表  
+    p.sort(compareBook);  
+    int ranking = 1;  
+      
+    // 设置输出格式，排名占3个字符宽度，书名占20个字符宽度，ID占10个字符宽度  
+    cout << left << setw(10) << "排名" << setw(50) << "书名" <<endl;  
+  
+    for (list<Book>::const_iterator it = p.begin(); it != p.end(); ++it)  
+    {  
+        cout << left << setw(10) << ranking << setw(50) << (*it).bookname << endl;  
+        ranking++;  
+        if(ranking>=21)
+        break;
+    }  
+    return;  
 }
 string getCurrentDateTime() {  
      // 获取当前时间（秒自从1970-01-01 00:00:00 UTC）

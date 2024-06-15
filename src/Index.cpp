@@ -99,6 +99,24 @@ void i_SaveData(list<IndexNode> &p)//存储数据
 
     fp.close();
 }
+void i_SaveData_del(list<IndexNode> &p)//存储数据
+{
+    ofstream fp("../data/index.txt", ios::trunc);//fp为文件指针，写方式
+
+
+    for (list<IndexNode>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+    {
+        fp << (*it).word << " ";
+        for (vector<int>::const_iterator it2 = (*it).bookid.begin(); it2 != (*it).bookid.end(); it2++)
+        {
+            fp<<(*it2)<<" ";
+        }
+        fp<<endl;
+    }
+    
+
+    fp.close();
+}
 void AddIndexword(const string& name, int id, list<IndexNode>& L) {
     char* Name = strToChar(name);
     vector<string> res_str = chinese_io(Name);

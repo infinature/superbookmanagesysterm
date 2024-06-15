@@ -44,6 +44,7 @@ void addBook()
     list<IndexNode> L = i_LordData(); // 加载现有的索引数据
     AddIndexword(temp.bookname, temp.id, L); // 将书添加到词典
     b_SaveData(p);
+    i_SaveData_del(L);
 }
 void b_SaveData_del(list<Book>& p)//存储数据
 {

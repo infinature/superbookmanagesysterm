@@ -14,7 +14,7 @@ class Borrowed_Book;
 class Book;
 void BorrowBook(User uk ,string borrowdata ,int kind);
 bool compareBook(Book a,Book b);
-list<string> Rank();
+void Rank();
 string getCurrentDateTime();
 int daysBetweenDates(const std::string& date1, const std::string& date2);
 vector<string> chinese_io(char* ori_c);

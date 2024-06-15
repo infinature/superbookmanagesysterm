@@ -30,5 +30,6 @@ list<IndexNode> i_LordData();
 vector<int> searchBookW(const string& name);
 vector<int> searchBookD(const string& name);
 void i_SaveData(list<IndexNode> &p);
+void i_SaveData_del(list<IndexNode> &p);
 void BuildIndex();
 #endif //_INDEX_H
