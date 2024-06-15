@@ -92,6 +92,7 @@ SDL_Window* CreateNewWindow(const string& title) {
     SDL_Window* newWindow = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
     return newWindow;
 }
+
 // 创建新的控制台窗口函数
 void CreateConsoleWindow(const string& title) {
     FreeConsole(); // 释放控制台
@@ -103,7 +104,6 @@ void CreateConsoleWindow(const string& title) {
     SetConsoleCP(CP_UTF8);
     cout << "New console window created with title: " << title << endl; // 输出新窗口的标题
 }
-
 // 根据用户类型创建新窗口的函数
 SDL_Window* CreateUserWindow(const User& user) {
     string windowTitle;
@@ -310,6 +310,9 @@ while (userRunning) {
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
             userRunning = false; // 用户请求关闭窗口
+        SDL_Log("TTF_OpenFont failed: %s", SDL_GetError());
+        SDL_DestroyRenderer(userRenderer);
+        SDL_DestroyWindow(userWin);
         }
     }
 
