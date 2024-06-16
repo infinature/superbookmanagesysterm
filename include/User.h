@@ -35,7 +35,7 @@ User(string name,string key,string id,short type,short borrownum)
 }
     bool operator==(const User& other) const
     {
-        return (id == other.id)&&(name==other.name);
+        return (id == other.id)&&(name ==other.name);
     }
 
     string name;                                //人名
@@ -52,10 +52,11 @@ void userborrowbook(User& p, Book b,string borrowdata);
 void u_SaveData(list<User>& p);
 list<User> u_LordData();
 void addUser();
+string getPassword();
 User logIn();
 void lookUser();
 void deleteUser();
-void returnBook(User uk);
+void returnBook(User &uk);
 list<string> lookBorrowbook_stu(User x);
 list<string> lookBorrowbook_man(User x);
 #endif //_USER_H

@@ -1,19 +1,31 @@
 #include "function.h"
 
+/*********************************************************************************
+ * @brief 借书函数  
+ *  
+ * 根据用户输入的关键词和类型，搜索并借阅书籍。  
+ *  
+ * @param uk 用户对象，包含用户信息  
+ * @param borrowdata 借书数据（可能是借书时间、地点等额外信息）  
+ * @param kind 搜索类型（0代表按书名搜索，1代表按作者搜索）  
+ *  
+ * @return 无返回值（void）  
+ **********************************************************************************/ 
 void BorrowBook(User uk, std::string borrowdata, int kind) {
-    std::list<Book> p = b_LordData();
-    std::string name;
+    std::list<Book> p = b_LordData();// 获取所有书籍的列表
+    std::string name; // 初始化变量
     int bid;
 
-    std::vector<int> idList;
-    std::cout << "输入关键词查找：";
+    std::vector<int> idList;// 用于存储搜索到的书籍ID的列表 
+    std::cout << "输入关键词查找：";// 提示用户输入关键词进行搜索
     name = readUTF8FromConsole();
-
+    // 根据搜索类型进行搜索
     if (kind == 0)
         idList = searchBookD(name);
     else if (kind == 1)
         idList = searchBookW(name);
-    bool flag=0;
+    bool flag=0;// 标志位，用于判断是否找到了书籍
+    // 遍历搜索到的书籍ID列表，检查书籍是否存在
     for (int bookId : idList) {
         auto temp = std::find_if(p.begin(), p.end(), [bookId](const Book& book) { return book.id == bookId; });
         if (temp != p.end()) {
@@ -48,16 +60,24 @@ void BorrowBook(User uk, std::string borrowdata, int kind) {
         }
     }
 }
-
+/*用于排序的辅助函数*/
 bool compareBook(Book a,Book b)
 {
     return a.io_number>b.io_number;
 }
 
+/*********************************************************************************
+ * @brief 书籍排名函数  
+ *  
+ * 从书籍列表中获取所有书籍，并按一定规则对书籍进行排序，  
+ * 然后输出前20名的书籍名称及其排名。  
+ *  
+ * @return 无返回值（void）  
+ **********************************************************************************/ 
 void Rank()  
 {  
-    list<Book> p = b_LordData(); // 假设这个函数返回一个Book的列表  
-    p.sort(compareBook);  
+    list<Book> p = b_LordData(); // 获取所有书籍的列表 
+    p.sort(compareBook);  // 使用compareBook函数对书籍列表进行排序 
     int ranking = 1;  
       
     // 设置输出格式，排名占3个字符宽度，书名占20个字符宽度，ID占10个字符宽度  
@@ -72,6 +92,14 @@ void Rank()
     }  
     return;  
 }
+/*********************************************************************************
+ * @brief 获取当前日期（不含时间）  
+ *  
+ * 该函数获取当前的系统时间，并将其转换为本地时间，然后提取出日期部分（年、月、日）  
+ * 并将它们格式化为一个字符串返回。  
+ *  
+ * @return 当前日期的字符串表示，格式为YYYYMMDD  
+ **********************************************************************************/ 
 string getCurrentDateTime() {  
      // 获取当前时间（秒自从1970-01-01 00:00:00 UTC）
     time_t rawtime;
@@ -89,6 +117,17 @@ string getCurrentDateTime() {
     return oss.str();
 }
 
+/*********************************************************************************
+ * @brief 计算两个日期之间的天数差  
+ *  
+ * 此函数接受两个日期字符串作为参数，并计算它们之间的天数差。  
+ * 日期字符串应为 "YYYYMMDD" 格式。  
+ *  
+ * @param date1 第一个日期字符串，格式为 "YYYYMMDD"  
+ * @param date2 第二个日期字符串，格式为 "YYYYMMDD"  
+ *  
+ * @return 两个日期之间的天数差  
+ **********************************************************************************/ 
 int daysBetweenDates(const std::string& date1, const std::string& date2) {
     // 将字符串转换为tm结构体
     std::tm tm1 = {}, tm2 = {};
@@ -106,6 +145,16 @@ int daysBetweenDates(const std::string& date1, const std::string& date2) {
 
     return days;
 }
+/*********************************************************************************
+ * @brief 提取字符串中的不重复汉字  
+ *  
+ * 从给定的 C 风格字符串中提取所有不重复的汉字  
+ * 假设每个汉字由连续的三个字节表示（GBK、GB2312 或类似编码）。  
+ *  
+ * @param ori_c C 风格字符串，包含待处理的汉字字符  
+ *  
+ * @return 包含所有不重复汉字的vector容器  
+ **********************************************************************************/ 
 vector<string> chinese_io(char* ori_c) {
     int size = strlen(ori_c); // 获取字符串长度
     int index = 0; // 初始化索引
@@ -129,6 +178,16 @@ vector<string> chinese_io(char* ori_c) {
     return res_str;
 }
 
+/*********************************************************************************
+ * @brief 将字符串转换为字符数组  
+ *  
+ * 将输入的 `string` 类型数据转换为字符数组（`char*`），并返回该字符数组的指针。  
+ * 注意：返回的字符数组是动态分配的，调用者需在使用后手动释放内存。  
+ *  
+ * @param strSend 输入的字符串  
+ *  
+ * @return 转换后的字符数组指针  
+ **********************************************************************************/ 
 char* strToChar(string strSend)
 {
     char* ConvertData;
@@ -137,6 +196,17 @@ char* strToChar(string strSend)
     strcpy(ConvertData, strSend.c_str());
     return ConvertData;
 }
+
+/*********************************************************************************
+ * @brief 将 UTF-16 编码的宽字符串转换为 UTF-8 编码的字符串  
+ *  
+ * 使用 Windows API 函数 WideCharToMultiByte 将 UTF-16 编码的宽字符串（std::wstring）  
+ * 转换为 UTF-8 编码的字符串（std::string）。  
+ *  
+ * @param utf16 UTF-16 编码的宽字符串  
+ *  
+ * @return 转换后的 UTF-8 编码的字符串  
+ **********************************************************************************/ 
 string UTF16ToUTF8(const std::wstring& utf16) {
     int count = WideCharToMultiByte(CP_UTF8, 0, utf16.c_str(), -1, NULL, 0, NULL, NULL);
     char* buffer = new char[count+1];
@@ -146,6 +216,16 @@ string UTF16ToUTF8(const std::wstring& utf16) {
     delete[] buffer;
     return utf8;
 }
+
+/*********************************************************************************
+ * @brief 判断给定的字符串是否为有效的UTF-8编码  
+ *  
+ * 根据UTF-8编码规则，判断输入的字符串`str`是否是一个有效的UTF-8编码字符串。  
+ *  
+ * @param str 待检查的字符串  
+ *  
+ * @return 如果字符串是有效的UTF-8编码，则返回`true`；否则返回`false`  
+ **********************************************************************************/ 
 bool isValidUTF8(const std::string& str) {
     int len = str.length();
     int i = 0;
@@ -186,6 +266,14 @@ bool isValidUTF8(const std::string& str) {
     }
     return true;
 }
+
+/*********************************************************************************
+ * @brief 从控制台读取UTF-8编码的字符串  
+ *  
+ * 该函数通过Windows API读取用户在控制台输入的宽字符（UTF-16编码），然后将其转换为UTF-8编码的字符串。  
+ *  
+ * @return 读取并转换后的UTF-8编码字符串  
+ **********************************************************************************/ 
 string readUTF8FromConsole() {
     // 获取标准输入的句柄
     HANDLE hConsole = GetStdHandle(STD_INPUT_HANDLE);
@@ -219,7 +307,18 @@ string readUTF8FromConsole() {
 
     return utf8String;
 }
-// 通用函数：验证并获取有效的整数输入
+
+/*********************************************************************************
+ * @brief 获取有效的整数输入  
+ *  
+ * 通过控制台提示用户输入一个整数，并持续要求用户输入直到输入一个有效的整数为止。  
+ *  
+ * @param prompt 提示用户输入的字符串  
+ *  
+ * @return 用户输入的有效整数  
+ *  
+ * @throw 无直接抛出异常，但内部使用了try-catch来处理stoi可能抛出的异常  
+ **********************************************************************************/ 
 int getValidIntegerInput(const std::string& prompt) {
     int value;
     while (true) {
