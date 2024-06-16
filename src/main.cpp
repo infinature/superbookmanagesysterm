@@ -93,6 +93,7 @@ SDL_Window* CreateNewWindow(const string& title) {
     return newWindow;
 }
 
+
 // 创建新的控制台窗口函数
 void CreateConsoleWindow(const string& title) {
     FreeConsole(); // 释放控制台
@@ -918,7 +919,7 @@ else if (newWindowTitle == "UserADMIN" || newWindowTitle == "BookADMIN") {
         {211, 212, 204} 
     };
     // 定义按钮文本
-    const char* buttonTexts[] = {"add", "delete", "look", "return"};
+    const char* buttonTexts[] = {"add", " SDU_computer(international)01", "look", "return"};
 
     // 获取窗口尺寸
     int windowWidth, windowHeight;
@@ -985,10 +986,7 @@ if (newWindowTitle == "UserADMIN") {
         CreateConsoleWindow(consoleTitle);
         addUser();
     } else if (buttonTexts[i] == "delete") {
-                    // 根据点击的按钮创建新的控制台窗口
-        string consoleTitle = "Console for " + string(newWindowTitle) + " " + buttonTexts[i];
-        CreateConsoleWindow(consoleTitle);
-        deleteUser();
+
     } else if (buttonTexts[i] == "look") {
                     // 根据点击的按钮创建新的控制台窗口
         string consoleTitle = "Console for " + string(newWindowTitle) + " " + buttonTexts[i];
