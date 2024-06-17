@@ -11,15 +11,23 @@
  *  
  * @return 无返回值（void）  
  **********************************************************************************/ 
-void BorrowBook(User uk, std::string borrowdata, int kind) {
+void BorrowBook(User uk, std::string borrowdata) {
     std::list<Book> p = b_LordData();// 获取所有书籍的列表
     std::string name; // 初始化变量
     int bid;
-
+    int kind=1;
+    string bookkind="3";
     std::vector<int> idList;// 用于存储搜索到的书籍ID的列表 
+    // 根据搜索类型进行搜索
+    kind=getValidIntegerInput("请输入搜索方式(0为精确搜索,1为模糊搜索,默认为模糊搜索):");
+    if(kind!=0&&kind!=1)kind=1;
+
+    cout<<"请输入书籍类型(0为期刊，1为报刊，2为书籍，默认为全部类型):";
+    cin>>bookkind;
+    if(bookkind!="0"&&bookkind!="1"&&bookkind!="2")bookkind="3";
+
     std::cout << "输入关键词查找：";// 提示用户输入关键词进行搜索
     name = readUTF8FromConsole();
-    // 根据搜索类型进行搜索
     if (kind == 0)
         idList = searchBookD(name);
     else if (kind == 1)
@@ -29,8 +37,12 @@ void BorrowBook(User uk, std::string borrowdata, int kind) {
     for (int bookId : idList) {
         auto temp = std::find_if(p.begin(), p.end(), [bookId](const Book& book) { return book.id == bookId; });
         if (temp != p.end()) {
-            flag=1;
-            std::cout << "name: " << temp->bookname << " id: " << temp->id << std::endl;
+            if(bookkind=="3"){
+                flag=1;
+            std::cout << "name: " << temp->bookname << " 类型: " << temp->kind <<" id: " << temp->id << std::endl;}
+            else if(bookkind==temp->kind){
+                flag=1;
+            std::cout << "name: " << temp->bookname << " 类型: " << temp->kind <<" id: " << temp->id << std::endl;}
         }   
     }
     if(!flag)

@@ -50,6 +50,14 @@ void addBook()
     list<Book> p;// 创建一个空的书籍列表 
     Book temp;// 创建一个临时书籍对象用于存储用户输入的信息
     temp.id=havebook.back().id+1;
+    cout<<"请输入新增加书籍的名字："<<endl;
+    temp.bookname=readUTF8FromConsole();
+    cout<<"请输入新增加书籍的作者名字："<<endl;
+    temp.author=readUTF8FromConsole();
+    cout<<"请输入新增加书籍的出版社名称："<<endl;
+    temp.publising=readUTF8FromConsole();
+    cout<<"请输入新增加书籍的出版日期(格式示例:20010101):"<<endl;
+    cin>> temp.publisingdate;
     temp.sum_number=getValidIntegerInput("请输入新增加书籍的总数:");
     temp.io_number=getValidIntegerInput("请输入新增加书籍的已借数量:");
     temp.cur_number=getValidIntegerInput("请输入新增加书籍的现有数量:");
@@ -66,15 +74,6 @@ void addBook()
             cout<<"未包含类别，请重新输入"<<endl;
         }
     }
-    cout<<"请输入新增加书籍的名字："<<endl;
-    temp.bookname=readUTF8FromConsole();
-    cout<<"请输入新增加书籍的作者名字："<<endl;
-    temp.author=readUTF8FromConsole();
-    cout<<"请输入新增加书籍的出版社名称："<<endl;
-    temp.publising=readUTF8FromConsole();
-    cout<<"请输入新增加书籍的出版日期(格式示例:20010101):"<<endl;
-    cin>> temp.publisingdate;
-
     p.push_back(temp);//把这个赋值好的book放进list
     list<IndexNode> L = i_LordData(); // 加载现有的索引数据
     AddIndexword(temp.bookname, temp.id, L); // 将书添加到词典

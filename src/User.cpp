@@ -256,6 +256,11 @@ void userborrowbook(User& p, Book b,string borrowdata)
 void returnBook(User &uk)
 {
     // 展示用户借阅的书籍
+    if(uk.borrownum==0)
+    {
+        cout<<"暂无借书捏"<<endl;
+        return;
+    }
     lookBorrowbook_stu(uk);
 
     int returnid;
@@ -336,7 +341,6 @@ void returnBook(User &uk)
 void lookBorrowbook_stu(User x)
 {
     list<User> p =u_LordData();
-    
     for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)
     {
         if(x==(*it))

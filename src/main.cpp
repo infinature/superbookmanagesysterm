@@ -572,8 +572,7 @@ while (!bquit) {
                 // Borrow按钮被点击
                 string consoleTitle = "Console for " + string(newWindowTitle) + " " + "BorrowBook";
                 CreateConsoleWindow(consoleTitle);
-                int temp=0;
-                BorrowBook(loggedInUser,getCurrentDateTime(),temp);
+                BorrowBook(loggedInUser,getCurrentDateTime());
                 isBorrowButtonPressed = false;
                 SDL_Delay(100); // 延时100毫秒
                 SDL_DestroyWindow(newWindow); 
