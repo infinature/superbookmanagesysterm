@@ -46,14 +46,26 @@ list<Book> b_LordData()
  **********************************************************************************/ 
 void addBook()
 {
+    list<Book> havebook=b_LordData();//将现有书目储存到havebook中
     list<Book> p;// 创建一个空的书籍列表 
     Book temp;// 创建一个临时书籍对象用于存储用户输入的信息
-    temp.id=getValidIntegerInput("请输入新增加书籍的id:");
+    temp.id=havebook.back().id+1;
     temp.sum_number=getValidIntegerInput("请输入新增加书籍的总数:");
     temp.io_number=getValidIntegerInput("请输入新增加书籍的已借数量:");
     temp.cur_number=getValidIntegerInput("请输入新增加书籍的现有数量:");
     cout<<"请输入新增加书籍的种类(0为期刊,1为杂志,2为图书):"<<endl;
-    cin>>temp.kind;
+    while(1)
+    {
+        cin>>temp.kind;
+        if(temp.kind=="0"||temp.kind=="1"||temp.kind=="2")
+        {
+            break;
+        }
+        else
+        {
+            cout<<"未包含类别，请重新输入"<<endl;
+        }
+    }
     cout<<"请输入新增加书籍的名字："<<endl;
     temp.bookname=readUTF8FromConsole();
     cout<<"请输入新增加书籍的作者名字："<<endl;
@@ -68,6 +80,7 @@ void addBook()
     AddIndexword(temp.bookname, temp.id, L); // 将书添加到词典
     b_SaveData(p);
     i_SaveData_del(L);
+    cout<<"添加成功"<<endl;
 }
 /*********************************************************************************
  * @brief 保存书籍信息到文件  
