@@ -256,11 +256,8 @@ void userborrowbook(User& p, Book b,string borrowdata)
 void returnBook(User &uk)
 {
     // 展示用户借阅的书籍
-    list<string> borrowedBooks = lookBorrowbook_stu(uk);
-    for (const string& book : borrowedBooks)
-    {
-        cout << book << endl;
-    }
+lookBorrowbook_stu(uk);
+
     int returnid;
     returnid=getValidIntegerInput("请输入你想还的书的id：");
     // 检查还书ID是否在用户的借书ID列表中
@@ -336,24 +333,21 @@ void returnBook(User &uk)
  * @param x 要查看借阅记录的学生对象  
  * @return 无返回值（void）  
  **********************************************************************************/ 
-list<string> lookBorrowbook_stu(User x)
+void lookBorrowbook_stu(User x)
 {
     list<User> p =u_LordData();
-    list<string> a;
-    string b;
+    
     for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
     {
         if(x==(*it))
         {
             for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
             {
-                b=(*it2).borrowbookname+ " " +to_string((*it2).id)+" "+(*it2).data;
-                a.push_back(b);
+                cout<<(*it2).borrowbookname<<" " <<(*it2).id+" "+(*it2).data<<endl;
+                
             }
         }
     }
-
-    return a;
 }
 /*********************************************************************************
  * @brief 查看所有借阅了书籍的用户及其借阅记录  
@@ -363,21 +357,18 @@ list<string> lookBorrowbook_stu(User x)
  * @param x 未使用的参数（在此函数中不需要）  
  * @return 无返回值（void）  
  **********************************************************************************/
-list<string> lookBorrowbook_man(User x)
+void lookBorrowbook_man(User x)
 {
     
     list<User> p =u_LordData();
-    list<string> a;
-    string b;
+    
     for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
     {
         if((*it).borrownum!= 0){
             for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
             {
-                b=(*it2).borrowbookname+ " " +to_string((*it2).id)+" "+(*it2).data+" "+(*it).name;
-                a.push_back(b);
+                cout<<(*it2).borrowbookname<<" " <<(*it2).id+" "+(*it2).data<<endl;
             }
         }
     }
-    return a;
 }

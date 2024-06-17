@@ -57,6 +57,6 @@ User logIn();
 void lookUser();
 void deleteUser();
 void returnBook(User &uk);
-list<string> lookBorrowbook_stu(User x);
-list<string> lookBorrowbook_man(User x);
+void lookBorrowbook_stu(User x);
+void lookBorrowbook_man(User x);
 #endif //_USER_H
