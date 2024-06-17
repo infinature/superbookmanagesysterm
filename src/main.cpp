@@ -332,6 +332,9 @@ while (userRunning) {
         SDL_Log("TTF_OpenFont failed: %s", SDL_GetError());
         SDL_DestroyRenderer(userRenderer);
         SDL_DestroyWindow(userWin);
+           TTF_Quit(); // 退出TTF库
+    SDL_Quit(); // 退出SDL库
+    return 0; // 正常退出程序，返回0
         }
     }
 
@@ -464,8 +467,13 @@ SDL_Color endColor = {
             if (event.type == SDL_QUIT) {
             userRunning = false; // 用户请求关闭窗口
         SDL_Log("TTF_OpenFont failed: %s", SDL_GetError());
-        SDL_DestroyRenderer(userRenderer);
+
+
+                SDL_DestroyRenderer(userRenderer);
         SDL_DestroyWindow(userWin);
+           TTF_Quit(); // 退出TTF库
+    SDL_Quit(); // 退出SDL库
+    return 0; // 正常退出程序，返回0
             } else if (event.type == SDL_MOUSEBUTTONDOWN) {
                 int x = event.button.x;
                 int y = event.button.y;
@@ -546,6 +554,9 @@ while (!bquit) {
     while (SDL_PollEvent(&e) != 0) {
         if (e.type == SDL_QUIT) {
             bquit = true;
+            SDL_DestroyRenderer(renderer);
+            SDL_DestroyWindow(newWindow);
+            break;
         } else if (e.type == SDL_MOUSEBUTTONDOWN) {
             int x, y;
             SDL_GetMouseState(&x, &y);
@@ -571,7 +582,7 @@ while (!bquit) {
                 break;
             } else if (isReturnButtonPressed) {
                 // Return按钮被点击
-                SDL_Delay(100); // 延时100毫秒
+
                 SDL_DestroyWindow(newWindow);
                 SDL_DestroyRenderer(renderer);
                 bquit=true;
@@ -603,6 +614,9 @@ while (!bquit) {
     while (SDL_PollEvent(&e) != 0) {
         if (e.type == SDL_QUIT) {
             bquit = true;
+                        SDL_DestroyRenderer(renderer);
+            SDL_DestroyWindow(newWindow);
+            break;
         } else if (e.type == SDL_MOUSEBUTTONDOWN) {
             int x, y;
             SDL_GetMouseState(&x, &y);
@@ -620,14 +634,13 @@ while (!bquit) {
                 CreateConsoleWindow(consoleTitle);
                 returnBook(loggedInUser);
                 isBorrowButtonPressed = false;
-                    SDL_Delay(100); // 延时100毫秒
+
     SDL_DestroyWindow(newWindow); // 关闭窗口
     SDL_DestroyRenderer(renderer);
                 bquit=true;
                 break;
             } else if (isReturnButtonPressed) {
-                // back按钮被点击
-                SDL_Delay(100); // 延时100毫秒
+
                 SDL_DestroyWindow(newWindow);
                 SDL_DestroyRenderer(renderer);
                 bquit=true;
@@ -657,7 +670,10 @@ std::string outputText = "";
 while (!bquit) {
     while (SDL_PollEvent(&e) != 0) {
         if (e.type == SDL_QUIT) {
-            bquit = true;
+                SDL_DestroyWindow(newWindow);
+                SDL_DestroyRenderer(renderer);
+                bquit=true;
+               break;
         } else if (e.type == SDL_MOUSEBUTTONDOWN) {
             int x, y;
             SDL_GetMouseState(&x, &y);
@@ -674,14 +690,13 @@ while (!bquit) {
                 string consoleTitle = "Console for " + string(newWindowTitle) + " " + "lookBorrowbook_man";
                 CreateConsoleWindow(consoleTitle);
     lookBorrowbook_man(loggedInUser);
-                SDL_Delay(100); // 延时100毫秒
+
                 SDL_DestroyWindow(newWindow); 
                 SDL_DestroyRenderer(renderer);// 关闭窗口
                 bquit=true;
                 break;
             } else if (isReturnButtonPressed) {
-                // Return按钮被点击
-                SDL_Delay(100); // 延时100毫秒
+
                 SDL_DestroyWindow(newWindow);
                 SDL_DestroyRenderer(renderer);
                 bquit=true;
@@ -715,7 +730,10 @@ std::string outputText = "";
 while (!bquit) {
     while (SDL_PollEvent(&e) != 0) {
         if (e.type == SDL_QUIT) {
-            bquit = true;
+                SDL_DestroyWindow(newWindow);
+                SDL_DestroyRenderer(renderer);
+                bquit=true;
+               break;
         } else if (e.type == SDL_MOUSEBUTTONDOWN) {
             int x, y;
             SDL_GetMouseState(&x, &y);
@@ -732,14 +750,12 @@ while (!bquit) {
                 string consoleTitle = "Console for " + string(newWindowTitle) + " " + "    lookBorrowbook_user";
                 CreateConsoleWindow(consoleTitle);
     lookBorrowbook_stu(loggedInUser);
-                SDL_Delay(100); // 延时100毫秒
                 SDL_DestroyWindow(newWindow); 
                 SDL_DestroyRenderer(renderer);// 关闭窗口
                 bquit=true;
                 break;
             } else if (isReturnButtonPressed) {
                 // Return按钮被点击
-                SDL_Delay(100); // 延时100毫秒
                 SDL_DestroyWindow(newWindow);
                 SDL_DestroyRenderer(renderer);
                 bquit=true;
@@ -883,14 +899,13 @@ RenderButtonText(renderer, font, "back", textColor, buttonRect.x, buttonRect.y);
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 quit = true;
-                    SDL_Delay(100); // 延时100毫秒
                     SDL_DestroyWindow(newWindow);
                     SDL_DestroyRenderer(renderer);
+                    break;
             } else if (event.type == SDL_MOUSEBUTTONDOWN) {
                 int x = event.button.x;
                 int y = event.button.y;
                 if (x >= buttonRect.x && x <= buttonRect.x + buttonRect.w && y >= buttonRect.y && y <= buttonRect.y + buttonRect.h) {
-                    SDL_Delay(100); // 延时100毫秒
                     SDL_DestroyWindow(newWindow);
                     SDL_DestroyRenderer(renderer);
                     quit = true;
@@ -957,7 +972,6 @@ while (running) {
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
             running = false; // 用户请求关闭窗口
-                    SDL_Delay(100); // 延时100毫秒
                     SDL_DestroyWindow(newWindow);
                     SDL_DestroyRenderer(renderer);
                         break; // 跳出循环
@@ -970,7 +984,7 @@ for (int i = 0; i < 4; ++i) {
         // 根据点击的按钮执行对应的操作
 if (buttonTexts[i] == "return") {
 
-    SDL_Delay(100); // 延时100毫秒
+
     SDL_DestroyWindow(newWindow); // 关闭窗口
     SDL_DestroyRenderer(renderer);
     running = false; // 设置running为false以退出循环
@@ -993,7 +1007,6 @@ if (newWindowTitle == "UserADMIN") {
         CreateConsoleWindow(consoleTitle);
         lookUser();
     }
-    SDL_Delay(100); // 延时100毫秒
     SDL_DestroyWindow(newWindow); // 关闭窗口
     SDL_DestroyRenderer(renderer);
     running = false; // 设置running为false以退出循环
