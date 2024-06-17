@@ -256,7 +256,7 @@ void userborrowbook(User& p, Book b,string borrowdata)
 void returnBook(User &uk)
 {
     // 展示用户借阅的书籍
-lookBorrowbook_stu(uk);
+    lookBorrowbook_stu(uk);
 
     int returnid;
     returnid=getValidIntegerInput("请输入你想还的书的id：");
@@ -337,13 +337,13 @@ void lookBorrowbook_stu(User x)
 {
     list<User> p =u_LordData();
     
-    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+    for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)
     {
         if(x==(*it))
         {
             for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
             {
-                cout<<(*it2).borrowbookname<<" " <<(*it2).id+" "+(*it2).data<<endl;
+                cout<<(*it2).borrowbookname<<" " <<(*it2).id<<" "<<(*it2).data<<endl;
                 
             }
         }
@@ -367,7 +367,7 @@ void lookBorrowbook_man(User x)
         if((*it).borrownum!= 0){
             for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
             {
-                cout<<(*it2).borrowbookname<<" " <<(*it2).id+" "+(*it2).data<<endl;
+                cout<<(*it2).borrowbookname<<" " <<(*it2).id<<" "<<(*it2).data<<endl;
             }
         }
     }
