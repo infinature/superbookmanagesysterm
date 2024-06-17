@@ -22,7 +22,7 @@ void BorrowBook(User uk, std::string borrowdata) {
     kind=getValidIntegerInput("请输入搜索方式(0为精确搜索,1为模糊搜索,默认为模糊搜索):");
     if(kind!=0&&kind!=1)kind=1;
 
-    cout<<"请输入书籍类型(0为期刊，1为报刊，2为书籍，默认为全部类型):";
+    cout<<"请输入书籍类型(0为书籍，1为期刊，2为报刊，默认为全部类型):";
     cin>>bookkind;
     if(bookkind!="0"&&bookkind!="1"&&bookkind!="2")bookkind="3";
 
