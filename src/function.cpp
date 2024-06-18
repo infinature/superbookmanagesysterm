@@ -1,5 +1,8 @@
 #include "function.h"
 
+extern int deadline;
+extern int finenum;
+
 /*********************************************************************************
  * @brief 借书函数  
  *  
@@ -56,7 +59,7 @@ void BorrowBook(User uk, std::string borrowdata) {
         if (std::find(idList.begin(), idList.end(), bid) != idList.end()) {
             auto temp = std::find_if(p.begin(), p.end(), [bid](const Book& book) { return book.id == bid; });
             if (temp != p.end()) {
-                if ((*temp).cur_number == 0) {
+                if ((*temp).cur_number <= 0) {
                     std::cout << "无存书！" << std::endl;
                 } else {
                     (*temp).io_number += 1;
@@ -357,4 +360,22 @@ int getValidIntegerInput(const std::string& prompt) {
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
+}
+
+/*********************************************************************************
+ * @brief 修改系统参数  
+ *  
+ * 修改图书借阅时间限制和罚款金额  
+ *  
+ * @param *date 定义在returnbook的全局变量，记录借书时间 
+ * @param *cost 定义在returnbook的全局变量，记录罚款金额    
+ *  
+ * @return 无返回值（void）  
+ **********************************************************************************/ 
+void changeSystemParameter(int *date,int *cost)
+{
+    *date=getValidIntegerInput("输入更改的借书日期(默认为14天,范围为0~60):");
+    if(*date<=0||*date>=60)
+    *date=14;
+    *cost=getValidIntegerInput("输入更改罚款金额(默认为0.5元/天):");
 }
