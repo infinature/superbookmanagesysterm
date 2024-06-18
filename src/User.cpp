@@ -138,14 +138,32 @@ string getPassword() {
   
     return password;  
 }  
+int logpp = 0; // 在函数外部定义logpp变量
 User logIn()
 {
+    
+     extern int logpp; // 在函数内部声明logpp为全局变量
+     logpp++;
+    if(logpp>=5)
+    {
+        srand(time(0)); // 初始化随机数种子
+        for (int i = 0; i < 10; i++) // 循环10次
+        {
+            cout << "Boom!\nBoom!Boom!Boom!\nBoom!Boom!\n";
+            this_thread::sleep_for(chrono::milliseconds(rand() % 500 + 200)); // 暂停200-700毫秒
+        }
+        logpp=0;
+        cout<<"/n好了˙﹀˙现在你重新来过吧˙﹀˙";
+            logIn();
+        
+    }
     string n,k;
     
     list<User> p =u_LordData();
     
     while(1)
     {
+        
         cout<<"请输入您的用户名："<<endl;
         cin>>n;
         cout<<"请输入您的密码"<<endl;
@@ -159,6 +177,9 @@ User logIn()
             }
        
         }
+        cout<<"你的用户名或密码输入错误！请重新来过`︿`（超过5次电脑会爆炸˙﹀˙）\n";
+        logIn();
+
     }
 }
 /*********************************************************************************
@@ -269,10 +290,11 @@ void returnBook(User &uk)
         cout<<"暂无借书捏"<<endl;
         return;
     }
+    cout<<"以下是你已经借阅但未归还的书目˙﹀˙\n";
     lookBorrowbook_stu(uk);
 
     int returnid;
-    returnid=getValidIntegerInput("请输入你想还的书的id：");
+    returnid=getValidIntegerInput("请输入你想还的上述书目对应的id：");
     // 检查还书ID是否在用户的借书ID列表中
     bool found = false;
     for(auto it =uk.borrowbook.begin();it!=uk.borrowbook.end();++it)
@@ -283,12 +305,13 @@ void returnBook(User &uk)
             break;
         }
     }
+    if(found==false)
+    {
+        cout<<"你所输入的id错误！请重新来过`︿`\n\n\n";
+        returnBook(uk);
+    }
 
-    // if (!found)
-    // {
-    //     cout << "错误：你没有借阅ID为 " << returnid << " 的书籍。" << endl;
-    //     return;
-    // }
+
 
     list<User> users = u_LordData();
     for (User& user : users)
