@@ -400,14 +400,17 @@ void changePassword(User x)
     cin>>n;
     cout<<"请输入新密码："<<endl;
     cin>>m;
+    int pp=0;
     for (list<User>::iterator it = p.begin(); it != p.end(); it++)
     {
         if((*it).name==x.name&&n==(*it).key)
         {
             (*it).key=m;
             cout<<"修改成功！"<<endl;
+            pp++;
+           
         }
-        else 
+        else if(pp==0)
         {
             cout<<"修改失败，原密码错误！"<<endl;
         }

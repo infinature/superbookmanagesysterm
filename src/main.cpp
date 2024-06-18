@@ -374,17 +374,17 @@ switch (loggedInUser.type) {
         break;
 }
 // 美化左侧下半部分区域
-SDL_Rect leftLowerRect = {0, 100, 80, 20};
+SDL_Rect leftLowerRect = {0, 100, 180, 20};
 SDL_SetRenderDrawColor(userRenderer, 44, 48, 54, 255); // 设置背景颜色
 SDL_RenderFillRect(userRenderer, &leftLowerRect);
-string buttonText = "CG_Key";
+string buttonText = "Change your Key";
 SDL_Surface* buttonSurface = TTF_RenderText_Solid(font, buttonText.c_str(), textColor);
 SDL_Texture* buttonTexture = SDL_CreateTextureFromSurface(userRenderer, buttonSurface);
 // 创建“更改密码”按钮
 const int buttonPadding = 10;
-SDL_Color buttonColor = {66, 72, 79};
+SDL_Color buttonColor = {22, 255, 255};
 
-SDL_Rect buttonRect = {0, 100, 80, 20};
+SDL_Rect buttonRect = {0, 100, 180, 20};
 
 // 创建按钮文本的表面，并渲染
 
@@ -501,7 +501,7 @@ SDL_Color endColor = {
                 int x = event.button.x;
                 int y = event.button.y;
 
-                if( x>=0,&&y>=100,&&x<=80,&&y<=120)
+                if( x>=0&&y>=100&&x<=180&&y<=120)
                 {
                                    string consoleTitle = "Console for " + string(newWindowTitle) + " " + "Change your Key";
                 CreateConsoleWindow(consoleTitle);
