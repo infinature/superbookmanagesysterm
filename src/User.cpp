@@ -141,47 +141,40 @@ string getPassword() {
 int logpp = 0; // 在函数外部定义logpp变量
 User logIn()
 {
-    
-     extern int logpp; // 在函数内部声明logpp为全局变量
-     logpp++;
-    if(logpp>=5)
+    extern int logpp; // 在函数内部声明logpp为全局变量
+    while (true)
     {
-        srand(time(0)); // 初始化随机数种子
-        for (int i = 0; i < 10; i++) // 循环10次
+        logpp++;
+        if (logpp >= 4)
         {
-            cout << "Boom!\nBoom!Boom!Boom!\nBoom!Boom!\n";
-            //sleep_for(chrono::milliseconds(rand() % 500 + 200)); // 暂停200-700毫秒
+            for (int i = 0; i < 6; i++) // 循环6次
+            {
+                cout << "Boom!Boom!Boom!Boom!Boom!Boom!";
+            }
+            logpp = 0; // 将logpp设置为0
+            cout << "\n好了现在请你重新来过吧˙﹀˙\n";
         }
-        logpp=0;
-        cout<<"/n好了˙﹀˙现在你重新来过吧˙﹀˙";
-            logIn();
-        
-    }
-    string n,k;
-    
-    list<User> p =u_LordData();
-    
-    while(1)
-    {
-        
-        cout<<"请输入您的用户名："<<endl;
-        cin>>n;
-        cout<<"请输入您的密码"<<endl;
-        k=getPassword();
+        string n, k;
+        list<User> p = u_LordData();
+
+        cout << "\n请输入您的用户名：" << endl;
+        cin >> n;
+        cout << "请输入您的密码" << endl;
+        k = getPassword();
         for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)
         {
-
-            if((*it).name==n&&(*it).key==k)
+            if ((*it).name == n && (*it).key == k)
             {
+                cout<<"登'陆'成功˙﹀˙";
                 return (*it);
             }
-       
         }
-        cout<<"你的用户名或密码输入错误！请重新来过`︿`（超过5次电脑会爆炸˙﹀˙）\n";
-        logIn();
-
+        cout << "现在你已经尝试了" << logpp << "次了\n";
+        cout << "你的用户名或密码输入错误！请重新来过`︿`（最多3次）\n";
     }
 }
+
+
 /*********************************************************************************
  * @brief 查看用户信息  
  *  
