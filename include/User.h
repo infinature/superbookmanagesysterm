@@ -59,4 +59,5 @@ void deleteUser();
 void returnBook(User &uk);
 void lookBorrowbook_stu(User x);
 void lookBorrowbook_man(User x);
+void changePassword(User x);
 #endif //_USER_H

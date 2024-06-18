@@ -199,10 +199,16 @@ void deleteUser()
     cin>>n;
     
     list<User> p =u_LordData();
+
     for (list<User>::const_iterator it = p.begin(); it != p.end(); it++)
         {
             if((*it).name ==n)
             {
+                if((*it).borrownum!=0)
+                {
+                    cout<<"请先确保账户无借书"<<endl;
+                    return;
+                }
                 p.erase(it);
                 break;
             }
@@ -244,6 +250,8 @@ void userborrowbook(User& p, Book b,string borrowdata)
     u_SaveData_del(u);
 }
 
+int deadline=14;//截止日期
+int finenum=0.5;//罚款金额
 /*********************************************************************************
  * @brief 用户还书  
  *  
@@ -293,10 +301,10 @@ void returnBook(User &uk)
                 {
                     // 获取当前日期
                     string returnDate = getCurrentDateTime();
-                    int overdueDays = daysBetweenDates(it->data, returnDate) - 14;
+                    int overdueDays = daysBetweenDates(it->data, returnDate) - deadline;
                     if (overdueDays > 0)
                     {
-                        cout << "您逾期 " << overdueDays << " 天未还书, 罚款 " << overdueDays / 2 << " 元！" << endl;
+                        cout << "您逾期 " << overdueDays << " 天未还书, 罚款 " << overdueDays*finenum << " 元！" << endl;
                     }
                     else
                     {
@@ -375,4 +383,34 @@ void lookBorrowbook_man(User x)
             }
         }
     }
+}
+/*********************************************************************************
+ * @brief 修改账户密码 
+ *  
+ * 修改管理员或用户的账号密码
+ *  
+ * @param x 用户信息 
+ * @return 无返回值（void）  
+ **********************************************************************************/
+void changePassword(User x)
+{
+    list<User> p =u_LordData();
+    cout<<"请输入原密码："<<endl;
+    string n,m;
+    cin>>n;
+    cout<<"请输入新密码："<<endl;
+    cin>>m;
+    for (list<User>::iterator it = p.begin(); it != p.end(); it++)
+    {
+        if((*it).name==x.name&&n==(*it).key)
+        {
+            (*it).key=m;
+            cout<<"修改成功！"<<endl;
+        }
+        else 
+        {
+            cout<<"修改失败，原密码错误！"<<endl;
+        }
+    }
+    u_SaveData_del(p);
 }
