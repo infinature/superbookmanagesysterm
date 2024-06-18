@@ -1042,7 +1042,7 @@ if (newWindowTitle == "UserADMIN") {
     running = false; // 设置running为false以退出循环
     break; // 跳出循环
 } else if (newWindowTitle == "BookADMIN") {
-    if (buttonTexts[i] == "add") {
+    if (buttonTexts[i] == "Add") {
                     // 根据点击的按钮创建新的控制台窗口
         string consoleTitle = "Console for " + string(newWindowTitle) + " " + buttonTexts[i];
         CreateConsoleWindow(consoleTitle);
@@ -1166,7 +1166,7 @@ else if (newWindowTitle == "UserADMIN" ) {
         {211, 212, 204} 
     };
     // 定义按钮文本
-    const char* buttonTexts[] = {"Add", "Delete", "Look(4ways)", "Back"};
+    const char* buttonTexts[] = {"Add", "Delete", "Look", "Back"};
 
     // 获取窗口尺寸
     int windowWidth, windowHeight;
