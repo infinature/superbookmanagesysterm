@@ -393,6 +393,29 @@ if (buttonTexture) {
 } else {
     SDL_Log("TTF_RenderText_Solid failed: %s", SDL_GetError());
 }
+if(loggedInUser.type==0)
+{
+    // 美化左侧下下部分区域
+SDL_Rect leftLowerRect = {0, 200, 200, 20};
+SDL_SetRenderDrawColor(userRenderer, 44, 48, 54, 255); // 设置背景颜色
+SDL_RenderFillRect(userRenderer, &leftLowerRect);
+string buttonText = "SystemParameter Change";
+SDL_Surface* buttonSurface = TTF_RenderText_Solid(font, buttonText.c_str(), textColor);
+SDL_Texture* buttonTexture = SDL_CreateTextureFromSurface(userRenderer, buttonSurface);
+// 创建“更改密码”按钮
+const int buttonPadding = 10;
+SDL_Color buttonColor = {22, 255, 255};
+
+SDL_Rect buttonRect = {0, 200, 200, 20};
+
+// 创建按钮文本的表面，并渲染
+
+if (buttonTexture) {
+    SDL_RenderCopy(userRenderer, buttonTexture, NULL, &buttonRect);
+} else {
+    SDL_Log("TTF_RenderText_Solid failed: %s", SDL_GetError());
+}
+}
 
 // 清理
 SDL_FreeSurface(buttonSurface);
@@ -506,6 +529,12 @@ SDL_Color endColor = {
                                    string consoleTitle = "Console for " + string(newWindowTitle) + " " + "Change your Key";
                 CreateConsoleWindow(consoleTitle);
                  changePassword(loggedInUser)   ;
+                }
+                                if( x>=0&&y>=200&&x<=200&&y<=220)
+                {
+                                   string consoleTitle = "Console for " + string(newWindowTitle) + " " + "SystemParameter change";
+                CreateConsoleWindow(consoleTitle);
+                 changeSystemParameter  ;
                 }
                 // 检测点击区域并设置新窗口标题
                 for (int i = 0; i < 5; ++i) 
