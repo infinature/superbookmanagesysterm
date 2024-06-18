@@ -59,8 +59,8 @@ void addBook()
     cout<<"请输入新增加书籍的出版日期(格式示例:20010101):"<<endl;
     cin>> temp.publisingdate;
     temp.sum_number=getValidIntegerInput("请输入新增加书籍的总数:");
-    temp.io_number=getValidIntegerInput("请输入新增加书籍的已借数量:");
-    temp.cur_number=getValidIntegerInput("请输入新增加书籍的现有数量:");
+    temp.io_number=0;
+    temp.cur_number=temp.sum_number;
     cout<<"请输入新增加书籍的种类(0为期刊,1为杂志,2为图书):"<<endl;
     while(1)
     {
