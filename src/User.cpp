@@ -150,7 +150,7 @@ User logIn()
         for (int i = 0; i < 10; i++) // 循环10次
         {
             cout << "Boom!\nBoom!Boom!Boom!\nBoom!Boom!\n";
-            this_thread::sleep_for(chrono::milliseconds(rand() % 500 + 200)); // 暂停200-700毫秒
+            //sleep_for(chrono::milliseconds(rand() % 500 + 200)); // 暂停200-700毫秒
         }
         logpp=0;
         cout<<"/n好了˙﹀˙现在你重新来过吧˙﹀˙";
@@ -217,6 +217,7 @@ void lookUser()
 void deleteUser()
 {
     string n;
+    cout<<"输入想要删除的用户姓名："<<endl;
     cin>>n;
     
     list<User> p =u_LordData();
@@ -234,6 +235,7 @@ void deleteUser()
                 break;
             }
         }
+    cout<<"已删除 "<<n<<" 用户"<<endl;
     u_SaveData_del(p);
 
 }
@@ -423,19 +425,22 @@ void changePassword(User x)
     cin>>n;
     cout<<"请输入新密码："<<endl;
     cin>>m;
-    int pp=0;
     for (list<User>::iterator it = p.begin(); it != p.end(); it++)
     {
         if((*it).name==x.name&&n==(*it).key)
         {
             (*it).key=m;
             cout<<"修改成功！"<<endl;
-            pp++;
-           
+            break;
         }
-        else if(pp==0)
+        else if((*it).name==x.name&&n!=(*it).key)
         {
             cout<<"修改失败，原密码错误！"<<endl;
+            break;
+        }
+        if(it==p.end()&&(*it).name!=x.name)
+        {
+            cout<<"未找到用户"<<endl;
         }
     }
     u_SaveData_del(p);
