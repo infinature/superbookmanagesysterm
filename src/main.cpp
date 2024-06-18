@@ -373,7 +373,30 @@ switch (loggedInUser.type) {
         textColor = textColor;
         break;
 }
+// 美化左侧下半部分区域
+SDL_Rect leftLowerRect = {0, 100, 80, 20};
+SDL_SetRenderDrawColor(userRenderer, 44, 48, 54, 255); // 设置背景颜色
+SDL_RenderFillRect(userRenderer, &leftLowerRect);
+string buttonText = "CG_Key";
+SDL_Surface* buttonSurface = TTF_RenderText_Solid(font, buttonText.c_str(), textColor);
+SDL_Texture* buttonTexture = SDL_CreateTextureFromSurface(userRenderer, buttonSurface);
+// 创建“更改密码”按钮
+const int buttonPadding = 10;
+SDL_Color buttonColor = {66, 72, 79};
 
+SDL_Rect buttonRect = {0, 100, 80, 20};
+
+// 创建按钮文本的表面，并渲染
+
+if (buttonTexture) {
+    SDL_RenderCopy(userRenderer, buttonTexture, NULL, &buttonRect);
+} else {
+    SDL_Log("TTF_RenderText_Solid failed: %s", SDL_GetError());
+}
+
+// 清理
+SDL_FreeSurface(buttonSurface);
+SDL_DestroyTexture(buttonTexture);
   // 创建用户名和用户类型文本的表面，并美化
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, usernameText.c_str(), textColor);
     SDL_Surface* userTypeSurface = TTF_RenderText_Solid(font, userTypeText.c_str(), textColor);
@@ -478,6 +501,12 @@ SDL_Color endColor = {
                 int x = event.button.x;
                 int y = event.button.y;
 
+                if( x>=0,&&y>=100,&&x<=80,&&y<=120)
+                {
+                                   string consoleTitle = "Console for " + string(newWindowTitle) + " " + "Change your Key";
+                CreateConsoleWindow(consoleTitle);
+                 changePassword(loggedInUser)   ;
+                }
                 // 检测点击区域并设置新窗口标题
                 for (int i = 0; i < 5; ++i) 
                 {
