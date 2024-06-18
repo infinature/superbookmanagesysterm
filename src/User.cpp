@@ -1,5 +1,7 @@
 #include "User.h"
 
+int deadline=14;//截止日期
+double finenum=0.5;//罚款金额
 /*********************************************************************************
  * @brief 存储用户数据到文件  
  *  
@@ -266,8 +268,7 @@ void userborrowbook(User& p, Book b,string borrowdata)
     u_SaveData_del(u);
 }
 
-int deadline=14;//截止日期
-int finenum=0.5;//罚款金额
+
 /*********************************************************************************
  * @brief 用户还书  
  *  
@@ -373,8 +374,16 @@ void lookBorrowbook_stu(User x)
         {
             for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
             {
-                cout<<(*it2).borrowbookname<<" " <<(*it2).id<<" "<<(*it2).data<<endl;
-                
+                cout<<(*it2).borrowbookname<<" " <<(*it2).id<<" "<<(*it2).data<<endl;   
+            }
+            cout<<"以下为您到期未还的书，请尽快还书！"<<endl;
+           for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+            {
+                if(daysBetweenDates((*it2).data,getCurrentDateTime())>deadline)
+                {                    
+                    cout<<(*it2).borrowbookname<<" " <<(*it2).id<<" "<<(*it2).data<<endl; 
+                }
+                  
             }
         }
     }
@@ -398,6 +407,15 @@ void lookBorrowbook_man(User x)
             for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
             {
                 cout<<(*it2).borrowbookname<<" " <<(*it2).id<<" "<<(*it2).data<<endl;
+            }
+            cout<<"以下为所有用户到期未还的书："<<endl;
+            for (list<Borrowed_Book>::const_iterator it2 = (*it).borrowbook.begin(); it2 != (*it).borrowbook.end(); it2++)//利用迭代器来遍历book的list容器的元素并且输出到文件中
+            {
+                if(daysBetweenDates((*it2).data,getCurrentDateTime())>deadline)
+                {
+                    
+                    cout<<(*it2).borrowbookname<<" " <<(*it2).id<<" "<<(*it2).data<<endl; 
+                }
             }
         }
     }

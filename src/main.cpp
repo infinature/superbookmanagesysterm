@@ -13,7 +13,8 @@
 
 using namespace std; // 使用标准命名空间
 
-
+extern int deadline;
+extern double finenum;
 
 
 // 假设有一个全局变量或者在合适的地方定义的成员变量来控制渐变进度
@@ -534,7 +535,7 @@ SDL_Color endColor = {
                 {
                                    string consoleTitle = "Console for " + string(newWindowTitle) + " " + "SystemParameter change";
                 CreateConsoleWindow(consoleTitle);
-                 changeSystemParameter  ;
+                 changeSystemParameter(&deadline,&finenum);
                 }
                 // 检测点击区域并设置新窗口标题
                 for (int i = 0; i < 5; ++i) 

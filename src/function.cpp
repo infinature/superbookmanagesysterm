@@ -1,7 +1,6 @@
 #include "function.h"
 
-extern int deadline;
-extern int finenum;
+
 
 /*********************************************************************************
  * @brief 借书函数  
@@ -363,6 +362,40 @@ int getValidIntegerInput(const std::string& prompt) {
 }
 
 /*********************************************************************************
+ * @brief 获取有效的数字输入  
+ *  
+ * 通过控制台提示用户输入一个数字，并持续要求用户输入直到输入一个有效的数字为止。  
+ *  
+ * @param prompt 提示用户输入的字符串  
+ *  
+ * @return 用户输入的有效数字 
+ *  
+ * @throw 无直接抛出异常，但内部使用了try-catch来处理stoi可能抛出的异常  
+ **********************************************************************************/ 
+double getValidDoubleInput(const std::string& prompt) {
+    double value;
+    while (true) {
+        std::cout << prompt;
+        std::string input;
+        std::getline(std::cin, input);
+
+        // 使用字符串流进行转换和验证
+        std::istringstream stream(input);
+        stream >> value;
+
+        // 检查流是否成功转换，且没有额外的字符
+        if (!stream.fail() && stream.eof()) {
+            return value;
+        } else {
+            std::cerr << "输入无效，请输入一个有效的双精度浮点数。" << std::endl;
+        }
+        
+        // 清空错误标志并忽略剩余的输入
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+}
+/*********************************************************************************
  * @brief 修改系统参数  
  *  
  * 修改图书借阅时间限制和罚款金额  
@@ -372,10 +405,13 @@ int getValidIntegerInput(const std::string& prompt) {
  *  
  * @return 无返回值（void）  
  **********************************************************************************/ 
-void changeSystemParameter(int *date,int *cost)
+void changeSystemParameter(int *date,double *cost)
 {
     *date=getValidIntegerInput("输入更改的借书日期(默认为14天,范围为0~60):");
     if(*date<=0||*date>=60)
     *date=14;
-    *cost=getValidIntegerInput("输入更改罚款金额(默认为0.5元/天):");
+    cout<<"修改成功，当前为 "<<*date<<" 天。"<<endl;
+    getchar();
+    *cost=getValidDoubleInput("输入更改罚款金额(默认为0.5元/天):");
+    cout<<"修改成功，当前为 "<<*cost<<" 元/天。"<<endl;
 }
