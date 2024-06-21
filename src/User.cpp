@@ -167,7 +167,7 @@ User logIn()
         {
             if ((*it).name == n && (*it).key == k)
             {
-                cout<<"登'陆'成功˙﹀˙";
+                cout<<"登录成功˙﹀˙";
                 return (*it);
             }
         }

@@ -1,6 +1,7 @@
 #include "function.h"
 
-
+extern int deadline;
+extern double finenum;
 
 /*********************************************************************************
  * @brief 借书函数  
@@ -24,7 +25,7 @@ void BorrowBook(User uk, std::string borrowdata) {
     kind=getValidIntegerInput("请输入搜索方式(0为精确搜索,1为模糊搜索,默认为模糊搜索):");
     if(kind!=0&&kind!=1)kind=1;
 
-    cout<<"请输入书籍类型(0为书籍，1为期刊，2为报刊，默认为全部类型):";
+    cout<<"请输入书籍类型(0为书籍，1为期刊，2为报刊，3为全部类型，默认为全部类型):";
     cin>>bookkind;
     if(bookkind!="0"&&bookkind!="1"&&bookkind!="2")bookkind="3";
 
@@ -414,4 +415,27 @@ void changeSystemParameter(int *date,double *cost)
     getchar();
     *cost=getValidDoubleInput("输入更改罚款金额(默认为0.5元/天):");
     cout<<"修改成功，当前为 "<<*cost<<" 元/天。"<<endl;
+    // 将数据写入txt文件  
+ std::ofstream outfile("../data/userinfo.txt"); 
+ if (outfile.is_open()) { 
+ outfile << *date << std::endl; 
+ outfile << *cost << std::endl; 
+ outfile.close(); 
+ } else { 
+ std::cerr << "无法打开文件: " << std::endl; 
+ } 
+ 
+} 
+
+
+void lordfine()
+{
+ std::ifstream infile("../data/fine.txt"); 
+if (!infile) { 
+ std::cerr << "无法打开文件: " << std::endl; 
+ } 
+ std::string line; 
+ std::getline(infile, line) && std::istringstream(line) >> deadline;
+ std::getline(infile, line) && std::istringstream(line) >> finenum;
+ infile.close(); 
 }

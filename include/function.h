@@ -28,4 +28,5 @@ string readUTF8FromConsole();
 int getValidIntegerInput(const std::string& prompt);
 double getValidDoubleInput(const std::string& prompt);
 void changeSystemParameter(int *date,double *cost);
+void lordfine();
 #endif //_FUNCTION_H
