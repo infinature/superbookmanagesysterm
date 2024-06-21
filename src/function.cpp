@@ -416,7 +416,7 @@ void changeSystemParameter(int *date,double *cost)
     *cost=getValidDoubleInput("输入更改罚款金额(默认为0.5元/天):");
     cout<<"修改成功，当前为 "<<*cost<<" 元/天。"<<endl;
     // 将数据写入txt文件  
- std::ofstream outfile("../data/userinfo.txt"); 
+ std::ofstream outfile("../data/fine.txt"); 
  if (outfile.is_open()) { 
  outfile << *date << std::endl; 
  outfile << *cost << std::endl; 
