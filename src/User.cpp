@@ -288,7 +288,6 @@ void returnBook(User &uk)
     }
     cout<<"以下是你已经借阅但未归还的书目˙﹀˙\n";
     lookBorrowbook_stu(uk);
-
     int returnid;
     returnid=getValidIntegerInput("请输入你想还的上述书目对应的id：");
     // 检查还书ID是否在用户的借书ID列表中

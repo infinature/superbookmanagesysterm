@@ -192,24 +192,6 @@ void AddIndexword(const string& name, int id, list<IndexNode>& L) {
     }
 }
 
-
-// void DelIndexword(string name,int id)
-// {
-//     list<IndexNode> L=i_LordData();
-//     for (auto ch : name)         //ch依次取的是str里面的字符,直到取完为止
-//     {
-//         IndexNode searchword(ch);//需要删除么
-//         list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
-//         if(temp!=L.end())
-//         {  
-//             ((*temp).bookid).erase(std::remove(((*temp).bookid).begin(),((*temp).bookid).end(),id),((*temp).bookid).end());
-//         } 
-//         if(temp==L.end())
-//         {
-//             cout<<"无法删除，无存储信息"<<endl;
-//         }
-//     }
-// }
 /*********************************************************************************
  * @brief 初始化建立书名词典  
  *  
@@ -226,22 +208,6 @@ void BuildIndex()//建立书名词典
     for(list<Book>::const_iterator it = p.begin();it !=p.end();it++)
     {
         AddIndexword((*it).bookname,(*it).id,L);
-    //     for (auto ch : (*it).bookname)         //ch依次取的是str里面的字符,直到取完为止
-    // {
-    //     IndexNode searchword(ch);//需要删除么
-    //     list<IndexNode>::iterator temp = find(L.begin(),L.end(),searchword);
-    //     if(temp!=L.end())
-    //     {  
-    //         (*temp).addBooks((*it).id);
-    //     }
-    //     else if(temp==L.end())
-    //     {
-    //         (*temp).word=ch;
-    //         (*temp).addBooks((*it).id);
-    //         L.push_back(*temp);
-    //     }
-        
-    // }
     }
     i_SaveData(L);
 }
